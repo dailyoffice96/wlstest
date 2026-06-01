@@ -1,12 +1,16 @@
+import { useNavigate } from "react-router-dom";
+
 type HeaderProps = {
   isLogin: boolean;
   username?: string;
+  onLogout?: () => void;
 };
 
-function Header({ isLogin = true, username = "정 인" }: HeaderProps) {
+function Header({isLogin, username, onLogout}: HeaderProps) {
+  const navigate = useNavigate();
     return(
 <header className="header">
-  <div className="header-logo">백프론트 강의실</div>
+  <div className="header-logo" onClick={()=>navigate("/")}>백프론트 강의실</div>
 
     <div className="header-left">
       <div className="custom-dropdown">
@@ -25,13 +29,13 @@ function Header({ isLogin = true, username = "정 인" }: HeaderProps) {
     {isLogin ? (
       <>
         <button>☆즐겨찾기</button>
-        <button>{username}</button>
-        <button>로그아웃</button>
+        <button>{username}님</button>
+        <button onClick={onLogout}>로그아웃</button>
       </>
     ) : (
       <>
-        <button>Login</button>
-        <button>Sign Up</button>
+        <button onClick={()=>navigate("/login")}>Login</button>
+        <button onClick={()=>navigate("/signup")}>Sign Up</button>
       </>
     )}
   </div>

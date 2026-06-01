@@ -12,6 +12,7 @@
 .header-logo {
   font-size: 22px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .header-menu {
