@@ -66,7 +66,8 @@ public class LectureService {
         savedLecture.setName(updatedLecture.getName());
         savedLecture.setLecture_goal(updatedLecture.getLecture_goal());
         savedLecture.setCode_example(updatedLecture.getCode_example());
-        savedLecture.setCode_desription(updatedLecture.getCode_desription());
+        savedLecture.setCode_description(updatedLecture.getCode_description());
+        savedLecture.setLanguage(updatedLecture.getLanguage());
         savedLecture.setIframe_url(updatedLecture.getIframe_url());
         // 등록일자는 놔두고 수정일자만 추가하기
         savedLecture.setUpdated_at(LocalDate.now());

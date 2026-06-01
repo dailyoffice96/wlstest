@@ -1,8 +1,10 @@
 package com.backend_semi.entity;
 
+import com.backend_semi.constant.Language;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -43,7 +45,12 @@ public class Lecture {
     // 코드 설명
     @Column(nullable = false)
     @NotBlank(message = "코드 설명은 필수 입력 사항입니다.")
-    private String code_desription;
+    private String code_description;
+
+    // 사용 언어
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "사용 언어는 필수 선택 사항입니다.")
+    private Language language;
 
     // 구현화면 url
     @Column(nullable = false)

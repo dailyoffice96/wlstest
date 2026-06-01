@@ -1,24 +1,18 @@
 import Header from "./components/layout/Header";
-import Sidebar from "./components/layout/Sidebar";
 import "./components/layout/Header.css";
-
+import LecturePage from "./pages/LecturePage";
 
 function App() {
   const isLogin = true;
   const userName = "KOTCHA";
 
   return (
-  <>
-    <Header isLogin={isLogin} username={userName} />
+    <>
+      <Header isLogin={isLogin} username={userName} />
 
-    <div className="page-layout">
-      <Sidebar />
+      <LecturePage />
 
-      <main className="main-content">
-        {/* 본문 영역 */}
-      </main>
-    </div>
-  </>
+    </>
   );
 }
 
