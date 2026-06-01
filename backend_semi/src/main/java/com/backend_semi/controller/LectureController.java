@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/lecture")
@@ -47,8 +48,7 @@ public class LectureController {
             );
         }
 
-        try { // 성공하면
-            // 이미지를 운영체제에 저장하고 상품의 이미지 컬럼에 값을 넣고 데이터베이스에 상품을 저장함
+        try { // 성공하면 강의 저장함
             Lecture savedLecture = this.lectureService.insertLecture(lecture);
 
             if (savedLecture == null) {
@@ -103,5 +103,71 @@ public class LectureController {
 
     }
 
+    // 강의 수정할때 사용하는 GetMapping
+    // 프론트 앤드의 강의 수정 페이지에서 조회 요청이 들어옴
+    // 강의의 id 정보를 이용하여 해당 상품 Bean 객체를 반환해서 프론트의 수정페이지에 정보를 표시함
+    @GetMapping("/update/{id}")
+    public ResponseEntity<Lecture> getUpdate(@PathVariable Long id){
+        System.out.println("수정할 상품 번호 : " + id);
+
+        // id에 해당하는 강의 정보 가져오기
+        Lecture lecture = this.lectureService.getLectureById(id) ;
+
+        if(lecture == null){ // 강의가 없으면 404 응답과 함께 null을 반환
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+        }else{ // 해당 강의 정보와 함께, 성공(200) 메시지를 반환합니다.
+            return ResponseEntity.ok(lecture);
+        }
+    }
+
+    // 강의 수정할때 사용하는 PutMapping
+    // 프론트 엔드의 상품 수정 페이지에서 수정 요청이 들어옴
+    // 프론트에서 작성한 수정한 lecture 객체를 받아와서 데이터 베이스의 기존 lecture 객체에 덮어쓰기함
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> putUpdate(@PathVariable Long id,
+                                       @Valid @RequestBody Lecture updatedLecture,
+                                       BindingResult bindingResult) {
+        // 1. 유효성 검사
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.put(error.getField(), error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(
+                    Map.of(
+                            "message", "강의 수정 유효성 검사에 문제가 있습니다.",
+                            "errors", errors
+                    ),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        // 2. 강의 조회
+        Optional<Lecture> findLecture = lectureService.findById(id);
+
+        if (findLecture.isEmpty()) {
+            // ResponseEntity.notFound().build(): 지울 대상이 없으므로 깔끔하게
+            // HTTP 상태 코드 404 Not Found 봉투만 빌드(build())해서 리액트에게 던짐
+            return ResponseEntity.notFound().build();
+        }
+
+        try { // findLecture의 타입이 Optional이여서 굳이 get()을 하고 Lecture타입의 변수에 다시 넣음
+            Lecture savedLecture = findLecture.get();
+            // 새로운 Lecture의 정보를 기존에 저장된 Lecture정보에 덮어쓰기함 (service에서 만든 메소드이용)
+            lectureService.updateLecture(savedLecture, updatedLecture);
+
+            // 프론트에는 성공했다는 메시지를 보냄
+            return ResponseEntity.ok(Map.of("message", "강의 수정 성공"));
+
+        } catch (Exception err) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                            "message", err.getMessage(),
+                            "error", "강의 수정 실패"
+                    ));
+        }
+    }
 
 }
