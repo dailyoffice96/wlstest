@@ -4,20 +4,12 @@ function Sidebar(){
     return (
 
     <aside className="sidebar">
-        <div className="sidebar-dom sidebar-dom1">
-            {/* DOM1 영역 */}
-            DOM1
-        </div>
+        {location.pathname === "/lecture/list" && (
+                <div className="sidebar-dom sidebar-dom1">
+                    특정 URL(/special)에서만 보이는 DOM3
+                </div>
+            )}
 
-        <div className="sidebar-dom sidebar-dom1">
-            {/* DOM2 영역 */}
-            DOM2
-        </div>
-
-        <div className="sidebar-dom sidebar-dom1">
-            {/* DOM2 영역 */}
-            DOM2
-        </div>
     </aside>
     );
 }
