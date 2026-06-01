@@ -81,6 +81,7 @@ public class LectureController {
     }
 
     // 강의 삭제할때 사용하는 DeleteMapping
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id){
         try {
             boolean isDeleted = this.lectureService.deleteLecture(id);
@@ -98,9 +99,7 @@ public class LectureController {
 
         }catch (Exception err){ // 두루뭉실한 예외처리
             return ResponseEntity.internalServerError().body("오류 발생 : " + err.getMessage());
-
         }
-
     }
 
     // 강의 수정할때 사용하는 GetMapping
