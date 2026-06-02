@@ -33,20 +33,6 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
         // Record를 이용해서 타입 정의 : acc라는 객체는 key를 string으로 받고 value를 Lecture[]로 받음
     }, {} as Record<string, Lecture[]>);
 
-    // 💡 정렬 로직 (공부해야함)
-    // 각 카테고리 내부의 강의들을 id 오름차순(옛날 순)으로 정렬
-    Object.keys(groupedLectures).forEach(category => {
-        groupedLectures[category].sort((a, b) => a.id - b.id);
-    });
-
-    // 카테고리(대주제) 자체도 생성된 순서(가장 작은 id 기준)로 정렬
-    const sortedCategories = Object.keys(groupedLectures).sort((a, b) => {
-        const minIdA = Math.min(...groupedLectures[a].map(l => l.id));
-        const minIdB = Math.min(...groupedLectures[b].map(l => l.id));
-        return minIdA - minIdB;
-    });
-
-    // 2. 카테고리 토글 상태 관리
     // useState<Record<string, boolean>>({}) : key타입이 string이고 value 타입이 boolean인 것들만
     // state 변수에 넣을 것고 이 변수의 초기값은 {} - 객체이다.
     const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
@@ -56,6 +42,8 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
             setOpenCategories({
                 // lectures배열의 0번째 객체의 category를 가져옴
                 // [key] : value를 설정하는 문법이라서
+
+
                 // key가 lectures[0].category이고 value가 true인 openCategories 객체의 요소가 생성됨
                 [lectures[0].category]: true
             });
@@ -123,12 +111,20 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
                     overflowY: "auto",
                     padding: "16px"
                 }}
-            >
-                {/* 정렬된 sortedCategories를 사용하여 map 순서 보장 */}
-                {sortedCategories.map((category) => (
+            > {/* groupedLectures는 배열이 아니고 객체여서 map()을 직접 쓸 수 없음 */}
+                {/* object.entries()는 객체 안에 들어있는 데이터(key와 value)를 배열형태로 바꿔줌 */}
+                {/* 객체를 배열형식으로 만들다보니 배열을 요소로 가진 배열이 생성이 됨 */}
+                {/* 배열의 요소인 배열의 [0]은 key / [1]은 value가 됨 */}
+                {/* 따로 꺼내서 매개변수로 쓰기 귀찮아서 []대괄호를 이용해서 */}
+                {/* [0]인 key는 category 변수에 넣고 [1]은 value는 lectureList 변수(배열?)에 넣음 */}
+                {/* 결과적으로 category에는 lecture의 category(string)들이 들어있고 */}
+                {/* lectureList에는 그 category인 lecture 객체가 들어있음 */}
+                {Object.entries(groupedLectures).map(([category, lectureList]) => (
                     <div
                         key={category}
-                        style={{ marginBottom: "12px" }}
+                        style={{
+                            marginBottom: "12px"
+                        }}
                     >
                         {/* 대주제 */}
                         <div
@@ -145,14 +141,28 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
                             }}
                         >
                             <span>📁 {category}</span>
-                            <span> {openCategories[category] ? "▲" : "▼"} </span>
+                            <span> {/* 삼항연산자를 이용해서 화살표 모양 바꾸기 */}
+                                {openCategories[category] ? "▲" : "▼"}
+                            </span>
                         </div>
 
                         {/* 소주제 */}
+                        {/* openCategories[category] 값이 true라면 && 오른쪽에 있는 */}
+                        {/* 코드를 실행하는 조건식임 */}
+                        {/* ** openCategories[category] 값이 true면 소주제들을 보여줌  */}
                         {openCategories[category] && (
-                            <div style={{ marginTop: "6px", marginLeft: "10px" }}>
-                                {groupedLectures[category].map(lecture => {
-                                    const selected = lecture.id === currentLecture_id;
+                            <div
+                                style={{
+                                    marginTop: "6px",
+                                    marginLeft: "10px"
+                                }}
+                            >
+                                {lectureList.map(lecture => {
+                                    // 선택한 lecture와 같은 lecture가 반복되다가
+                                    // 나오면 그 lecture를 하이라이트 표시함
+                                    const selected =
+                                        lecture.id === currentLecture_id;
+
                                     return (
                                         <div
                                             key={lecture.id}
@@ -162,9 +172,15 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
                                                 marginBottom: "4px",
                                                 cursor: "pointer",
                                                 borderRadius: "6px",
-                                                background: selected ? "white" : "transparent",
-                                                color: selected ? "#0753bf" : "white",
-                                                fontWeight: selected ? "bold" : "normal"
+                                                background: selected
+                                                    ? "white"
+                                                    : "transparent",
+                                                color: selected
+                                                    ? "#0753bf"
+                                                    : "white",
+                                                fontWeight: selected
+                                                    ? "bold"
+                                                    : "normal"
                                             }}
                                         >
                                             • {lecture.name}

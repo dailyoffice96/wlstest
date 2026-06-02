@@ -1,6 +1,6 @@
 import Header from "./components/layout/Header";
 import "./components/layout/Header.css";
-import LecturePage from "./pages/LecturePage";
+import AppRoutes from "./routes/AppRoutes"
 
 function App() {
   const isLogin = true;
@@ -10,7 +10,7 @@ function App() {
     <>
       <Header isLogin={isLogin} username={userName} />
 
-      <LecturePage />
+      <AppRoutes />
 
     </>
   );

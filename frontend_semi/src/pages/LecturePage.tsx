@@ -24,6 +24,7 @@ function LecturePage() {
                     setCurrentLecture(response.data[0]);
                 }
             })
+
             .catch((err) => {
                 console.error("데이터 통신 에러:", err);
             });

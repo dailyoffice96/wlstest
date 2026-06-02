@@ -23,7 +23,7 @@ public class Lecture {
     private Long id;
 
     // 대주제
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     @NotBlank(message = "대주제는 필수 입력 사항입니다.")
     private String category;
 
@@ -38,12 +38,12 @@ public class Lecture {
     private String lecture_goal;
 
     // 코드 예시
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @NotBlank(message = "코드 예시는 필수 입력 사항입니다.")
     private String code_example;
 
     // 코드 설명
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @NotBlank(message = "코드 설명은 필수 입력 사항입니다.")
     private String code_description;
 
