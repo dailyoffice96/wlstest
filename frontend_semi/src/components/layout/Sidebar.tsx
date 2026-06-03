@@ -9,6 +9,7 @@ interface LecturePageProps {
 }
 
 function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePageProps) {
+
     const navigate = useNavigate();
 
     // lectures.reduce( (acc, lecture => {}, {} as Record<string, Lecture[]>) ) : 
@@ -33,14 +34,31 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
         // Record를 이용해서 타입 정의 : acc라는 객체는 key를 string으로 받고 value를 Lecture[]로 받음
     }, {} as Record<string, Lecture[]>);
 
-    // 💡 정렬 로직 (공부해야함)
+    // 💡 정렬 로직
+    // groupedLectures 객체의 value인 lecture객체들이 들어있는 배열의 순서를 id기준 오름차순으로 재정렬하기
     // 각 카테고리 내부의 강의들을 id 오름차순(옛날 순)으로 정렬
+    // Object.keys() : 매개변수를 가져와서 key들만 뽑아서 배열로 만듬 (lecture.category들로 이루어진 배열 생성됨)
+    // forEach : 반복문 (해당 배열의 요소(lecture.category)를 꺼내서 category라는 매개변수에 넣고 {}안의 함수를 반복해서 실행함)
+    // groupedLectures 객체의 value는 배열이여서 JSX영역에서 map()함수를 사용할 수 있음
     Object.keys(groupedLectures).forEach(category => {
+        // groupedLectures[category] : groupedLectures객체의 현재 선택된 category가 key인 value(lecture들) 배열을 가져옴
+        // sort() : 배열안의 요소의 순서를 정렬하는 함수
+        // 결과값(a.id - b.id)이 음수: 앞에 있는 매개변수(a)를 앞으로 보냄 / 결과값이 0: 순서 바꾸지 않음
+        // 결과값이 양수 : 뒤에 있는 매개변수(b)를 앞으로 보냄
+        // 매개변수 a, b는 groupedLectures[category]인 사실상 category가 key인 value(lecture들) 배열의 임의의 값들이 나옴
+        // 임의의 값(lecture)의 id를 비교해서 id가 더 낮은(예전) 것을 배열의 앞으로 배치함(오름차순)
         groupedLectures[category].sort((a, b) => a.id - b.id);
     });
 
     // 카테고리(대주제) 자체도 생성된 순서(가장 작은 id 기준)로 정렬
-    const sortedCategories = Object.keys(groupedLectures).sort((a, b) => {
+    // 대주제를 오름차순으로 정렬하고 sortedCategories 배열에 넣음 (배열에는 오름차순의 대주제들(string)이 들어있음)
+    // 굳이 새로운 배열에 값을 넣는 이유 : JSX에서 사용할때 map()함수를 사용하려는데 map()함수는 배열에만 사용가능함
+    const sortedCategories = Object.keys(groupedLectures).sort((a, b) => { // a, b는 임의의 lecture.category
+        // groupedLectures 객체에서 key가 임의의 lecture.category인 것의
+        // value를 반복문으로 돌려서 그중에서 가장 낮은 id를 찾아서 변수에 넣음
+        // 결국 key가 임의의 lecture.category인 것 value중에서 가장 낮은 id를 서로 비교함
+        // Math.min() 함수는 배열을 매개변수로 받지 못해서 전개 연산자 ...을 사용해서
+        // groupedLectures[a].map(l => l.id)인 value 배열의 id들의 배열을 풀고 그 배열의 값을 하나하나 숫자로 넣어줌
         const minIdA = Math.min(...groupedLectures[a].map(l => l.id));
         const minIdB = Math.min(...groupedLectures[b].map(l => l.id));
         return minIdA - minIdB;
@@ -51,7 +69,7 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
     // state 변수에 넣을 것고 이 변수의 초기값은 {} - 객체이다.
     const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
 
-    useEffect(() => {
+    useEffect(() => { // 카테고리 토글 열린 상태 초기 설정 (첫번째 대주제 토글이 열린 상태)
         if (lectures.length > 0) { // 백엔드가 보내온 강의 목록이 1개라도 있으면
             setOpenCategories({
                 // lectures배열의 0번째 객체의 category를 가져옴
