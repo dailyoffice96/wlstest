@@ -64,7 +64,7 @@ public class LectureService {
     public Lecture updateLecture(Lecture savedLecture, Lecture updatedLecture) {
         savedLecture.setCategory(updatedLecture.getCategory());
         savedLecture.setName(updatedLecture.getName());
-        savedLecture.setLecture_goal(updatedLecture.getLecture_goal());
+        savedLecture.setLecture_description(updatedLecture.getLecture_description());
         savedLecture.setCode_example(updatedLecture.getCode_example());
         savedLecture.setCode_description(updatedLecture.getCode_description());
         savedLecture.setLanguage(updatedLecture.getLanguage());

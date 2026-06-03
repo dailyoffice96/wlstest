@@ -32,10 +32,10 @@ public class Lecture {
     @NotBlank(message = "소주제는 필수 입력 사항입니다.")
     private String name;
 
-    // 강의 목표 - 소주제 소개문구
-    @Column(nullable = false)
-    @NotBlank(message = "강의 목표는 필수 입력 사항입니다.")
-    private String lecture_goal;
+    // 강의 설명 - 소주제 소개문구
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @NotBlank(message = "강의 설명은 필수 입력 사항입니다.")
+    private String lecture_description;
 
     // 코드 예시
     @Column(nullable = false, columnDefinition = "TEXT")

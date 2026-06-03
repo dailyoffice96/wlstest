@@ -2,7 +2,7 @@ export interface Lecture {
     id: number;
     category: string;
     name: string;
-    lecture_goal: string;
+    lecture_description: string;
     code_example: string;
     code_description: string;
     language: string;

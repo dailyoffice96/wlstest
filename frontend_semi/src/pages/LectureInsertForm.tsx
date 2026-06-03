@@ -25,7 +25,7 @@ function App() {
     const initial_value = {
         category: '',
         name: '',
-        lecture_goal: '',
+        lecture_description: '',
         code_example: '',
         code_description: '',
         language: '',
@@ -39,7 +39,7 @@ function App() {
     const initialErrors = {
         category: '',
         name: '',
-        lecture_goal: '',
+        lecture_description: '',
         code_example: '',
         code_description: '',
         language: '',
@@ -144,7 +144,7 @@ function App() {
 
                             // 정확히 말하자면 name 속성이 아니고 id속성임
                             // 그래서 Form.Group태그의 controlId속성에 formCategory으로 설정함
-                            // name이 lecture_goal면 lecture_goal로 바꾸고 formLecture_goal로 하면 됨
+                            // name이 lecture_description면 lecture_description로 바꾸고 formlecture_description로 하면 됨
                             name="category"
                             value={lecture.category}
 
@@ -190,31 +190,31 @@ function App() {
                     </Col>
                 </Form.Group>
 
-                {/* 강의 목표(lecture_goal) 입력창 */}
-                <Form.Group as={Row} className="mb-3" controlId="formLecture_goal">
+                {/* 강의 설명(lecture_description) 입력창 */}
+                <Form.Group as={Row} className="mb-3" controlId="formlecture_description">
                     <Form.Label column sm={2}>
-                        강의 목표
+                        강의 설명
                     </Form.Label>
                     <Col sm={10}> {/* Form.Control은 HTML의 form의 input같은 것 */}
                         <Form.Control
                             as="textarea"
                             rows={3}
-                            placeholder="강의 목표를 입력해 주세요."
+                            placeholder="강의 설명를 입력해 주세요."
 
                             // 정확히 말하자면 name 속성이 아니고 id속성임
-                            name="lecture_goal"
-                            value={lecture.lecture_goal}
+                            name="lecture_description"
+                            value={lecture.lecture_description}
 
                             // Change 이벤트 : 값이 변하면 동작하는 이벤트
                             onChange={ControlChange}
 
                             // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
-                            isInvalid={!!errors.lecture_goal}
+                            isInvalid={!!errors.lecture_description}
                         />
 
                         {/* 문제가 생기면 나오는 경고성 멘트 */}
                         <Form.Control.Feedback type="invalid">
-                            {errors.lecture_goal}
+                            {errors.lecture_description}
                         </Form.Control.Feedback>
                     </Col>
                 </Form.Group>

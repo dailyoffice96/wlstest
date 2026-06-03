@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Lecture } from "../../types/Lecture";
 import { useNavigate } from "react-router-dom";
-import "./Sidebar.css";
 
 interface LecturePageProps {
     lectures: Lecture[]; // 전체 강의 목록 배열
@@ -10,6 +9,7 @@ interface LecturePageProps {
 }
 
 function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePageProps) {
+
     const navigate = useNavigate();
 
     // lectures.reduce( (acc, lecture => {}, {} as Record<string, Lecture[]>) ) : 
@@ -22,6 +22,7 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
             // acc 객체의 key가 lecture.category인 value를 빈배열로 만들어놓기
             acc[lecture.category] = [];
         }
+
         // 위에서 만든 key가 lecture.category인 빈 배열( acc[lecture.category] )에 lecture 객체를 넣는데
         // 이 lecture 객체는 LecturePage.tsx에서 프롭스로 받은 Lecture[]인 lectures 배열에 있는 객체
         // 그래서 그 객체의 category가 같은 것들만 모아서 category를 기준으로(key로) lecture 객체를 value로 넣음
@@ -93,24 +94,73 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
     };
 
     return (
-        <aside className="sidebar">
+        <aside
+            className="lecture-sidebar"
+            style={{
+                width: "320px",
+                background: "linear-gradient(180deg, #2588f0, #0753bf)",
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+                color: "white"
+            }}
+        >
             {/* 상단 영역 */}
-            <div className="sidebar-dom sidebar-dom1 border-bottom border-light border-opacity-25">
-                <h2 className="fs-4 fw-bold text-white">📚 학습 목차</h2>
-                <p className="mt-2 mb-0 text-white" style={{ fontSize: "13px", opacity: 0.8 }}>
+            <div
+                style={{
+                    padding: "24px",
+                    borderBottom: "1px solid rgba(255,255,255,0.2)"
+                }}
+            >
+                <h2
+                    style={{
+                        margin: 0,
+                        fontSize: "22px",
+                        fontWeight: "bold"
+                    }}
+                >
+                    📚 학습 목차
+                </h2>
+
+                <p
+                    style={{
+                        marginTop: "8px",
+                        marginBottom: 0,
+                        fontSize: "13px",
+                        opacity: 0.8
+                    }}
+                >
                     총 {lectures.length}개의 강의
                 </p>
             </div>
 
             {/* 카테고리 목록 */}
-            <div className="sidebar-dom sidebar-dom2 overflow-auto">
+            <div
+                style={{
+                    flex: 1,
+                    overflowY: "auto",
+                    padding: "16px"
+                }}
+            >
+                {/* 정렬된 sortedCategories를 사용하여 map 순서 보장 */}
                 {sortedCategories.map((category) => (
-                    <div key={category} className="mb-3">
+                    <div
+                        key={category}
+                        style={{ marginBottom: "12px" }}
+                    >
                         {/* 대주제 */}
                         <div
                             onClick={() => toggleCategory(category)}
-                            className="d-flex justify-content-between align-items-center p-3 rounded cursor-pointer fw-bold text-white"
-                            style={{ background: "rgba(255,255,255,0.15)" }}
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                padding: "12px 14px",
+                                cursor: "pointer",
+                                borderRadius: "8px",
+                                background: "rgba(255,255,255,0.15)",
+                                fontWeight: "bold"
+                            }}
                         >
                             <span>📁 {category}</span>
                             <span> {openCategories[category] ? "▲" : "▼"} </span>
@@ -118,14 +168,22 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
 
                         {/* 소주제 */}
                         {openCategories[category] && (
-                            <div className="mt-2 ms-3">
+                            <div style={{ marginTop: "6px", marginLeft: "10px" }}>
                                 {groupedLectures[category].map(lecture => {
                                     const selected = lecture.id === currentLecture_id;
                                     return (
                                         <div
                                             key={lecture.id}
                                             onClick={() => setCurrentLecture(lecture)}
-                                            className={`p-2 mb-1 rounded cursor-pointer ${selected ? "bg-white text-primary fw-bold" : "text-white"}`}
+                                            style={{
+                                                padding: "10px 12px",
+                                                marginBottom: "4px",
+                                                cursor: "pointer",
+                                                borderRadius: "6px",
+                                                background: selected ? "white" : "transparent",
+                                                color: selected ? "#0753bf" : "white",
+                                                fontWeight: selected ? "bold" : "normal"
+                                            }}
                                         >
                                             • {lecture.name}
                                         </div>
@@ -138,10 +196,25 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
             </div>
 
             {/* 새 글 작성 버튼 */}
-            <div className="sidebar-dom sidebar-dom3 border-top border-light border-opacity-25 pt-3">
+            <div
+                style={{
+                    padding: "20px",
+                    borderTop: "1px solid rgba(255,255,255,0.2)"
+                }}
+            >
                 <button
                     onClick={() => navigate("/lecture/insert")}
-                    className="btn btn-outline-light w-100 fw-bold py-2"
+                    style={{
+                        width: "100%",
+                        height: "55px",
+                        background: "transparent",
+                        color: "white",
+                        border: "2px solid white",
+                        borderRadius: "10px",
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                        cursor: "pointer"
+                    }}
                 >
                     + 새 글 작성
                 </button>
