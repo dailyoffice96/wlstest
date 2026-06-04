@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -18,10 +19,11 @@ import java.util.List;
 
 @Entity @ToString @Getter @Setter
 @Table(name = "members")
+@NoArgsConstructor
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "member_id")
     private Long memberId;
 
@@ -51,7 +53,7 @@ public class Member {
 
     private LocalDate birthDate;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now().withNano(0);
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberLearningProfile> memberLearningProfiles = new ArrayList<>();
@@ -72,5 +74,8 @@ public class Member {
         this.email = email;
         this.phone = phone;
         this.birthDate = birthDate;
+    }
+    public void changePassword(String encodedPassword){
+        this.password = encodedPassword;
     }
 }

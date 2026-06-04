@@ -11,7 +11,7 @@ import lombok.Setter;
 public class LearningProfile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "learning_profile_id")
     private Long learningProfileId;
 

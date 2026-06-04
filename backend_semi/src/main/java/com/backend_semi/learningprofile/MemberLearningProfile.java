@@ -22,7 +22,7 @@ import lombok.Setter;
 public class MemberLearningProfile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_learning_profile_id")
     private Long memberLearningProfileId;
 
