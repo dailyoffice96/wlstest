@@ -64,10 +64,12 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
     });
 
     // 2. 카테고리 토글 상태 관리
+    // key : 카테고리 이름(string) / value : 열림(true) or 닫힘(false)
     // useState<Record<string, boolean>>({}) : key타입이 string이고 value 타입이 boolean인 것들만
     // state 변수에 넣을 것고 이 변수의 초기값은 {} - 객체이다.
     const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
 
+    // 강의 목록이 처음 로드될 때 첫 번째 카테고리를 자동으로 열어놓기
     useEffect(() => { // 카테고리 토글 열린 상태 초기 설정 (첫번째 대주제 토글이 열린 상태)
         if (lectures.length > 0) { // 백엔드가 보내온 강의 목록이 1개라도 있으면
             setOpenCategories({
@@ -80,6 +82,7 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
     }, [lectures]);
 
     // openCategories state변수를 업데이트하는 함수
+    // prev[category]가 true면 false로, false(또는 없으면)면 true로 변경
     // prev[category] : prev객체의 key가 category인 것의 value값을 표현 (value가 boolean타입)
     // ** 매개변수 category와 같은 이름의 key값인 category의 value를 반전시키는 함수 **
     // 탑다운 토글을 움직이기 위해서 만드는 함수
@@ -93,39 +96,56 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
     };
 
     return (
+        // 사이드바 전체 영역 : Sidebar.css의 .sidebar 클래스 적용
         <aside className="sidebar">
-            {/* 상단 영역 */}
+
+            {/* 상단 영역 : 학습 목차 제목 + 강의 수 표시 */}
+            {/* border-bottom border-light border-opacity-25 : 흰색 반투명 하단 구분선 */}
             <div className="sidebar-dom sidebar-dom1 border-bottom border-light border-opacity-25">
                 <h2 className="fs-4 fw-bold text-white">📚 학습 목차</h2>
+
+                {/* 전체 강의 수 표시 */}
                 <p className="mt-2 mb-0 text-white" style={{ fontSize: "13px", opacity: 0.8 }}>
                     총 {lectures.length}개의 강의
                 </p>
             </div>
 
-            {/* 카테고리 목록 */}
+            {/* 중간 영역 : 카테고리 목록 (overflow-auto : 내용 많으면 스크롤) */}
             <div className="sidebar-dom sidebar-dom2 overflow-auto">
+
+                {/* 정렬된 카테고리 배열을 map으로 순서대로 렌더링 */}
                 {sortedCategories.map((category) => (
                     <div key={category} className="mb-3">
-                        {/* 대주제 */}
+
+                        {/* 대주제 토글 버튼 : 클릭하면 toggleCategory 실행 */}
+                        {/* rgba(255,255,255,0.15) : 반투명 흰색 배경 */}
                         <div
                             onClick={() => toggleCategory(category)}
-                            className="d-flex justify-content-between align-items-center p-3 rounded cursor-pointer fw-bold text-white"
-                            style={{ background: "rgba(255,255,255,0.15)" }}
+                            className="d-flex justify-content-between align-items-center p-3 rounded fw-bold text-white"
+                            style={{ background: "rgba(255,255,255,0.15)", cursor: "pointer" }}
                         >
                             <span>📁 {category}</span>
-                            <span> {openCategories[category] ? "▲" : "▼"} </span>
+
+                            {/* 열림/닫힘 상태에 따라 화살표 방향 변경 */}
+                            <span>{openCategories[category] ? "▲" : "▼"}</span>
                         </div>
 
-                        {/* 소주제 */}
+                        {/* 소주제 : openCategories[category]가 true일 때만 렌더링 */}
                         {openCategories[category] && (
                             <div className="mt-2 ms-3">
                                 {groupedLectures[category].map(lecture => {
+                                    // 현재 선택된 강의인지 확인
                                     const selected = lecture.id === currentLecture_id;
                                     return (
                                         <div
                                             key={lecture.id}
+                                            // 클릭하면 부모(LecturePage)의 setCurrentLecture 실행
+                                            // -> currentLecture state가 이 lecture로 변경됨
                                             onClick={() => setCurrentLecture(lecture)}
-                                            className={`p-2 mb-1 rounded cursor-pointer ${selected ? "bg-white text-primary fw-bold" : "text-white"}`}
+                                            // 선택된 강의 : 흰 배경 + 파란 글씨 + 굵게
+                                            // 선택 안된 강의 : 투명 배경 + 흰 글씨
+                                            className={`p-2 mb-1 rounded ${selected ? "bg-white text-primary fw-bold" : "text-white"}`}
+                                            style={{ cursor: "pointer" }}
                                         >
                                             • {lecture.name}
                                         </div>
@@ -135,10 +155,19 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
                         )}
                     </div>
                 ))}
+
+                {/* 준비중 문구 : 카테고리 목록 맨 아래에 표시 */}
+                {/* rgba(255,255,255,0.08) : 매우 연한 반투명 흰색 배경으로 은은하게 표시 */}
+                <div className="mt-3 p-3 rounded text-center text-white"
+                    style={{ background: "rgba(255,255,255,0.08)", fontSize: "13px", opacity: 0.75 }}>
+                    💡 다음 강의는 준비중입니다.
+                </div>
             </div>
 
-            {/* 새 글 작성 버튼 */}
+            {/* 하단 영역 : 새 글 작성 버튼 */}
+            {/* border-top : 위쪽 구분선 / pt-3 : 위 패딩 */}
             <div className="sidebar-dom sidebar-dom3 border-top border-light border-opacity-25 pt-3">
+                {/* btn-outline-light : 흰색 테두리 버튼 / w-100 : 버튼 너비 사이드바 전체 */}
                 <button
                     onClick={() => navigate("/lecture/insert")}
                     className="btn btn-outline-light w-100 fw-bold py-2"
