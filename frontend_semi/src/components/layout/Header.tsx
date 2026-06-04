@@ -1,9 +1,13 @@
+import { useNavigate } from "react-router-dom";
+
 type HeaderProps = {
   isLogin: boolean;
   username?: string;
 };
 
 function Header({ isLogin = true, username = "정 인" }: HeaderProps) {
+const navigate = useNavigate();
+
     return(
 <header className="header">
   <div className="header-logo">백프론트 강의실</div>
@@ -19,7 +23,9 @@ function Header({ isLogin = true, username = "정 인" }: HeaderProps) {
         </div>
     </div>
 
-  {isLogin && <button className="header-button">강의실</button>}
+  {isLogin && <button 
+  onClick={() => navigate("/lecture/list")}
+  className="header-button">강의실</button>}
     </div>
   <div className="header-right">
     {isLogin ? (
