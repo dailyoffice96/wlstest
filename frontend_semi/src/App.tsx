@@ -7,12 +7,14 @@ function App() {
   const userName = "KOTCHA";
 
   return (
-    <>
+    // 화면 전체 높이 차지 + 세로 배치 + 전체 스크롤 차단
+    <div className="d-flex flex-column vh-100 overflow-hidden">
       <Header isLogin={isLogin} username={userName} />
-
-      <AppRoutes />
-
-    </>
+      {/* Header 아래 남은 공간 전부를 차지 */}
+      <div className="flex-fill overflow-hidden" style={{ minHeight: 0 }}>
+        <AppRoutes />
+      </div>
+    </div>
   );
 }
 

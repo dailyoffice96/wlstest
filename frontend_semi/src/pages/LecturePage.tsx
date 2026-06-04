@@ -105,7 +105,7 @@ function LecturePage() {
 
     return (
         // 1. 전체 영역을 flex로 설정하여 브라우저 높이(100vh)를 확보합니다.
-        <div className="d-flex vh-100 overflow-hidden">
+        <div className="d-flex h-100 overflow-hidden">
             {/* 2. 메인 컨텐츠 영역에 flex: 1을 적용합니다. 
                 상단바가 있다면 상단바를 제외한 '남은 공간 전체'를 알아서 채우게 됩니다. */}
             <Sidebar
@@ -115,7 +115,7 @@ function LecturePage() {
             />
 
             {/* 우측 강의 상세 내용 영역 */}
-            <main className="flex-fill overflow-hidden">
+            <main className="flex-fill overflow-hidden" style={{ minHeight: 0 }}>
                 <LectureContent currentLecture={currentLecture} makeAdminButtons={makeAdminButtons} />
             </main>
         </div>
