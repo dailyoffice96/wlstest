@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import type { Lecture } from "../types/Lecture";
 import { API_BASE_URL } from "../config/config";
-import Sidebar from "../components/layout/Sidebar";
-import LectureContent from "../components/LecturePage/LectureContent";
+import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
+import type { Lecture } from "../types/Lecture";
+import axios from "axios";
+import Sidebar from "../components/layout/LectureSidebar";
+import LectureContent from "../components/LecturePage/LectureContent";
+
 
 function LecturePage() {
     const [lectures, setLectures] = useState<Lecture[]>([]);

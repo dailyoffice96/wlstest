@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Lecture } from "../../types/Lecture";
 import { useNavigate } from "react-router-dom";
-import "./Sidebar.css";
+import "./LectureSidebar.css";
 
 interface LecturePageProps {
     lectures: Lecture[]; // 전체 강의 목록 배열
@@ -93,12 +93,12 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
     };
 
     return (
-        <aside className="sidebar">
+        <aside className="lecture-sidebar">
             {/* 상단 영역 */}
-            <div className="sidebar-dom sidebar-dom1 border-bottom border-light border-opacity-25">
-                <h2 className="fs-4 fw-bold text-white">📚 학습 목차</h2>
-                <p className="mt-2 mb-0 text-white" style={{ fontSize: "13px", opacity: 0.8 }}>
-                    총 {lectures.length}개의 강의
+            <div className="lecture-sidebar-title">
+                <h2 className="lecture-sidebar-title">📚 학습 목차</h2>
+                <p className="lecture-sidebar-title-mini">
+                    · 총 {lectures.length}개의 강의
                 </p>
             </div>
 

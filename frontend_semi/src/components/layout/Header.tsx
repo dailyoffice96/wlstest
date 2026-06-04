@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import logo from "../../../public/logo.svg";
 
 type HeaderProps = {
   isLogin: boolean;
@@ -12,7 +13,7 @@ function Header({ isLogin, username, onLogout }: HeaderProps) {
   return (
     <header className="header">
     <div className="header-logo" onClick={() => navigate("/")}>
-        <img src="/logo.svg" alt="풀스택 강의실 로고" />
+        <img src={logo} alt="풀스택 강의실 로고" />
     </div>
 
       <div className="header-left">
@@ -27,7 +28,7 @@ function Header({ isLogin, username, onLogout }: HeaderProps) {
 
         {isLogin && (
           <>
-            <button className="header-button">▣ 강의실</button>
+            <button className="header-button" onClick={()=>navigate("/lecture/list/")}>▣ 강의실</button>
             <button className="header-button">▤ 공지사항</button>
           </>
         )}

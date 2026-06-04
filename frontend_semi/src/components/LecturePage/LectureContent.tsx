@@ -142,7 +142,6 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                         src={currentLecture.iframe_url}
                         className="w-100 flex-fill border-0 bg-white"
                         title="preview"
-
                     />
                 </div>
 
