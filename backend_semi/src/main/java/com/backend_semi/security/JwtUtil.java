@@ -70,7 +70,7 @@ public class JwtUtil {
 
     public String getName(String token) {
         Claims claims = parseToken(token);
-        return claims.get("name", String.class);
+        return claims.getId();
     }
 
     private PrivateKey loadPrivateKey(String privateKeyPath) throws Exception {
