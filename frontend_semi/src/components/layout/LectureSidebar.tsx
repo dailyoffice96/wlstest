@@ -95,7 +95,7 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
 
     return (
         // 사이드바 전체 영역 : Sidebar.css의 .sidebar 클래스 적용
-        <aside className="sidebar">
+        <aside className="lecture-sidebar">
 
             {/* 상단 영역 : 학습 목차 제목 + 강의 수 표시 */}
             {/* border-bottom border-light border-opacity-25 : 흰색 반투명 하단 구분선 */}
@@ -103,8 +103,8 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
                 <h2 className="fs-4 fw-bold text-white">📚 학습 목차</h2>
 
                 {/* 전체 강의 수 표시 */}
-                <p className="mt-2 mb-0 text-white" style={{ fontSize: "13px", opacity: 0.8 }}>
-                    총 {lectures.length}개의 강의
+                <p className="lecture-sidebar-title-mini">
+                    · 총 {lectures.length}개의 강의
                 </p>
             </div>
 

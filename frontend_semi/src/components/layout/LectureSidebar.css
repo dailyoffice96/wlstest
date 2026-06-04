@@ -20,9 +20,9 @@
 }
 
 .lecture-sidebar-title-mini {
-  margin: 0 0 28px 30px;
+  margin: 15px 0 28px 30px;
 
-  font-size: 20px;
+  font-size: 15px;
   color: #FFFFFF;
   font-weight: 900;
   opacity: 0.9;
@@ -185,3 +185,13 @@
   height: 17px;
   cursor: pointer;
 }
+
+.sidebar-dom {
+  box-sizing: border-box;
+  background: transparent;
+}
+
+/* 실제 영역 비율 */
+.sidebar-dom1 { flex: 0 0 auto; }   /* 내용만큼만 차지 */
+.sidebar-dom2 { flex: 1; }          /* 남은 공간 전부 사용 */
+.sidebar-dom3 { flex: 0 0 auto; }   /* 내용만큼만 차지 */
