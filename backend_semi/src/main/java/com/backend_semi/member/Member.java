@@ -53,7 +53,7 @@ public class Member {
 
     private LocalDate birthDate;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now().withNano(0);
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberLearningProfile> memberLearningProfiles = new ArrayList<>();
@@ -74,5 +74,8 @@ public class Member {
         this.email = email;
         this.phone = phone;
         this.birthDate = birthDate;
+    }
+    public void changePassword(String encodedPassword){
+        this.password = encodedPassword;
     }
 }

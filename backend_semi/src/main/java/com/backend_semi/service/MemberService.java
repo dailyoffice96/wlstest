@@ -1,10 +1,7 @@
 package com.backend_semi.service;
 
 import com.backend_semi.constant.Role;
-import com.backend_semi.dto.MemberInfoResponse;
-import com.backend_semi.dto.MemberSignupRequest;
-import com.backend_semi.dto.MemberLoginRequest;
-import com.backend_semi.dto.MemberLoginResponse;
+import com.backend_semi.dto.*;
 import com.backend_semi.learningprofile.LearningProfile;
 import com.backend_semi.learningprofile.MemberLearningProfile;
 import com.backend_semi.member.Member;
@@ -116,5 +113,26 @@ public class MemberService {
                 member.getBirthDate(),
                 profileCodes
         );
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkLoginDuplicate(String loginId){
+        return memberRepository.existsByLoginId(loginId);
+    }
+
+    @Transactional
+    public void changePassword(String memberId, MemberPasswordChangeRequest request){
+        Member member = memberRepository.findByLoginId(memberId)
+                                        .orElseThrow(() -> new IllegalArgumentException(("회원을 찾을 수 없습니다!")));
+        if(!passwordEncoder.matches(request.getCurrentPassword(), member.getPassword())){
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다!");
+        }
+
+        if(passwordEncoder.matches(request.getNewPassword(), member.getPassword())){
+            throw new IllegalArgumentException("기존 비밀번호와 새 비밀번호가 같습니다.");
+        }
+
+        String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
+        member.changePassword(encodedNewPassword);
     }
 }

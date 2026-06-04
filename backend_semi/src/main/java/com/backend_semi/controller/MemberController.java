@@ -1,14 +1,12 @@
 package com.backend_semi.controller;
 
-import com.backend_semi.dto.MemberInfoResponse;
-import com.backend_semi.dto.MemberLoginRequest;
-import com.backend_semi.dto.MemberLoginResponse;
-import com.backend_semi.dto.MemberSignupRequest;
+import com.backend_semi.dto.*;
 import com.backend_semi.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.backend_semi.security.JwtUtil;
@@ -64,4 +62,22 @@ public class MemberController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/checkId")
+    public ResponseEntity<Boolean> checkLoginIdDuplicate(@RequestParam String loginId){
+        boolean isDuplicate = memberService.checkLoginDuplicate(loginId);
+
+        return ResponseEntity.ok(isDuplicate);
+    }
+
+    @PatchMapping("/me/password")
+    public ResponseEntity<Void> changePassword(
+            Authentication authentication,
+            @RequestBody MemberPasswordChangeRequest request
+    ){
+        String loginId = authentication.getName();
+        memberService.changePassword(loginId, request);
+        return ResponseEntity.ok().build();
+    }
+
 }
