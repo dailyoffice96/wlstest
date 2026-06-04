@@ -33,7 +33,7 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
     // navigator.clipboard.writeText() : 매개변수로 받은 text를 클립보드에 복사
     const handleCopy = (text: string) => {
         navigator.clipboard.writeText(text);
-        alert("복사되었습니다.");
+        alert("복사되었습니다!");
     };
 
     if (!currentLecture) { // currentLecture가 자동으로 설정되지만 혹시모를경우를 대비해서 설정함
@@ -121,7 +121,6 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                             className={`btn flex-fill rounded-0 py-3 fw-bold ${activeTab === "description" ? "text-primary border-bottom border-3 border-primary" : "text-muted"}`}>
                             📖 코드 설명
                         </button>
-
                     </div>
 
 
@@ -138,7 +137,7 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                                     <button
                                         className="btn btn-sm btn-outline-secondary py-0 px-2"
                                         style={{ fontSize: "12px" }}
-                                        onClick={() => handleCopy(currentLecture.code_example)}
+                                        onClick={() => handleCopy(activeContent)}
                                     >
                                         📋 복사
                                     </button>
@@ -155,7 +154,7 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                                 </div>
                             </div>
                         ) : (
-                            /* 강의 내용 탭이 선택된 경우 */
+                            /* 코드 설명 탭이 선택된 경우 */
                             <div className="d-flex flex-column h-100 gap-2">
                                 {/* 언어 표시 라벨 (삭제 고민) */}
                                 <div className="bg-light border border-bottom-0 rounded-top p-2 px-3 text-muted d-flex justify-content-between align-items-center" style={{ fontSize: "14px" }}>
@@ -163,7 +162,7 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                                     <button
                                         className="btn btn-sm btn-outline-secondary py-0 px-2"
                                         style={{ fontSize: "12px" }}
-                                        onClick={() => handleCopy(currentLecture.code_example)}
+                                        onClick={() => handleCopy(activeContent)}
                                     >
                                         📋 복사
                                     </button>
