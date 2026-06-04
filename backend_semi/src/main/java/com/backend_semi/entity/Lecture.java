@@ -1,0 +1,62 @@
+package com.backend_semi.entity;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "lectures")
+@Getter @Setter @ToString
+public class Lecture {
+
+    // PK
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "lecture_id")
+    private Long id;
+
+    // 대주제
+    @Column(unique = true, nullable = false)
+    @NotBlank(message = "대주제는 필수 입력 사항입니다.")
+    private String category;
+
+    // 소주제 - 파일 이름
+    @Column(nullable = false)
+    @NotBlank(message = "소주제는 필수 입력 사항입니다.")
+    private String name;
+
+
+    // 강의 목표 - 소주제 소개문구
+    @Column(nullable = false)
+    @NotBlank(message = "강의 목표는 필수 입력 사항입니다.")
+    private String lecture_goal;
+
+    // 코드 예시
+    @Column(nullable = false)
+    @NotBlank(message = "코드 예시는 필수 입력 사항입니다.")
+    private String code_example;
+
+    // 코드 설명
+    @Column(nullable = false)
+    @NotBlank(message = "코드 설명은 필수 입력 사항입니다.")
+    private String code_desription;
+
+    // 구현화면 url
+    @Column(nullable = false)
+    @NotBlank(message = "코드 설명은 필수 입력 사항입니다.")
+    private String iframe_url;
+
+    // 생성일자
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate created_at ; // 등록 일자
+
+    // 수정일자
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate updated_at ; // 등록 일자
+
+}
