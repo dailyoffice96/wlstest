@@ -4,7 +4,7 @@ import com.backend_semi.constant.Role;
 import com.backend_semi.dto.*;
 import com.backend_semi.learningprofile.LearningProfile;
 import com.backend_semi.learningprofile.MemberLearningProfile;
-import com.backend_semi.member.Member;
+import com.backend_semi.entity.Member;
 import com.backend_semi.repository.LearningProfileRepository;
 import com.backend_semi.repository.MemberLearningProfileRepository;
 import com.backend_semi.repository.MemberRepository;

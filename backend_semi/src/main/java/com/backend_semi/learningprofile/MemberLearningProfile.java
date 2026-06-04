@@ -1,6 +1,6 @@
 package com.backend_semi.learningprofile;
 
-import com.backend_semi.member.Member;
+import com.backend_semi.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

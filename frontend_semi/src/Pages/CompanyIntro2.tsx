@@ -1,5 +1,4 @@
 // CompanyIntro2.jsx
-
 import "./CompanyIntro2.css";
 
 const statsData = [

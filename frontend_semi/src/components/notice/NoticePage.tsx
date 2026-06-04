@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import "./NoticePage.css";
-import NoticePagination from "../../Pages/NoticePagination";
-import NoticeSearch from "../../Pages/NoticeSearch";
-import NoticeList from "../../Pages/NoticeList";
-import NoticeDetail from "../../Pages/NoticeDetail";
-import NoticeForm from "../../Pages/NoticeForm";
+import NoticePagination from "../../pages/NoticePagination";
+import NoticeSearch from "../../pages/NoticeSearch";
+import NoticeList from "../../pages/NoticeList";
+import NoticeDetail from "../../pages/NoticeDetail";
+import NoticeForm from "../../pages/NoticeForm";
 
 type NoticeListDto = {
   noticeId: number;

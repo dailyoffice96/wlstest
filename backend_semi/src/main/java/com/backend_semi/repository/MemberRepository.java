@@ -1,6 +1,7 @@
 package com.backend_semi.repository;
 
-import com.backend_semi.member.Member;
+import com.backend_semi.entity.Member;
+import com.backend_semi.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

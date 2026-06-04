@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import logo from "../../../public/logo.svg";
+import logo from "../../icon/logo.svg";
 
 type HeaderProps = {
   isLogin: boolean;
@@ -21,7 +21,7 @@ function Header({ isLogin, username, onLogout }: HeaderProps) {
           <button className="header-button">소개 ▾</button>
 
           <div className="custom-dropdown-menu">
-            <div className="custom-dropdown-item">사이트 소개</div>
+            <div className="custom-dropdown-item" onClick={()=> navigate("/introduce/1")}>사이트 소개</div>
             <div className="custom-dropdown-item">이용 방법</div>
           </div>
         </div>
@@ -37,7 +37,7 @@ function Header({ isLogin, username, onLogout }: HeaderProps) {
 
       <div className="header-right">
         {isLogin ? (
-          <>
+          <><button className="header-button" onClick={()=>navigate("/memberinfo/mypage/favorite/")}> ★ 즐겨찾기</button>
             <button className="header-button" onClick={()=>navigate("/memberinfo/mypage/")}>♙ {username}</button>
             <button className="header-button" onClick={onLogout}>
               ↪로그아웃

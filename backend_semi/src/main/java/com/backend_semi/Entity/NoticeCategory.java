@@ -1,5 +1,4 @@
-package com.backend_semi.Entity;
-
+package com.backend_semi.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
