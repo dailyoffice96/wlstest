@@ -57,7 +57,7 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
 
     return (
         // 전체 컨텐츠 영역 : flex 세로 방향, 화면 전체 높이, 스크롤 숨김
-        <div className="d-flex flex-column p-4 gap-3 bg-light h-100 overflow-hidden">
+        <div className="flex-fill d-flex flex-column p-4 gap-3 bg-light vh-100 overflow-hidden">
 
             {/* 1. 파일 경로 목록 + 수정/삭제 버튼 영역 */}
             {/* justify-content-between : 왼쪽엔 경로, 오른쪽엔 버튼 배치 */}
@@ -126,11 +126,11 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
 
 
                     {/* 탭 내용 바디 : overflow-auto로 내용이 길면 스크롤 */}
-                    <div className="flex-fill p-4 d-flex flex-column" style={{ minHeight: 0 }}>
+                    <div className="flex-fill overflow-auto p-4">
 
                         {/* 코드 예시 탭이 선택된 경우 */}
                         {activeTab === "code" ? (
-                            <div className="d-flex flex-column flex-fill gap-2" style={{ minHeight: 0 }}>
+                            <div className="d-flex flex-column h-100 gap-2">
                                 {/* 언어 표시 라벨 (예: TYPESCRIPT) (삭제 고민) */}
                                 <div className="bg-light border border-bottom-0 rounded-top p-2 px-3 text-muted d-flex justify-content-between align-items-center" style={{ fontSize: "14px" }}>
                                     <span>📄 {currentLecture.language?.toUpperCase()}</span>
@@ -144,18 +144,18 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                                 </div>
 
                                 {/* 코드 하이라이터로 code_example 표시 */}
-                                <div className="border rounded-bottom p-3 bg-white flex-fill" style={{ minHeight: 0 }}>
+                                <div className="border rounded-bottom p-3 bg-white flex-fill">
                                     <SyntaxHighlighter
                                         language={currentLecture.language?.toLowerCase()}
                                         style={getThemeByLanguage(currentLecture.language || "")}
-                                        customStyle={{ margin: 0, padding: 0, background: "transparent", fontSize: "14px", lineHeight: "1.6", height: "100%" }}>
+                                        customStyle={{ margin: 0, padding: 0, background: "transparent", fontSize: "14px", lineHeight: "1.6" }}>
                                         {currentLecture.code_example}
                                     </SyntaxHighlighter>
                                 </div>
                             </div>
                         ) : (
                             /* 코드 설명 탭이 선택된 경우 */
-                            <div className="d-flex flex-column flex-fill gap-2" style={{ minHeight: 0 }}>
+                            <div className="d-flex flex-column h-100 gap-2">
                                 {/* 언어 표시 라벨 (삭제 고민) */}
                                 <div className="bg-light border border-bottom-0 rounded-top p-2 px-3 text-muted d-flex justify-content-between align-items-center" style={{ fontSize: "14px" }}>
                                     <span>📄 {currentLecture.language?.toUpperCase()}</span>
@@ -169,11 +169,11 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                                 </div>
 
                                 {/* 코드 하이라이터로 code_description 표시 */}
-                                <div className="border rounded-bottom p-3 bg-white flex-fill" style={{ minHeight: 0 }}>
+                                <div className="border rounded-bottom p-3 bg-white flex-fill">
                                     <SyntaxHighlighter
                                         language={currentLecture.language?.toLowerCase()}
                                         style={getThemeByLanguage(currentLecture.language || "")}
-                                        customStyle={{ margin: 0, padding: 0, background: "transparent", fontSize: "14px", lineHeight: "1.6", height: "100%" }}>
+                                        customStyle={{ margin: 0, padding: 0, background: "transparent", fontSize: "14px", lineHeight: "1.6" }}>
                                         {currentLecture.code_description}
                                     </SyntaxHighlighter>
                                 </div>
