@@ -13,11 +13,7 @@ import LecturePage from "../pages/LecturePage"
 import LectureInsertForm from "../pages/LectureInsertForm"
 import LectureUpdateForm from "../pages/LectureUpdateForm"
 import PublicLayout from "../components/layout/PublicLayout.tsx";
-
-import NoticePage from "../components/notice/NoticePage";
-import CompanyIntro2 from "../pages/CompanyIntro2";
-import HowToUse1 from "../pages/HowToUse1";
-
+import Introduce from "../pages/Introduce.tsx";
 
 function AppRoutes() {
     const navigate = useNavigate(); // 내비게이트 선언해둬야 해당 기능 사용 가능.
@@ -61,9 +57,29 @@ function AppRoutes() {
                 </PublicLayout>
             }
             />
+           <Route path="/introduce/" element={
+                <PublicLayout isLogin={isLogin}
+                              username={userName}
+                              onLogout={handleLogout}>
+                    <Introduce/>
+                </PublicLayout>
+            }
+            />
 
-            <Route path="/lecture/insert" element={<LectureInsertForm/>}/>
-            <Route path="/lecture/update/:id" element={<LectureUpdateForm/>}/>
+            <Route path="/lecture/insert" element={
+                    <PublicLayout isLogin={isLogin}
+                                  username={userName}
+                                  onLogout={handleLogout}>
+                                  <LectureInsertForm/>
+                    </PublicLayout>
+            }/>
+            <Route path="/lecture/update/:id"  element={
+                    <PublicLayout isLogin={isLogin}
+                                  username={userName}
+                                  onLogout={handleLogout}>
+                                  <LectureUpdateForm/>
+                    </PublicLayout>
+            }/>
             <Route
                 path="/"
                 element={
@@ -143,29 +159,6 @@ function AppRoutes() {
                         <FavoritePage />
                     </PublicLayout>
                 }/>
-            {/* 기본 경로 설정 */}
-            <Route path="/" element={<Navigate to="/introduce/1" replace />} />
-
-            {/* 공지사항 */}
-            <Route path="/notice" element={<NoticePage type="all" />} />
-            <Route path="/notice/important" element={<NoticePage type="important" />} />
-            <Route path="/notice/update" element={<NoticePage type="update" />} />
-
-            {/* 회사소개 및 가이드 */}
-            <Route path="/introduce/1/" element={
-                <PublicLayout
-                        isLogin={isLogin}
-                        username={userName}
-                        onLogout={handleLogout}>
-                <CompanyIntro2 />
-                </PublicLayout>} />
-            <Route path="/introduce/guide/1/" element={                
-                        <PublicLayout
-                        isLogin={isLogin}
-                        username={userName}
-                        onLogout={handleLogout}>
-                <HowToUse1 />
-                </PublicLayout>} />
         </Routes>
     );
 }

@@ -112,47 +112,57 @@
 
 .custom-dropdown {
   position: relative;
+  display: inline-block;
 }
 
 .custom-dropdown-menu {
   position: absolute;
-  top: 56px;
+  top: 100%;
   left: 0;
 
-  min-width: 180px;
-  padding: 10px 0;
-
-  display: none;
+  min-width: 130px;
+  padding: 12px 0;
 
   background: white;
   border: 1px solid #d7e4f7;
-  border-radius: 10px;
+  border-radius: 0 0 10px 10px;
 
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 10px 24px rgba(0, 50, 120, 0.16);
 
-  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+
+  z-index: 2000;
+
+  transition:
+    opacity 0.14s ease,
+    visibility 0.14s ease,
+    transform 0.14s ease;
 }
 
+/* 버튼이나 메뉴 위에 마우스가 있으면 유지 */
 .custom-dropdown:hover .custom-dropdown-menu {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .custom-dropdown-item {
-  padding: 13px 22px;
+  padding: 14px 22px;
 
   color: #0f2d5c;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
 
-  cursor: pointer;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .custom-dropdown-item:hover {
   background: #eef5ff;
   color: #0753bf;
 }
-
 .header-logo {
   width: 140px;
   height: 46px;

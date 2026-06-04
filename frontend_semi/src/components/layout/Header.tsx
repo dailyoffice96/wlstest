@@ -21,7 +21,7 @@ function Header({ isLogin, username, onLogout }: HeaderProps) {
           <button className="header-button">소개 ▾</button>
 
           <div className="custom-dropdown-menu">
-            <div className="custom-dropdown-item" onClick={()=> navigate("/introduce/1")}>사이트 소개</div>
+            <div className="custom-dropdown-item" onClick={()=> navigate("/introduce/")}>사이트 소개</div>
             <div className="custom-dropdown-item">이용 방법</div>
           </div>
         </div>
