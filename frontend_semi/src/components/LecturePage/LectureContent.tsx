@@ -121,6 +121,7 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                             className={`btn flex-fill rounded-0 py-3 fw-bold ${activeTab === "description" ? "text-primary border-bottom border-3 border-primary" : "text-muted"}`}>
                             📖 코드 설명
                         </button>
+
                     </div>
 
 
@@ -167,7 +168,7 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                                         📋 복사
                                     </button>
                                 </div>
-
+                                
                                 {/* 코드 하이라이터로 code_description 표시 */}
                                 <div className="border rounded-bottom p-3 bg-white flex-fill">
                                     <SyntaxHighlighter
