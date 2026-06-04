@@ -37,7 +37,8 @@ function LecturePage() {
         return (
             <div className="d-flex gap-2">
                 <Button // 수정을 위한 <Button>을 추가합니다.
-                    className="btn btn-sm btn-outline-primary fw-bold px-3"
+                    className="btn btn-sm fw-bold px-3"
+                    style={{ backgroundColor: "#2588f0", borderColor: "#2588f0", color: "white" }}
                     onClick={(event) => {
                         // 이 코드가 없으면 수정버튼을 포함하고 있는 더 큰 영역을 클릭했을때
                         // 그 큰 영역도 onClick으로 다른 일을 해야하는데 그 일과 이 코드가 동시에 시작해버려서
@@ -52,7 +53,8 @@ function LecturePage() {
                 &nbsp;
 
                 <Button // 삭제를 위한 <Button>을 추가합니다. (confirm 함수 이용)(alert과는 다름)
-                    className="btn btn-sm btn-outline-danger fw-bold px-3"
+                    className="btn btn-sm fw-bold px-3"
+                    style={{ backgroundColor: "#2588f0", borderColor: "#2588f0", color: "white" }}
                     onClick={async (event) => { // 백엔드를 거치고 일처리를 해야해서 async 붙임
                         event.stopPropagation(); // 이벤트 버블링 방지
 

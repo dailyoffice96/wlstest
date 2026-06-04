@@ -18,15 +18,6 @@
 }
 
 /* 실제 영역 비율 */
-.sidebar-dom1 {
-  flex: 5;
-
-}
-
-.sidebar-dom2 {
-  flex: 2;
-}
-
-.sidebar-dom3 {
-  flex: 2;
-}
+.sidebar-dom1 { flex: 0 0 auto; }   /* 내용만큼만 차지 */
+.sidebar-dom2 { flex: 1; }          /* 남은 공간 전부 사용 */
+.sidebar-dom3 { flex: 0 0 auto; }   /* 내용만큼만 차지 */

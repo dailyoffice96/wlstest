@@ -33,7 +33,7 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
     // navigator.clipboard.writeText() : 매개변수로 받은 text를 클립보드에 복사
     const handleCopy = (text: string) => {
         navigator.clipboard.writeText(text);
-        alert("복사되었습니다!");
+        alert("복사되었습니다.");
     };
 
     if (!currentLecture) { // currentLecture가 자동으로 설정되지만 혹시모를경우를 대비해서 설정함
@@ -119,17 +119,9 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                         <button
                             onClick={() => setActiveTab("description")}
                             className={`btn flex-fill rounded-0 py-3 fw-bold ${activeTab === "description" ? "text-primary border-bottom border-3 border-primary" : "text-muted"}`}>
-                            📖 강의 내용 (코드 설명)
+                            📖 코드 설명
                         </button>
 
-                        {/* 복사 버튼 : 현재 탭의 내용(activeContent)을 클립보드에 복사 */}
-                        <button
-                            onClick={() => handleCopy(activeContent)}
-                            className="btn btn-outline-secondary btn-sm me-2"
-                            style={{ whiteSpace: "nowrap" }}
-                            title="클립보드에 복사">
-                            📋 복사
-                        </button>
                     </div>
 
 
@@ -141,9 +133,17 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                         {activeTab === "code" ? (
                             <div className="d-flex flex-column h-100 gap-2">
                                 {/* 언어 표시 라벨 (예: TYPESCRIPT) (삭제 고민) */}
-                                <div className="bg-light border border-bottom-0 rounded-top p-2 px-3 text-muted" style={{ fontSize: "14px" }}>
+                                <div className="bg-light border border-bottom-0 rounded-top p-2 px-3 text-muted d-flex justify-content-between align-items-center" style={{ fontSize: "14px" }}>
                                     <span>📄 {currentLecture.language?.toUpperCase()}</span>
+                                    <button
+                                        className="btn btn-sm btn-outline-secondary py-0 px-2"
+                                        style={{ fontSize: "12px" }}
+                                        onClick={() => handleCopy(currentLecture.code_example)}
+                                    >
+                                        📋 복사
+                                    </button>
                                 </div>
+
                                 {/* 코드 하이라이터로 code_example 표시 */}
                                 <div className="border rounded-bottom p-3 bg-white flex-fill">
                                     <SyntaxHighlighter
@@ -158,9 +158,17 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
                             /* 강의 내용 탭이 선택된 경우 */
                             <div className="d-flex flex-column h-100 gap-2">
                                 {/* 언어 표시 라벨 (삭제 고민) */}
-                                <div className="bg-light border border-bottom-0 rounded-top p-2 px-3 text-muted" style={{ fontSize: "14px" }}>
+                                <div className="bg-light border border-bottom-0 rounded-top p-2 px-3 text-muted d-flex justify-content-between align-items-center" style={{ fontSize: "14px" }}>
                                     <span>📄 {currentLecture.language?.toUpperCase()}</span>
+                                    <button
+                                        className="btn btn-sm btn-outline-secondary py-0 px-2"
+                                        style={{ fontSize: "12px" }}
+                                        onClick={() => handleCopy(currentLecture.code_example)}
+                                    >
+                                        📋 복사
+                                    </button>
                                 </div>
+
                                 {/* 코드 하이라이터로 code_description 표시 */}
                                 <div className="border rounded-bottom p-3 bg-white flex-fill">
                                     <SyntaxHighlighter
