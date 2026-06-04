@@ -12,7 +12,7 @@ interface LecturePageProps {
 function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePageProps) {
     const navigate = useNavigate();
 
-    // lectures.reduce( (acc, lecture => {}, {} as Record<string, Lecture[]>) ) : 
+    // lectures.reduce( (acc, lecture => {}, {} as Record<string, Lecture[]>) ) :
     // lectures 배열을 반복문으로 돌리는데
     // acc라는 객체{}에 lectures 배열에서 꺼낸 lecture를 value로 넣을 것이다.
     // acc라는 객체의 key 타입은 string이고 value 타입은 Lecture[] 이다.
@@ -29,7 +29,7 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
         // 그렇게 모아서 만든 acc 객체를 groupedLectures 변수(객체)에 넣음
         return acc;
         // {}은 acc의 초기값 - 즉, 객체로 acc를 정의하겠다라는 뜻
-        // as Record<string, Lecture[]> : 
+        // as Record<string, Lecture[]> :
         // Record를 이용해서 타입 정의 : acc라는 객체는 key를 string으로 받고 value를 Lecture[]로 받음
     }, {} as Record<string, Lecture[]>);
 
