@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import LecturePage from "../pages/LecturePage"
 import LectureInsertForm from "../pages/LectureInsertForm"
+import LectureUpdateForm from "../pages/LectureUpdateForm"
 
 function App() {
 
@@ -9,6 +10,7 @@ function App() {
             <Route path="/lecture/list" element={<LecturePage />} />
             
             <Route path="/lecture/insert" element={<LectureInsertForm />} />
+            <Route path="/lecture/update/:id" element={<LectureUpdateForm />} />
         </Routes>
     );
 }
