@@ -1,0 +1,22 @@
+.mypage-page {
+  min-height: calc(100vh - 90px);
+  display: flex;
+
+  background: #f4f8ff;
+}
+
+.mypage-main {
+  flex: 1;
+  padding: 28px 28px 28px 350px;
+  box-sizing: border-box;
+}
+
+.mypage-panel {
+  min-height: calc(100vh - 140px);
+  padding: 28px 32px;
+  box-sizing: border-box;
+
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+  border: 1px solid #cfe0f8;
+  border-radius: 18px;
+}
