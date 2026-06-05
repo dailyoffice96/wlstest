@@ -9,4 +9,5 @@ public class MemberLoginResponse {
     private String accessToken;
     private Long memberId;
     private String name; // 사용자 이름을 프론트에 던져줄 용도
+    private String Role;
 }

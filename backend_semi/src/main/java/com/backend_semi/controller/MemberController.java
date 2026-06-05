@@ -76,13 +76,24 @@ public class MemberController {
         return ResponseEntity.ok(isDuplicate);
     }
 
+    // 비밀번호를 변경하는 컨트롤러
     @PatchMapping("/me/password")
     public ResponseEntity<Void> changePassword(
             Authentication authentication,
             @RequestBody MemberPasswordChangeRequest request
     ){
-        String loginId = authentication.getName();
+        String loginId = (String) authentication.getDetails();
         memberService.changePassword(loginId, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<Void> updateMemberInfo(
+            Authentication authentocatiion,
+            @RequestBody MemberInfoUpdateRequest request
+    ){
+        String loginId = (String) authentocatiion.getDetails();
+      //  memberService.updateMemberInfo(loginid, request);
         return ResponseEntity.ok().build();
     }
 

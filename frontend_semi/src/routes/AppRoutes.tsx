@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Home from "../pages/Home.tsx";
 import LoginPage from "../pages/LoginPage.tsx";
@@ -14,6 +14,7 @@ import LectureInsertForm from "../pages/LectureInsertForm"
 import LectureUpdateForm from "../pages/LectureUpdateForm"
 import PublicLayout from "../components/layout/PublicLayout.tsx";
 import Introduce from "../pages/Introduce.tsx";
+import NoticeContents from "../pages/NoticeContents.tsx";
 
 function AppRoutes() {
     const navigate = useNavigate(); // 내비게이트 선언해둬야 해당 기능 사용 가능.
@@ -157,6 +158,16 @@ function AppRoutes() {
                         username={userName}
                         onLogout={handleLogout}>
                         <FavoritePage />
+                    </PublicLayout>
+                }/>
+                <Route
+                path="/notices/"
+                element={
+                    <PublicLayout
+                        isLogin={isLogin}
+                        username={userName}
+                        onLogout={handleLogout}>
+                        <NoticeContents />
                     </PublicLayout>
                 }/>
         </Routes>

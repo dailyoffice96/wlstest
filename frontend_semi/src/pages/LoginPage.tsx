@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config/config";
 import axios from "axios";
 import "./LoginPage.css";
 
@@ -14,7 +15,7 @@ function LoginPage({onLoginSuccess}: LoginPageProps){
 
     const handleLogin = async () => {
        try{
-        const response = await axios.post("http://localhost:9000/api/members/login",{
+        const response = await axios.post(`${API_BASE_URL}/api/members/login`,{
             loginId: loginId,
             password: password,
         },
@@ -30,6 +31,7 @@ function LoginPage({onLoginSuccess}: LoginPageProps){
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("memberId", String(response.data.memberId));
         localStorage.setItem("name", response.data.name);
+        localStorage.setItem("role", response.data.role);
 
         onLoginSuccess(response.data.name);
         navigate("/");

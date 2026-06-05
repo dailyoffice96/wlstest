@@ -9,6 +9,7 @@ import com.backend_semi.entity.NoticeCategory;
 import com.backend_semi.repository.MemberRepository;
 import com.backend_semi.repository.NoticeCateoryRepository;
 import com.backend_semi.repository.NoticeRepository;
+import com.backend_semi.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -80,12 +81,9 @@ public class NoticeService {
         if(member.getRole() != Role.ADMIN){
             throw new IllegalArgumentException("관리자만 공지사항을 삭제할 수 있습니다!");
         }
-
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(()-> new IllegalArgumentException("공지사항을 찾을 수 없습니다!"));
 
-        NoticeCategory noticeCategory = noticeCategoryRepository.findById(noticeId)
-                .orElseThrow(()->new IllegalArgumentException("공지사항 카테고리를 찾을 수 없습니다!"));
+                .orElseThrow(()-> new IllegalArgumentException("공지사항을 찾을 수 없습니다!"));
 
         noticeRepository.delete(notice);
     }

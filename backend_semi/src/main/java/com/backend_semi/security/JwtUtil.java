@@ -1,5 +1,6 @@
 package com.backend_semi.security;
 
+import com.backend_semi.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,8 +36,8 @@ public class JwtUtil {
             throw new IllegalStateException("JWT 키 파일을 읽는 중 오류가 발생했습니다.", e);
         }
     }
-
-    public String createAccessToken(Long memberId, String loginId, String name) {
+    // 토큰을 만드는 메서드. 회원번호와 아이디, 이름, 그리고 회원롤을 받아서 만든다.
+    public String createAccessToken(Long memberId, String loginId, String name, String role) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
 
@@ -44,10 +45,16 @@ public class JwtUtil {
                 .subject(String.valueOf(memberId))
                 .claim("loginId", loginId)
                 .claim("name", name)
+                .claim("role", role)
                 .issuedAt(now)
                 .expiration(expiryDate)
-                .signWith(privateKey, Jwts.SIG.RS256)
+                .signWith(privateKey, Jwts.SIG.RS256) // RS256 알고리즘 사용
                 .compact();
+    }
+
+    public String getRole(String token){
+        Claims claims = parseToken(token);
+        return claims.get("role", String.class);
     }
 
     public Claims parseToken(String token) {
@@ -70,7 +77,7 @@ public class JwtUtil {
 
     public String getName(String token) {
         Claims claims = parseToken(token);
-        return claims.getId();
+        return claims.get("name", String.class);
     }
 
     private PrivateKey loadPrivateKey(String privateKeyPath) throws Exception {

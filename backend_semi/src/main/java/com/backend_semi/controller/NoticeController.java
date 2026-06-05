@@ -2,6 +2,7 @@ package com.backend_semi.controller;
 
 import com.backend_semi.dto.NoticeRequest;
 import com.backend_semi.dto.NoticeResponse;
+import com.backend_semi.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,8 @@ public class NoticeController {
             Authentication authentication,
             @RequestBody NoticeRequest request
     ) {
-        String loginId = authentication.getName();
+        String loginId = (String) authentication.getDetails();
         Long noticeId = noticeService.createNotice(loginId, request);
-        log.info("멤바 아이디" + loginId);
         return ResponseEntity.ok(noticeId);
     }
 
@@ -71,7 +71,7 @@ public class NoticeController {
             @PathVariable Long noticeId,
             @RequestBody NoticeRequest request
     ){
-        String loginId = autehntication.getName();
+        String loginId = (String) autehntication.getDetails();
 
         noticeService.updateNotice(loginId, noticeId, request);
 
@@ -83,7 +83,7 @@ public class NoticeController {
     public ResponseEntity<Void> deleteNotice(
             Authentication authentication,
             @PathVariable Long noticeId   ){
-        String loginId = authentication.getName();
+        String loginId = (String) authentication.getDetails();
 
         noticeService.deleteNotice(loginId, noticeId);
 

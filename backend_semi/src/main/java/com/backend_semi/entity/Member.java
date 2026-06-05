@@ -78,4 +78,14 @@ public class Member {
     public void changePassword(String encodedPassword){
         this.password = encodedPassword;
     }
+
+    public void updateMemberInfo(
+            String phone,
+            String email,
+            LocalDate birthDate
+    ){
+        this.phone = phone;
+        this.email = email;
+        this.birthDate = birthDate;
+    }
 }

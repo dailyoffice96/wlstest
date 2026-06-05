@@ -29,7 +29,7 @@ function Header({ isLogin, username, onLogout }: HeaderProps) {
         {isLogin && (
           <>
             <button className="header-button" onClick={()=>navigate("/lecture/list/")}>▣ 강의실</button>
-            <button className="header-button">▤ 공지사항</button>
+            <button className="header-button" onClick={()=>navigate("/notices/")}>▤ 공지사항</button>
           </>
         )}
       </div>

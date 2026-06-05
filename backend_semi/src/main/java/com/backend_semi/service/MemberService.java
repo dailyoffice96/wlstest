@@ -82,14 +82,16 @@ public class MemberService {
         String accessToken = jwtUtil.createAccessToken(
                 member.getMemberId(),
                 member.getLoginId(),
-                member.getName()
+                member.getName(),
+                member.getRole().name()
         );
 
         // 3.로그인 성공 응답 변환
         return new MemberLoginResponse(
                 accessToken,
                 member.getMemberId(),
-                member.getName()
+                member.getName(),
+                member.getRole().name()
         );
     }
 
@@ -120,19 +122,76 @@ public class MemberService {
         return memberRepository.existsByLoginId(loginId);
     }
 
+    // 패스워드를 변경하는 메서드
     @Transactional
-    public void changePassword(String memberId, MemberPasswordChangeRequest request){
-        Member member = memberRepository.findByLoginId(memberId)
-                                        .orElseThrow(() -> new IllegalArgumentException(("회원을 찾을 수 없습니다!")));
-        if(!passwordEncoder.matches(request.getCurrentPassword(), member.getPassword())){
-            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다!");
+    public void changePassword(String loginId, MemberPasswordChangeRequest request){
+        if (request.getCurrentPassword() == null || request.getCurrentPassword().isBlank()) {
+            throw new IllegalArgumentException("현재 비밀번호를 입력해 주세요.");
         }
 
-        if(passwordEncoder.matches(request.getNewPassword(), member.getPassword())){
-            throw new IllegalArgumentException("기존 비밀번호와 새 비밀번호가 같습니다.");
+        if (request.getNewPassword() == null || request.getNewPassword().isBlank()) {
+            throw new IllegalArgumentException("새 비밀번호를 입력해 주세요.");
         }
 
-        String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
-        member.changePassword(encodedNewPassword);
+        if (request.getNewPasswordConfirm() == null || request.getNewPasswordConfirm().isBlank()) {
+            throw new IllegalArgumentException("새 비밀번호 확인을 입력해 주세요.");
+        }
+
+        if (!request.getNewPassword().equals(request.getNewPasswordConfirm())) {
+            throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
+        }
+
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        member.changePassword(passwordEncoder.encode(request.getNewPassword()));
+    }
+    private boolean hasPasswordChangeRequest(MemberInfoUpdateRequest request){
+        return request.getCurrentPassword() != null && !request.getCurrentPassword().isBlank()
+                || request.getNewPassword() != null && !request.getNewPassword().isBlank()
+                || request.getNewPasswordConfirm() != null && !request.getNewPassword().isBlank();
+    }
+    // 회원정보를 수정하는 메서드
+    @Transactional
+    public void updateMemberInfo(String loginId, MemberInfoUpdateRequest request) {
+        // 특정 정보만 수정가능하게 해야함.
+        // 그러면 일단은 기본 정보를 가져와야하지 않을까?
+        // 그러면 먼저 데이터를 가져갔다가, 수정될 데이터만 새로 입력받아서 보내는 걸로 컨셉을 정하자.
+        // #1 기존 데이터를 memberRepository에서 받아온다.
+        // #2 기존 데이터를 프론트에서 받고, 수정될 데이터만 다시 입혀서 Json 형태로 백으로 돌려받는다.
+        //.#3 돌려받은 데이터를 JPA로 UPDATE 한다.
+        // #4 완료!!
+        // Password는 DB에서 가져올 수 없으므로 Password는 생략하고 가져오자.
+        // loginId, name은 수정 못하는걸로 하자.
+        // 그러면 수정할 수 있는게 이메일, 전화번호, 생년월일, 관심학습분야임.
+        Member member = memberRepository.findByLoginId(loginId)
+                                        .orElseThrow(()->new IllegalArgumentException(("회원 정보를 찾을 수 없습니다!")));
+        // 이메일을 못받았는가?
+        if(request.getEmail() == null || request.getEmail().isBlank()){
+            throw new IllegalArgumentException("이메일을 입력해주세요!");
+        }
+
+        // 전화번호를 못받았는가?
+        if(request.getPhone() == null || request.getPhone().isBlank()){
+            throw new IllegalArgumentException("전화번호를 입력해주세요!");
+        }
+
+        // 생년월일을 못받았는가? YYYY-MM-DD
+        if(request.getBirthDate() == null){
+            throw new IllegalArgumentException("생일을 입력해주세요!");
+        }
+
+        member.updateMemberInfo(
+                request.getEmail(),
+                request.getPhone(),
+                request.getBirthDate()
+        );
+
+        memberLearningProfileRepository.deleteByMember(member);
+
     }
 }

@@ -1,5 +1,6 @@
 import {useRef, useState} from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config/config";
 import axios from "axios";
 
 import "./SignupPage.css"
@@ -114,7 +115,7 @@ function SignupPage(){
     //======================================================================
     // ID가 중복되는지 확인하는 함수.
     const handleIdCheck = async () => {
-         const response = await axios.get(`http://localhost:9000/api/members/checkId`, {
+         const response = await axios.get(`${API_BASE_URL}/api/members/checkId`, {
             // checkId는 ID 중복을 확인하는 API입니다.
             params: {
             loginId: loginId,
@@ -195,7 +196,7 @@ function SignupPage(){
             return;
         }
         if(!isIdDuplicate && loginId !== "" && isPasswordMatched && isPasswordValid && emailId !== ""){
-            const response = await axios.post("http://localhost:9000/api/members/signup",
+            const response = await axios.post(`${API_BASE_URL}/api/members/signup`,
         {
             loginId: loginId,
             password: password,
