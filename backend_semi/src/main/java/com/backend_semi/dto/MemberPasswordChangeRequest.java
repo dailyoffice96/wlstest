@@ -1,0 +1,13 @@
+package com.backend_semi.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class MemberPasswordChangeRequest {
+    private String currentPassword;
+    private String newPassword;
+}

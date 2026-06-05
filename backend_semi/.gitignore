@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+## SECRET KEY!!! ##
+secrets/
+*.pem
+*.key
