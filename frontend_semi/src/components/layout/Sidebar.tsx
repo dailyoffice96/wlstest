@@ -1,24 +1,38 @@
-import "./Sidebar.css"
+import { Link, useLocation } from "react-router-dom";
+import "./Sidebar.css";
 
-function Sidebar(){
-    return (
+function Sidebar() {
+  const location = useLocation();
 
+  let menuList = [];
+
+  if (location.pathname.startsWith("/notice")) {
+    menuList = [
+      { title: "전체공지", path: "/notice" },
+      { title: "중요공지", path: "/notice/important" },
+      { title: "업데이트", path: "/notice/update" },
+    ];
+  }
+
+  return (
     <aside className="sidebar">
-        <div className="sidebar-dom sidebar-dom1">
-            {/* DOM1 영역 */}
-            DOM1
-        </div>
+      <nav className="sidebar-menu">
+        {menuList.map((menu, index) => {
+          const isActive = location.pathname === menu.path;
 
-        <div className="sidebar-dom sidebar-dom1">
-            {/* DOM2 영역 */}
-            DOM2
-        </div>
-
-        <div className="sidebar-dom sidebar-dom1">
-            {/* DOM2 영역 */}
-            DOM2
-        </div>
+          return (
+            <Link
+              to={menu.path}
+              className={`sidebar-link ${isActive ? "active" : ""}`}
+              key={index}
+            >
+              {menu.title}
+            </Link>
+          );
+        })}
+      </nav>
     </aside>
-    );
+  );
 }
+
 export default Sidebar;

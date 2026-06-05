@@ -1,5 +1,5 @@
 .sidebar {
-    width:400px;
+  width:400px;
   min-height: calc(100vh - 90px);
 
   display: flex;
@@ -29,4 +29,26 @@
 
 .sidebar-dom3 {
   flex: 2;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sidebar-link {
+  display: block;
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sidebar-link.active,
+.sidebar-link:hover {
+  background: rgba(0, 61, 150, 0.55);
 }

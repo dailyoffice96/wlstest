@@ -5,27 +5,9 @@
  */
 
 import { Paperclip } from "lucide-react";
+import type { NoticeListDto, NoticeDetailDto } from "../types/notice";
 
-// ====================
-// Type
-// ====================
 
-type NoticeListDto = {
-  noticeId: number;
-  title: string;
-  isImportant: boolean;
-  viewCount: number;
-  createdAt: string;
-  categoryName?: string;
-  authorName?: string;
-  hasFile?: boolean;
-  attachmentUrl?: string;
-  isUpdate: false
-};
-
-type NoticeDetailDto = {
-  noticeId: number;
-};
 
 // ====================
 // Props

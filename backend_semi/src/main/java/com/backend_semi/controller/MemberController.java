@@ -1,6 +1,6 @@
 package com.backend_semi.controller;
 
-import com.backend_semi.Service.MemberService;
+import com.backend_semi.service.MemberService;
 import com.backend_semi.dto.MemberLoginRequest;
 import com.backend_semi.dto.MemberLoginResponse;
 import com.backend_semi.dto.MemberSignupRequest;

@@ -4,24 +4,8 @@
  * 수정/삭제 버튼 클릭 시 이벤트를 실행한다.
  */
 
-// ====================
-// Type
-// ====================
+import type { NoticeDetailDto } from "../types/notice";
 
-
-type NoticeDetailDto = {
-  noticeId: number;
-  title: string;
-  content: string;
-  isImportant: boolean;
-  viewCount: number;
-  createdAt: string;
-  categoryName?: string;
-  authorName?: string;
-  attachmentUrl?: string;
-  originalFileName?: string;
-  isUpdate: boolean;
-};
 
 // ====================
 // Props

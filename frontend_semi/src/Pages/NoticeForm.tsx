@@ -3,16 +3,8 @@
  * 새 공지 작성과 기존 공지 수정을 처리한다.
  */
 
- // ====================
- // Type
- // ====================
 
-type NoticeFormData = {
-  title: string;
-  content: string;
-  isImportant: boolean;
-
-};
+import type { NoticeFormData } from "../types/notice";
 
 // ====================
 // Props
@@ -28,6 +20,8 @@ type NoticeFormProps = {
     setAttachmentUrl: (value: string) => void;
     onSubmit: () => void;
     onCancel: () => void;
+    file?: File | null;
+    removeFile?: boolean;
   };
 
 const FILE_BASE_URL = "http://localhost:9000";

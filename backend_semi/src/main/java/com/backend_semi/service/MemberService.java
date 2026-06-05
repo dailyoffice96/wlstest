@@ -1,4 +1,4 @@
-package com.backend_semi.Service;
+package com.backend_semi.service;
 
 
 import com.backend_semi.dto.MemberLoginRequest;
@@ -10,7 +10,6 @@ import com.backend_semi.constant.Role;
 import com.backend_semi.dto.MemberSignupRequest;
 //import com.backend_semi.learningprofile.LearningProfile;
 //import com.backend_semi.learningprofile.MemberLearningProfile;
-import com.backend_semi.entity.Member;
 //import com.backend_semi.repository.LearningProfileRepository;
 //import com.backend_semi.repository.MemberLearningProfileRepository;
 import com.backend_semi.repository.MemberRepository;
@@ -20,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+
 public class MemberService {
 
 
