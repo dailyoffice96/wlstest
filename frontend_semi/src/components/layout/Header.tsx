@@ -22,7 +22,7 @@ function Header({ isLogin, username, onLogout }: HeaderProps) {
 
           <div className="custom-dropdown-menu">
             <div className="custom-dropdown-item" onClick={()=> navigate("/introduce/")}>사이트 소개</div>
-            <div className="custom-dropdown-item">이용 방법</div>
+            <div className="custom-dropdown-item" onClick={()=> navigate("/HowToUse/")}>이용 방법</div>
           </div>
         </div>
 

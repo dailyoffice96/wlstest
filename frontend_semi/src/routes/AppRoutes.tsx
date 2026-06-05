@@ -14,6 +14,7 @@ import LectureInsertForm from "../pages/LectureInsertForm"
 import LectureUpdateForm from "../pages/LectureUpdateForm"
 import PublicLayout from "../components/layout/PublicLayout.tsx";
 import Introduce from "../pages/Introduce.tsx";
+import HowToUse from "../pages/HowToUse.tsx";
 
 function AppRoutes() {
     const navigate = useNavigate(); // 내비게이트 선언해둬야 해당 기능 사용 가능.
@@ -64,6 +65,14 @@ function AppRoutes() {
                     <Introduce/>
                 </PublicLayout>
             }
+           />
+           <Route path="/HowToUse/" element={
+               <PublicLayout isLogin={isLogin}
+                             username={userName}
+                             onLogout={handleLogout}>
+                   <HowToUse/>
+               </PublicLayout>
+           }
             />
 
             <Route path="/lecture/insert" element={
