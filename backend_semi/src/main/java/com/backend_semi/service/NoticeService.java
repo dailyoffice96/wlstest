@@ -1,15 +1,14 @@
 package com.backend_semi.service;
 
 import com.backend_semi.constant.Role;
-import com.backend_semi.dto.NoticeRequest;
-import com.backend_semi.dto.NoticeResponse;
+import com.backend_semi.dto.NoticeRequestDto;
+import com.backend_semi.dto.NoticeResponseDto;
 import com.backend_semi.entity.Notice;
 import com.backend_semi.entity.Member;
 import com.backend_semi.entity.NoticeCategory;
 import com.backend_semi.repository.MemberRepository;
 import com.backend_semi.repository.NoticeCateoryRepository;
 import com.backend_semi.repository.NoticeRepository;
-import com.backend_semi.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,7 @@ public class NoticeService {
     private final MemberRepository memberRepository;
 
     // 공지사항 등록
-    public Long createNotice(String loginId, NoticeRequest request){
+    public Long createNotice(String loginId, NoticeRequestDto request){
         Member member = memberRepository.findByLoginId(loginId)
                                         .orElseThrow(()-> new IllegalArgumentException("회원을 찾을 수 없습니다."));
 
@@ -52,7 +51,7 @@ public class NoticeService {
         return savedNotice.getNoticeId();
     }
 
-    public void updateNotice(String loginId, Long noticeId, NoticeRequest request){
+    public void updateNotice(String loginId, Long noticeId, NoticeRequestDto request){
         Member member = memberRepository.findByLoginId(loginId)
                                         .orElseThrow(()->new IllegalArgumentException("회원을 찾을 수 없습니다!"));
 
@@ -90,36 +89,36 @@ public class NoticeService {
 
     // 전체 공지사항 조회
     @Transactional(readOnly = true)
-    public List<NoticeResponse> getNoticeList(){
+    public List<NoticeResponseDto> getNoticeList(){
         return noticeRepository.findAllByOrderByCreatedAtDesc()
                                 .stream()
-                                .map(NoticeResponse::new)
+                                .map(NoticeResponseDto::new)
                                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public NoticeResponse getNotice(Long noticeId){
+    public NoticeResponseDto getNotice(Long noticeId){
         Notice notice = noticeRepository.findById(noticeId)
                                         .orElseThrow(()->new IllegalArgumentException("공지사항을 찾을 수 없습니다."));
 
-        return new NoticeResponse(notice);
+        return new NoticeResponseDto(notice);
     }
 
     // 카테고리별 공지사항 조회
     @Transactional(readOnly = true)
-    public List<NoticeResponse> getNoticeListByCategory(Long noticeCategoryId){
+    public List<NoticeResponseDto> getNoticeListByCategory(Long noticeCategoryId){
         return noticeRepository.findByNoticeCategory_NoticeCategoryIdOrderByCreatedAtDesc(noticeCategoryId)
                                 .stream()
-                                .map(NoticeResponse::new)
+                                .map(NoticeResponseDto::new)
                                 .toList();
     }
 
     // 작성자별 공지사항 조회
     @Transactional(readOnly = true)
-    public List<NoticeResponse> getNoticeListByMember(Long memberId){
+    public List<NoticeResponseDto> getNoticeListByMember(Long memberId){
         return noticeRepository.findByMember_MemberIdOrderByCreatedAtDesc(memberId)
                                 .stream()
-                                .map(NoticeResponse::new)
+                                .map(NoticeResponseDto::new)
                                 .toList();
     }
 }

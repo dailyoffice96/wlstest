@@ -2,9 +2,9 @@ package com.backend_semi.controller;
 
 import com.backend_semi.dto.*;
 import com.backend_semi.service.MemberService;
-import com.backend_semi.dto.MemberLoginRequest;
-import com.backend_semi.dto.MemberLoginResponse;
-import com.backend_semi.dto.MemberSignupRequest;
+import com.backend_semi.dto.MemberLoginRequestDto;
+import com.backend_semi.dto.MemberLoginResponseDto;
+import com.backend_semi.dto.MemberSignupRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +27,15 @@ public class MemberController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/signup")
-    public ResponseEntity<Long> signup(@RequestBody MemberSignupRequest request){
+    public ResponseEntity<Long> signup(@RequestBody MemberSignupRequestDto request){
         Long memberId = memberService.signup(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(memberId);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<MemberLoginResponse> login(@RequestBody MemberLoginRequest request){
-        MemberLoginResponse response = memberService.login(request);
+    public ResponseEntity<MemberLoginResponseDto> login(@RequestBody MemberLoginRequestDto request){
+        MemberLoginResponseDto response = memberService.login(request);
 
         return ResponseEntity.ok(response);
     }
@@ -59,12 +59,12 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<MemberInfoResponse> getMyInfo(){
+    public ResponseEntity<MemberInfoResponseDto> getMyInfo(){
         Authentication authenticaton  = SecurityContextHolder.getContext().getAuthentication();
 
         Long memberId = (Long) authenticaton.getPrincipal();
 
-        MemberInfoResponse response = memberService.getMyInfo(memberId);
+        MemberInfoResponseDto response = memberService.getMyInfo(memberId);
 
         return ResponseEntity.ok(response);
     }
@@ -80,7 +80,7 @@ public class MemberController {
     @PatchMapping("/me/password")
     public ResponseEntity<Void> changePassword(
             Authentication authentication,
-            @RequestBody MemberPasswordChangeRequest request
+            @RequestBody MemberPasswordChangeRequestDto request
     ){
         String loginId = (String) authentication.getDetails();
         memberService.changePassword(loginId, request);
@@ -90,7 +90,7 @@ public class MemberController {
     @PatchMapping("/me")
     public ResponseEntity<Void> updateMemberInfo(
             Authentication authentocatiion,
-            @RequestBody MemberInfoUpdateRequest request
+            @RequestBody MemberInfoUpdateRequestDto request
     ){
         String loginId = (String) authentocatiion.getDetails();
       //  memberService.updateMemberInfo(loginid, request);

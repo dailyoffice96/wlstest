@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class MemberInfoUpdateRequest {
+public class MemberInfoUpdateRequestDto {
     // 회원정보를 수정하기 위한 정보를 받는 Dto
     private String phone;
     private String email;

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NoticeRequest {
+public class NoticeRequestDto {
     //공지사항에서 카테고리 ID
     // 프론트에서는 '중요공지' '업데이트'와 같은 카테고리 선택시
     // 실제로는 noticeCateogryId 숫자값을 보내는 구조

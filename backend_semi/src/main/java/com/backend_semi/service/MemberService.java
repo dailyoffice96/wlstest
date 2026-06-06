@@ -27,7 +27,7 @@ public class MemberService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public Long signup(MemberSignupRequest request){
+    public Long signup(MemberSignupRequestDto request){
         // 1.아이디 중복 확인
         if(memberRepository.existsByLoginId(request.getLoginId())){
             throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
@@ -70,7 +70,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberLoginResponse login(MemberLoginRequest request){
+    public MemberLoginResponseDto login(MemberLoginRequestDto request){
         // 1.loginId로 회원 찾기
         Member member = memberRepository.findByLoginId(request.getLoginId())
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 아이디입니다."));
@@ -87,7 +87,7 @@ public class MemberService {
         );
 
         // 3.로그인 성공 응답 변환
-        return new MemberLoginResponse(
+        return new MemberLoginResponseDto(
                 accessToken,
                 member.getMemberId(),
                 member.getName(),
@@ -96,7 +96,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberInfoResponse getMyInfo(Long memberId){
+    public MemberInfoResponseDto getMyInfo(Long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
@@ -107,7 +107,7 @@ public class MemberService {
                 )
                 .toList();
 
-        return new MemberInfoResponse(
+        return new MemberInfoResponseDto(
                 member.getLoginId(),
                 member.getName(),
                 member.getPhone(),
@@ -124,7 +124,7 @@ public class MemberService {
 
     // 패스워드를 변경하는 메서드
     @Transactional
-    public void changePassword(String loginId, MemberPasswordChangeRequest request){
+    public void changePassword(String loginId, MemberPasswordChangeRequestDto request){
         if (request.getCurrentPassword() == null || request.getCurrentPassword().isBlank()) {
             throw new IllegalArgumentException("현재 비밀번호를 입력해 주세요.");
         }
@@ -150,14 +150,14 @@ public class MemberService {
 
         member.changePassword(passwordEncoder.encode(request.getNewPassword()));
     }
-    private boolean hasPasswordChangeRequest(MemberInfoUpdateRequest request){
+    private boolean hasPasswordChangeRequest(MemberInfoUpdateRequestDto request){
         return request.getCurrentPassword() != null && !request.getCurrentPassword().isBlank()
                 || request.getNewPassword() != null && !request.getNewPassword().isBlank()
                 || request.getNewPasswordConfirm() != null && !request.getNewPassword().isBlank();
     }
     // 회원정보를 수정하는 메서드
     @Transactional
-    public void updateMemberInfo(String loginId, MemberInfoUpdateRequest request) {
+    public void updateMemberInfo(String loginId, MemberInfoUpdateRequestDto request) {
         // 특정 정보만 수정가능하게 해야함.
         // 그러면 일단은 기본 정보를 가져와야하지 않을까?
         // 그러면 먼저 데이터를 가져갔다가, 수정될 데이터만 새로 입력받아서 보내는 걸로 컨셉을 정하자.

@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class NoticeResponse {
+public class NoticeResponseDto {
     private Long noticeId;
 
     private Long noticeCategoryId;
@@ -24,7 +24,7 @@ public class NoticeResponse {
 
     private LocalDateTime updatedAt;
 
-    public NoticeResponse(Notice notice) {
+    public NoticeResponseDto(Notice notice) {
         this.noticeId = notice.getNoticeId();
         this.noticeCategoryId = notice.getNoticeCategory().getNoticeCategoryId();
         this.noticeCategoryName = notice.getNoticeCategory().getCategoryName();

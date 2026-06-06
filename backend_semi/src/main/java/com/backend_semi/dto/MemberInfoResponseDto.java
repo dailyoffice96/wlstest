@@ -1,21 +1,18 @@
 package com.backend_semi.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
-public class MemberSignupRequest {
-
+@AllArgsConstructor
+public class MemberInfoResponseDto {
     private String loginId;
-    private String password;
     private String name;
-    private String email;
     private String phone;
+    private String email;
     private LocalDate birthDate;
-
-    private List<Long> profileIds;
+    private List<String> memberLearningProfiles;
 }
