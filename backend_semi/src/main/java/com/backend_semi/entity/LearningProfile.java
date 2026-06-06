@@ -1,4 +1,4 @@
-package com.backend_semi.learningprofile;
+package com.backend_semi.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

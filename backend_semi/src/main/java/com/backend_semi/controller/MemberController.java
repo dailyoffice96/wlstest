@@ -69,6 +69,18 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("/me")
+    public ResponseEntity<Void> updateMyInfo(
+            Authentication authentication,
+            @RequestBody MemberUpdateRequestDto request
+    ){
+        String loginId = (String) authentication.getDetails();
+
+        memberService.updateMemberInfo(loginId, request);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/checkId")
     public ResponseEntity<Boolean> checkLoginIdDuplicate(@RequestParam String loginId){
         boolean isDuplicate = memberService.checkLoginDuplicate(loginId);
@@ -90,7 +102,7 @@ public class MemberController {
     @PatchMapping("/me")
     public ResponseEntity<Void> updateMemberInfo(
             Authentication authentocatiion,
-            @RequestBody MemberInfoUpdateRequestDto request
+            @RequestBody MemberUpdateRequestDto request
     ){
         String loginId = (String) authentocatiion.getDetails();
       //  memberService.updateMemberInfo(loginid, request);

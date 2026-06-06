@@ -1,5 +1,6 @@
 package com.backend_semi.dto;
 
+import com.backend_semi.entity.MemberLearningProfile;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,12 +11,12 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class MemberInfoUpdateRequestDto {
+public class MemberUpdateRequestDto {
     // 회원정보를 수정하기 위한 정보를 받는 Dto
-    private String phone;
     private String email;
+    private String phone;
     private LocalDate birthDate;
-    private List<Long> memberLearningProfiles;
+    private List<Long> LearningProfile;
 
     // 선택적 OPTIONAL
     private String currentPassword;

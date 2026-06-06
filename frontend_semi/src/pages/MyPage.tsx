@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { ChangeEvent } from "react";
 import MyPageSideBar from "../components/layout/MyPageSideBar";
 import { API_BASE_URL } from "../config/config";
 import "./MyPage.css";
@@ -10,51 +11,44 @@ type MemberInfo = {
     email: string;
     phone: string;
     birthDate: string;
-    learningProfile: number[];
+
+    // 백엔드 조회 응답 기준
+    // 예: ["FRONT", "BACK", "웹 서비스", "UI"]
+    memberLearningProfiles: string[];
 };
 
 type MemberUpdateForm = {
-    name: string;
     email: string;
     phone: string;
     birthDate: string;
-    learningProfile: number[];
+
+    // 백엔드 수정 요청 기준
+    // 예: [1, 2, 3, 4]
+    memberLearningProfiles: number[];
 };
 
 function MyPage() {
     const [memberInfo, setMemberInfo] = useState<MemberInfo | null>(null);
     const [loading, setLoading] = useState(true);
-    
+
     const [currentPassword, setCurrentPassword] = useState("");
     const [memberPassword, setMemberPassword] = useState("");
     const [memberPasswordConfirm, setMemberPasswordConfirm] = useState("");
+
     const [isEditMode, setIsEditMode] = useState(false);
-    
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[~!@#$%^&*]).{8,}$/;
-
-    const isPasswordTyped = memberPassword.length > 0;
-    const isPasswordConfirmTyped = memberPasswordConfirm.length > 0;
-
-    const isPasswordValid = passwordRegex.test(memberPassword);
-
-    const isPasswordMatch =
-          memberPassword.length > 0 &&
-          memberPasswordConfirm.length > 0 &&
-          memberPassword === memberPasswordConfirm;
 
     const [memberUpdateForm, setMemberUpdateForm] = useState<MemberUpdateForm>({
-        name: "",
         email: "",
         phone: "",
         birthDate: "",
-        learningProfile: [],
+        memberLearningProfiles: [],
     });
 
-    const profileNameMap: Record<number, string> = {
-        1: "FRONT",
-        2: "BACK",
-        3: "웹 서비스",
-        4: "UI",
+    const profileIdMap: Record<string, number> = {
+        FRONT: 1,
+        BACK: 2,
+        "웹 서비스": 3,
+        UI: 4,
     };
 
     const profileOptions = [
@@ -63,6 +57,52 @@ function MyPage() {
         { id: 3, name: "웹 서비스" },
         { id: 4, name: "UI" },
     ];
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[~!@#$%^&*]).{8,}$/;
+
+    const isPasswordTyped = memberPassword.length > 0;
+    const isPasswordConfirmTyped = memberPasswordConfirm.length > 0;
+
+    const isPasswordValid = passwordRegex.test(memberPassword);
+
+    const isPasswordMatch =
+        memberPassword.length > 0 &&
+        memberPasswordConfirm.length > 0 &&
+        memberPassword === memberPasswordConfirm;
+
+    const formatPhoneNumber = (value: string) => {
+        const onlyNumber = value.replace(/[^0-9]/g, "");
+
+        if (onlyNumber.length <= 3) {
+            return onlyNumber;
+        }
+
+        if (onlyNumber.length <= 7) {
+            return `${onlyNumber.slice(0, 3)}-${onlyNumber.slice(3)}`;
+        }
+
+        return `${onlyNumber.slice(0, 3)}-${onlyNumber.slice(3, 7)}-${onlyNumber.slice(7, 11)}`;
+    };
+
+    const convertProfileNamesToIds = (profileNames: string[]) => {
+        return profileNames
+            .map((name) => profileIdMap[name])
+            .filter((id) => id !== undefined);
+    };
+
+    const hasPasswordInput = () => {
+        return (
+            currentPassword.trim() !== "" ||
+            memberPassword.trim() !== "" ||
+            memberPasswordConfirm.trim() !== ""
+        );
+    };
+
+    const clearPasswordInputs = () => {
+        setCurrentPassword("");
+        setMemberPassword("");
+        setMemberPasswordConfirm("");
+    };
 
     const getMemberInfo = async () => {
         try {
@@ -76,14 +116,27 @@ function MyPage() {
 
             console.log("회원정보 응답 : ", response.data);
 
-            setMemberInfo(response.data);
+            const memberLearningProfiles =
+                response.data.memberLearningProfiles || [];
 
-            setMemberUpdateForm({
+            const data: MemberInfo = {
+                loginId: response.data.loginId || "",
                 name: response.data.name || "",
                 email: response.data.email || "",
                 phone: response.data.phone || "",
                 birthDate: response.data.birthDate || "",
-                learningProfile: response.data.learningProfile || [],
+                memberLearningProfiles: memberLearningProfiles,
+            };
+
+            setMemberInfo(data);
+
+            setMemberUpdateForm({
+                email: data.email,
+                phone: data.phone,
+                birthDate: data.birthDate,
+                memberLearningProfiles: convertProfileNamesToIds(
+                    data.memberLearningProfiles
+                ),
             });
         } catch (error) {
             console.error("회원정보 조회 실패:", error);
@@ -97,111 +150,124 @@ function MyPage() {
         getMemberInfo();
     }, []);
 
-    if (loading) {
-        return <div className="mypage-main">회원정보를 불러오는 중입니다...</div>;
-    }
-
-    if (memberInfo === null) {
-        return <div className="mypage-main">회원정보가 없습니다!</div>;
-    }
-
     const handlePasswordCheck = () => {
-    if (!isPasswordTyped || !isPasswordConfirmTyped) {
-        alert("비밀번호와 비밀번호 확인을 모두 입력해 주세요.");
-        return;
-    }
+        if (!currentPassword.trim()) {
+            alert("현재 비밀번호를 입력해 주세요.");
+            return;
+        }
 
-    if (!isPasswordValid) {
-        alert("비밀번호는 8자리 이상, 대문자 1개 이상, 특수문자를 포함해야 합니다.");
-        return;
-    }
+        if (!isPasswordTyped || !isPasswordConfirmTyped) {
+            alert("새 비밀번호와 비밀번호 확인을 모두 입력해 주세요.");
+            return;
+        }
 
-    if (!isPasswordMatch) {
-        alert("비밀번호가 일치하지 않습니다.");
-        return;
-    }
+        if (!isPasswordValid) {
+            alert("비밀번호는 8자리 이상, 대문자 1개 이상, 특수문자를 포함해야 합니다.");
+            return;
+        }
 
-    alert("사용 가능한 비밀번호입니다.");
-};
+        if (!isPasswordMatch) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+        }
 
- const handlePasswordChange = async () => {
-    if (!currentPassword.trim()) {
-        alert("현재 비밀번호를 입력해 주세요.");
-        return;
-    }
+        alert("사용 가능한 비밀번호입니다.");
+    };
 
-    if (!memberPassword || !memberPasswordConfirm) {
-        alert("변경할 비밀번호를 입력해 주세요.");
-        return;
-    }
+    const handlePasswordChange = async () => {
+        if (!currentPassword.trim()) {
+            alert("현재 비밀번호를 입력해 주세요.");
+            return;
+        }
 
-    if (!isPasswordValid) {
-        alert("비밀번호는 8자리 이상, 대문자 1개 이상, 특수문자를 포함해야 합니다.");
-        return;
-    }
+        if (!memberPassword || !memberPasswordConfirm) {
+            alert("변경할 비밀번호를 입력해 주세요.");
+            return;
+        }
 
-    if (!isPasswordMatch) {
-        alert("비밀번호가 일치하지 않습니다.");
-        return;
-    }
+        if (!isPasswordValid) {
+            alert("비밀번호는 8자리 이상, 대문자 1개 이상, 특수문자를 포함해야 합니다.");
+            return;
+        }
 
-    try {
-        const token = localStorage.getItem("accessToken");
+        if (!isPasswordMatch) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+        }
 
-        await axios.patch(
-            `${API_BASE_URL}/api/members/me/password`,
-            {
-                currentPassword: currentPassword,
-                newPassword: memberPassword,
-                newPasswordConfirm: memberPasswordConfirm,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
+        try {
+            const token = localStorage.getItem("accessToken");
+
+            await axios.patch(
+                `${API_BASE_URL}/api/members/me/password`,
+                {
+                    currentPassword: currentPassword,
+                    newPassword: memberPassword,
+                    newPasswordConfirm: memberPasswordConfirm,
                 },
-            }
-        );
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
 
-        alert("비밀번호가 변경되었습니다.");
+            alert("비밀번호가 변경되었습니다.");
 
-        setCurrentPassword("");
-        setMemberPassword("");
-        setMemberPasswordConfirm("");
-    } catch (error) {
-        console.error("비밀번호 변경 실패:", error);
-        alert("비밀번호 변경에 실패했습니다.");
-    }
-};
+            clearPasswordInputs();
+        } catch (error) {
+            console.error("비밀번호 변경 실패:", error);
+            alert("비밀번호 변경에 실패했습니다.");
+        }
+    };
 
     const handleEditModeStart = () => {
+        if (!memberInfo) {
+            return;
+        }
+
         setIsEditMode(true);
+        clearPasswordInputs();
 
         setMemberUpdateForm({
-            name: memberInfo.name || "",
             email: memberInfo.email || "",
             phone: memberInfo.phone || "",
             birthDate: memberInfo.birthDate || "",
-            learningProfile: memberInfo.learningProfile || [],
+            memberLearningProfiles: convertProfileNamesToIds(
+                memberInfo.memberLearningProfiles || []
+            ),
         });
     };
 
     const handleEditCancel = () => {
+        if (!memberInfo) {
+            return;
+        }
+
         setIsEditMode(false);
+        clearPasswordInputs();
 
         setMemberUpdateForm({
-            name: memberInfo.name || "",
             email: memberInfo.email || "",
             phone: memberInfo.phone || "",
             birthDate: memberInfo.birthDate || "",
-            learningProfile: memberInfo.learningProfile || [],
+            memberLearningProfiles: convertProfileNamesToIds(
+                memberInfo.memberLearningProfiles || []
+            ),
         });
     };
 
-    const handleMemberUpdateChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleMemberUpdateChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
+
+        if (name === "phone") {
+            setMemberUpdateForm({
+                ...memberUpdateForm,
+                phone: formatPhoneNumber(value),
+            });
+            return;
+        }
 
         setMemberUpdateForm({
             ...memberUpdateForm,
@@ -210,22 +276,60 @@ function MyPage() {
     };
 
     const handleLearningProfileChange = (profileId: number) => {
-        const alreadySelected = memberUpdateForm.learningProfile.includes(profileId);
+        const alreadySelected =
+            memberUpdateForm.memberLearningProfiles.includes(profileId);
 
         if (alreadySelected) {
             setMemberUpdateForm({
                 ...memberUpdateForm,
-                learningProfile: memberUpdateForm.learningProfile.filter(
-                    (id) => id !== profileId
-                ),
+                memberLearningProfiles:
+                    memberUpdateForm.memberLearningProfiles.filter(
+                        (id) => id !== profileId
+                    ),
             });
             return;
         }
 
         setMemberUpdateForm({
             ...memberUpdateForm,
-            learningProfile: [...memberUpdateForm.learningProfile, profileId],
+            memberLearningProfiles: [
+                ...memberUpdateForm.memberLearningProfiles,
+                profileId,
+            ],
         });
+    };
+
+    const validatePasswordForUpdate = () => {
+        if (!hasPasswordInput()) {
+            return true;
+        }
+
+        if (!currentPassword.trim()) {
+            alert("현재 비밀번호를 입력해 주세요.");
+            return false;
+        }
+
+        if (!memberPassword.trim()) {
+            alert("새 비밀번호를 입력해 주세요.");
+            return false;
+        }
+
+        if (!memberPasswordConfirm.trim()) {
+            alert("새 비밀번호 확인을 입력해 주세요.");
+            return false;
+        }
+
+        if (!isPasswordValid) {
+            alert("비밀번호는 8자리 이상, 대문자 1개 이상, 특수문자를 포함해야 합니다.");
+            return false;
+        }
+
+        if (!isPasswordMatch) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return false;
+        }
+
+        return true;
     };
 
     const handleMemberInfoUpdate = async () => {
@@ -244,10 +348,37 @@ function MyPage() {
             return;
         }
 
+        if (!validatePasswordForUpdate()) {
+            return;
+        }
+
         try {
             const token = localStorage.getItem("accessToken");
 
-            await axios.put(`${API_BASE_URL}/api/members/me`, memberUpdateForm, {
+            const requestBody: {
+                email: string;
+                phone: string;
+                birthDate: string;
+                memberLearningProfiles: number[];
+                currentPassword?: string;
+                newPassword?: string;
+                newPasswordConfirm?: string;
+            } = {
+                email: memberUpdateForm.email,
+                phone: memberUpdateForm.phone,
+                birthDate: memberUpdateForm.birthDate,
+                memberLearningProfiles: memberUpdateForm.memberLearningProfiles,
+            };
+
+            if (hasPasswordInput()) {
+                requestBody.currentPassword = currentPassword;
+                requestBody.newPassword = memberPassword;
+                requestBody.newPasswordConfirm = memberPasswordConfirm;
+            }
+
+            console.log("회원정보 수정 요청 :", requestBody);
+
+            await axios.put(`${API_BASE_URL}/api/members/me`, requestBody, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -257,12 +388,22 @@ function MyPage() {
             alert("회원정보가 수정되었습니다.");
 
             setIsEditMode(false);
+            clearPasswordInputs();
+
             await getMemberInfo();
         } catch (error) {
             console.error("회원정보 수정 실패:", error);
             alert("회원정보 수정에 실패했습니다.");
         }
     };
+
+    if (loading) {
+        return <div className="mypage-main">회원정보를 불러오는 중입니다...</div>;
+    }
+
+    if (memberInfo === null) {
+        return <div className="mypage-main">회원정보가 없습니다!</div>;
+    }
 
     return (
         <div className="mypage-page">
@@ -315,106 +456,107 @@ function MyPage() {
                                         className="member-info-input"
                                         type="text"
                                         name="name"
-                                        value={
-                                            isEditMode
-                                                ? memberUpdateForm.name
-                                                : memberInfo.name
-                                        }
-                                        readOnly={true}
+                                        value={memberInfo.name}
+                                        readOnly
                                     />
                                 </div>
 
-<div className="member-password-area">
-    <label>비밀번호</label>
+                                <div className="member-password-area">
+                                    <label>비밀번호</label>
 
-    <div className="member-password-fields password-change-fields">
-        <div className="member-password-input-group member-password-current">
-    <input
-        className="member-info-input"
-        type="password"
-        value={currentPassword}
-        onChange={(event) => setCurrentPassword(event.target.value)}
-        placeholder="현재 비밀번호를 입력하세요."
-    />
+                                    <div className="member-password-fields password-change-fields">
+                                        <div className="member-password-input-group member-password-current">
+                                            <input
+                                                className="member-info-input"
+                                                type="password"
+                                                value={currentPassword}
+                                                onChange={(event) =>
+                                                    setCurrentPassword(event.target.value)
+                                                }
+                                                placeholder="현재 비밀번호를 입력하세요."
+                                            />
 
-    {(isEditMode || currentPassword.length > 0) && (
-        <p className="member-password-guide">
-            현재 사용 중인 비밀번호를 입력해 주세요.
-        </p>
-    )}
-</div>
+                                            {(isEditMode || currentPassword.length > 0) && (
+                                                <p className="member-password-guide">
+                                                    현재 사용 중인 비밀번호를 입력해 주세요.
+                                                </p>
+                                            )}
+                                        </div>
 
-        <div className="member-password-input-group">
-            <input
-                className={
-                    isPasswordTyped && !isPasswordValid
-                        ? "member-info-input password-error"
-                        : "member-info-input"
-                }
-                type="password"
-                value={memberPassword}
-                onChange={(event) => setMemberPassword(event.target.value)}
-                placeholder="새 비밀번호를 입력하세요."
-            />
+                                        <div className="member-password-input-group">
+                                            <input
+                                                className={
+                                                    isPasswordTyped && !isPasswordValid
+                                                        ? "member-info-input password-error"
+                                                        : "member-info-input"
+                                                }
+                                                type="password"
+                                                value={memberPassword}
+                                                onChange={(event) =>
+                                                    setMemberPassword(event.target.value)
+                                                }
+                                                placeholder="새 비밀번호"
+                                            />
 
-            {(isEditMode || isPasswordTyped) && (
-                <p
-                    className={
-                        isPasswordTyped && !isPasswordValid
-                            ? "member-password-guide error"
-                            : "member-password-guide"
-                    }
-                >
-                    8자리 이상, 대문자 1개 이상, 특수문자 포함
-                </p>
-            )}
-        </div>
+                                            {(isEditMode || isPasswordTyped) && (
+                                                <p
+                                                    className={
+                                                        isPasswordTyped && !isPasswordValid
+                                                            ? "member-password-guide error"
+                                                            : "member-password-guide"
+                                                    }
+                                                >
+                                                    8자리 이상, 대문자 1개 이상, 특수문자 포함
+                                                </p>
+                                            )}
+                                        </div>
 
-        <div className="member-password-input-group">
-            <input
-                className={
-                    isPasswordConfirmTyped && !isPasswordMatch
-                        ? "member-info-input password-error"
-                        : "member-info-input"
-                }
-                type="password"
-                value={memberPasswordConfirm}
-                onChange={(event) =>
-                    setMemberPasswordConfirm(event.target.value)
-                }
-                placeholder="새 비밀번호를 다시 입력하세요."
-            />
+                                        <div className="member-password-input-group">
+                                            <input
+                                                className={
+                                                    isPasswordConfirmTyped && !isPasswordMatch
+                                                        ? "member-info-input password-error"
+                                                        : "member-info-input"
+                                                }
+                                                type="password"
+                                                value={memberPasswordConfirm}
+                                                onChange={(event) =>
+                                                    setMemberPasswordConfirm(event.target.value)
+                                                }
+                                                placeholder="새 비밀번호 확인"
+                                            />
 
-            {(isEditMode || isPasswordConfirmTyped) && (
-                <p
-                    className={
-                        isPasswordConfirmTyped && isPasswordMatch
-                            ? "member-password-guide success"
-                            : isPasswordConfirmTyped && !isPasswordMatch
-                                ? "member-password-guide error"
-                                : "member-password-guide"
-                    }
-                >
-                    {isPasswordConfirmTyped
-                        ? isPasswordMatch
-                            ? "비밀번호가 일치합니다."
-                            : "비밀번호가 일치하지 않습니다."
-                        : isEditMode
-                            ? "비밀번호 확인을 입력해 주세요."
-                            : ""}
-                </p>
-            )}
-        </div>
+                                            {(isEditMode || isPasswordConfirmTyped) && (
+                                                <p
+                                                    className={
+                                                        isPasswordConfirmTyped && isPasswordMatch
+                                                            ? "member-password-guide success"
+                                                            : isPasswordConfirmTyped && !isPasswordMatch
+                                                            ? "member-password-guide error"
+                                                            : "member-password-guide"
+                                                    }
+                                                >
+                                                    {isPasswordConfirmTyped
+                                                        ? isPasswordMatch
+                                                            ? "비밀번호가 일치합니다."
+                                                            : "비밀번호가 일치하지 않습니다."
+                                                        : isEditMode
+                                                        ? "비밀번호 확인을 입력해 주세요."
+                                                        : ""}
+                                                </p>
+                                            )}
+                                        </div>
 
-        <button
-            type="button"
-            className="member-password-button"
-            onClick={handlePasswordCheck}
-        >
-            확인
-        </button>
-    </div>
-</div>
+                                        <button
+                                            type="button"
+                                            className="member-password-button"
+                                            onClick={handlePasswordCheck}
+                                        >
+                                            확인
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <div className="member-form-row">
                                     <label>이메일</label>
                                     <input
@@ -444,6 +586,7 @@ function MyPage() {
                                         }
                                         onChange={handleMemberUpdateChange}
                                         readOnly={!isEditMode}
+                                        maxLength={13}
                                     />
                                 </div>
 
@@ -475,7 +618,7 @@ function MyPage() {
                                                 >
                                                     <input
                                                         type="checkbox"
-                                                        checked={memberUpdateForm.learningProfile.includes(
+                                                        checked={memberUpdateForm.memberLearningProfiles.includes(
                                                             profile.id
                                                         )}
                                                         onChange={() =>
@@ -485,19 +628,16 @@ function MyPage() {
                                                     <span>{profile.name}</span>
                                                 </label>
                                             ))
-                                        ) : memberInfo.learningProfile &&
-                                          memberInfo.learningProfile.length > 0 ? (
-                                            memberInfo.learningProfile
-                                                .map((id) => profileNameMap[id])
-                                                .filter((name) => name !== undefined)
-                                                .map((name) => (
-                                                    <span
-                                                        key={name}
-                                                        className="member-learning-chip"
-                                                    >
-                                                        {name}
-                                                    </span>
-                                                ))
+                                        ) : memberInfo.memberLearningProfiles &&
+                                          memberInfo.memberLearningProfiles.length > 0 ? (
+                                            memberInfo.memberLearningProfiles.map((name) => (
+                                                <span
+                                                    key={name}
+                                                    className="member-learning-chip"
+                                                >
+                                                    {name}
+                                                </span>
+                                            ))
                                         ) : (
                                             <span className="member-learning-empty">
                                                 선택한 관심 학습 분야가 없습니다.

@@ -2,8 +2,8 @@ package com.backend_semi.service;
 
 import com.backend_semi.constant.Role;
 import com.backend_semi.dto.*;
-import com.backend_semi.learningprofile.LearningProfile;
-import com.backend_semi.learningprofile.MemberLearningProfile;
+import com.backend_semi.entity.LearningProfile;
+import com.backend_semi.entity.MemberLearningProfile;
 import com.backend_semi.entity.Member;
 import com.backend_semi.repository.LearningProfileRepository;
 import com.backend_semi.repository.MemberLearningProfileRepository;
@@ -150,14 +150,9 @@ public class MemberService {
 
         member.changePassword(passwordEncoder.encode(request.getNewPassword()));
     }
-    private boolean hasPasswordChangeRequest(MemberInfoUpdateRequestDto request){
-        return request.getCurrentPassword() != null && !request.getCurrentPassword().isBlank()
-                || request.getNewPassword() != null && !request.getNewPassword().isBlank()
-                || request.getNewPasswordConfirm() != null && !request.getNewPassword().isBlank();
-    }
     // 회원정보를 수정하는 메서드
     @Transactional
-    public void updateMemberInfo(String loginId, MemberInfoUpdateRequestDto request) {
+    public void updateMemberInfo(String loginId, MemberUpdateRequestDto request) {
         // 특정 정보만 수정가능하게 해야함.
         // 그러면 일단은 기본 정보를 가져와야하지 않을까?
         // 그러면 먼저 데이터를 가져갔다가, 수정될 데이터만 새로 입력받아서 보내는 걸로 컨셉을 정하자.
@@ -191,7 +186,66 @@ public class MemberService {
                 request.getBirthDate()
         );
 
-        memberLearningProfileRepository.deleteByMember(member);
+        // 2. 관심 학습 분야 수정
+        // 프론트에서 learningProfile 배열을 보내면 기존걸 지우고 새 배열로 교체.
+        if (request.getLearningProfileIds() != null) {
+            memberLearningProfileRepository.deleteByMember(member);
 
+            for (Long learningProfileId : request.getLearningProfileIds()) {
+                LearningProfile learningProfile = learningProfileRepository.findById(learningProfileId)
+                        .orElseThrow(() -> new IllegalArgumentException("관심학습분야를 찾을 수 없습니다."));
+
+                MemberLearningProfile memberLearningProfile =
+                        new MemberLearningProfile(member, learningProfile);
+
+                memberLearningProfileRepository.save(memberLearningProfile);
+            }
+        }
+
+
+        // 3. 비밀번호 입력 값이 하나라도 있으면 비밀번호 변경 시도로 봄.
+        if(hasPasswordChangeRequest(request)){
+            changePasswordInternal(
+                    member,
+                    request.getCurrentPassword(),
+                    request.getNewPassword(),
+                    request.getNewPasswordConfirm()
+            );
+        }
+    }
+    private boolean hasPasswordChangeRequest(MemberUpdateRequestDto request){
+        return request.getCurrentPassword() != null && !request.getCurrentPassword().isBlank()
+                || request.getNewPassword() != null && !request.getNewPassword().isBlank()
+                || request.getNewPasswordConfirm() != null && !request.getNewPasswordConfirm().isBlank();
+    }
+
+    private void changePasswordInternal(
+            Member member,
+            String currentPassword,
+            String newPassword,
+            String newPasswordConfirm
+    ){
+        if(currentPassword == null || currentPassword.isBlank()){
+            throw new IllegalArgumentException("현재 비밀번호를 입력해주세요.");
+        }
+
+        if(newPassword == null || newPassword.isBlank()){
+            throw new IllegalArgumentException("새 비밀번호를 입력해주세요.");
+        }
+
+        if(newPasswordConfirm == null || newPasswordConfirm.isBlank()){
+            throw new IllegalArgumentException("새 비밀번호 확인을 입력해주세요.");
+        }
+
+        if(!newPassword.equals(newPasswordConfirm)){
+            throw new IllegalArgumentException("새 비밀번호가 일치하지않습니다.");
+        }
+
+        if(!passwordEncoder.matches(currentPassword, member.getPassword())){
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지않습니다.");
+        }
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        member.changePassword(encodedPassword);
     }
 }

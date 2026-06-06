@@ -1,7 +1,6 @@
 package com.backend_semi.entity;
 
 import com.backend_semi.constant.Role;
-import com.backend_semi.learningprofile.MemberLearningProfile;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -80,12 +79,12 @@ public class Member {
     }
 
     public void updateMemberInfo(
-            String phone,
             String email,
+            String phone,
             LocalDate birthDate
     ){
-        this.phone = phone;
         this.email = email;
+        this.phone = phone;
         this.birthDate = birthDate;
     }
 }
