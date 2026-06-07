@@ -1,6 +1,7 @@
 .site-intro-page {
   width: 100%;
   min-height: calc(100vh - 72px);
+  margin-top: 75px;
   padding: 20px;
   box-sizing: border-box;
   background: #f4f8ff;

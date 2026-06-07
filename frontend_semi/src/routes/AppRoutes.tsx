@@ -15,6 +15,7 @@ import PublicLayout from "../components/layout/PublicLayout.tsx";
 import Introduce from "../pages/Introduce.tsx";
 import NoticeContents from "../pages/NoticeContents.tsx";
 import type { User } from "../types/User.ts";
+import HowToUse from "../pages/HowToUse.tsx";
 
 interface AppProps { // App.tsx에서 온 프롭스 - LoginPage.tsx에 전달만 함
     user: User | null; // 로그인하면 App.tsx의 setUser로 의미있는 데이터가 되어 프롭스로 받아짐 (로그인안하면 null)
@@ -30,6 +31,7 @@ function AppRoutes({ user, handleLoginSuccess, handleLogout }: AppProps) {
             <Route element={<PublicLayout user={user} handleLogout={handleLogout} />}>
                 <Route path="/lecture/list" element={<LecturePage />} />
                 <Route path="/introduce/" element={<Introduce />} />
+                <Route path="/introduce/howtouse" element={<HowToUse />} />
                 <Route path="/lecture/insert" element={<LectureInsertForm />} />
                 <Route path="/lecture/update/:id" element={<LectureUpdateForm />} />
                 <Route path="/" element={<Home />} />

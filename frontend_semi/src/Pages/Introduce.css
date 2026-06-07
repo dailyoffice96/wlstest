@@ -5,18 +5,19 @@
   width: 100%;
   height: calc(100vh - var(--header-height));
 
-  padding: 120px 40px var(--page-gap);
+  padding: 90px 40px var(--page-gap);
   box-sizing: border-box;
 
   background: #f4f8ff;
 
   overflow: hidden;
+  margin-top: 90px;
 }
 
 .site-intro-frame {
   width: 100%;
   height: 100%;
-
+  
   margin: 0;
   padding: 24px;
   box-sizing: border-box;
