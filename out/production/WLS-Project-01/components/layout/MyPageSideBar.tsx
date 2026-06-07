@@ -44,7 +44,7 @@ function MyPageSideBar() {
       <div>
       <button
         className={isMember ? "mypage-menu active" : "mypage-menu"}
-        onClick={()=>navigate("/memberinfo/mypage/")}
+        onClick={()=>navigate("/api/members/mypage")} 
       >
         <span >02</span>
              회원정보

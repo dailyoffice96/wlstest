@@ -3,8 +3,14 @@ import { API_BASE_URL } from "../config/config";
 import { useEffect, useState } from "react";
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import type { User } from "../types/User";
+import customAxios from "../api/axiosInstance";
 
-function App() {
+interface AppRoutesProps { // App.tsx에서 온 프롭스
+    user: User | null; // 로그인하면 App.tsx의 setUser로 의미있는 데이터가 되어 프롭스로 받아짐 (로그인안하면 null)
+}
+
+function App({ user }: AppRoutesProps) {
     // 주소창(URL)에 파라미터 (id)이용하기
     // LecturePage.tsx의 "navigate(`/lecture/update/${currentLecture?.id}`);"와 
     // AppRoutes.tsx의 "<Route path="/lecture/update/:id" element={<LectureUpdateForm />} />"로 설정해서 가능
@@ -14,15 +20,14 @@ function App() {
 
     const navigate = useNavigate();
 
-    // 아직 user를 안넣어서 주석처리 함
-    /* useEffect(() => {
+    useEffect(() => {
         // useEffect 안에서도 ?. 문법으로 깔끔하게 줄일 수 있습니다.
         if (user?.role !== 'ADMIN') {
             alert('관리자만 접근할 수 있는 페이지입니다.');
-            navigate(user ? '/' : '/member/login'); // 로그인 여부에 따라 이동지 분기
+            navigate(user ? '/' : '/api/members/login'); // 로그인 여부에 따라 이동지 분기
             return;
         }
-    }, [user, navigate]); */
+    }, [user, navigate]);
 
 
     const comment = '강의 수정'; // 제목으로도 쓰고 버튼이름으로도 쓸거같아서 변수로 만든 것
@@ -64,11 +69,10 @@ function App() {
         } */
 
         // role이 ADMIN이면
-        const url = `${API_BASE_URL}/lecture/update/${id}`;
+        const url = `${API_BASE_URL}/api/lecture/update/${id}`;
 
         // 데이터 베이스에 저장되어 수정을 하려는 id의 객체를 가져옴 (get)
-        // 아직 customAxios를 쓸 axiosInstance가 없어서 그냥 axios 사용
-        axios
+        customAxios
             .get(url)
             .then((response) => {
                 setLecture(response.data);
@@ -115,14 +119,13 @@ function App() {
         event.preventDefault();
 
         try {
-            const url = `${API_BASE_URL}/lecture/update/${id}`;
+            const url = `${API_BASE_URL}/api/lecture/update/${id}`;
 
             const config = {
                 headers: { 'Content-Type': 'application/json' }
             };
 
-            // 원래 customAxios(axiosInstance)를 써야하는데 아직 안넣어서 그냥 axios 사용함
-            const response = await axios.put(url, lecture, config);
+            const response = await customAxios.put(url, lecture, config);
 
             console.log(`상품 수정 : [${response.data}]`);
             alert('상품이 성공적으로 수정 되었습니다.');
@@ -133,7 +136,7 @@ function App() {
             setLecture(initial_value);
             setErrors(initialErrors);
 
-            navigate('/lecture/list');
+            navigate('/api/lecture/list');
 
         } catch (error: unknown) {
             if (axios.isAxiosError(error) && error.response) {

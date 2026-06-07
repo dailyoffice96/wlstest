@@ -6,14 +6,15 @@ import LectureSidebar from "../components/layout/LectureSidebar";
 import LectureContent from "../components/LecturePage/LectureContent";
 import { Button } from "react-bootstrap";
 import "./LecturePage.css";
+import customAxios from "../api/axiosInstance";
 
 function LecturePage() {
     const [lectures, setLectures] = useState<Lecture[]>([]);
     const [currentLecture, setCurrentLecture] = useState<Lecture | null>(null);
 
     useEffect(() => {
-        const url = `${API_BASE_URL}/lecture/list`;
-        axios.get(url)
+        const url = `${API_BASE_URL}/api/lecture/list`;
+        customAxios.get(url)
             .then((response) => {
                 setLectures(response.data);
                 if (response.data.length > 0) {
@@ -45,7 +46,7 @@ function LecturePage() {
                         // 그 큰 영역도 onClick으로 다른 일을 해야하는데 그 일과 이 코드가 동시에 시작해버려서
                         // 문제가 생길 수도 있음
                         event.stopPropagation(); // 이벤트 버블링 방지
-                        navigate(`/lecture/update/${currentLecture?.id}`);
+                        navigate(`/api/lecture/update/${currentLecture?.id}`);
                     }}>
                     강의 수정
                 </Button>
@@ -68,8 +69,8 @@ function LecturePage() {
                         }
 
                         try { // 전체 배열에서 일부 데이터만 필터할 수 있음
-                            const url = `${API_BASE_URL}/lecture/delete/${currentLecture?.id}`;
-                            await axios.delete(url); // 백엔드를 거치고 일처리를 해야해서 await 붙임
+                            const url = `${API_BASE_URL}/api/lecture/delete/${currentLecture?.id}`;
+                            await customAxios.delete(url); // 백엔드를 거치고 일처리를 해야해서 await 붙임
                             alert(`'${currentLecture?.name}' 상품이 삭제되었습니다.`)
 
                             // 상품을 갱신해주는 setter
@@ -87,7 +88,7 @@ function LecturePage() {
                                 return filtered;
                             });
 
-                            navigate('/lecture/list');
+                            navigate('/api/lecture/list');
 
                         } catch (error) {
                             console.log(error);

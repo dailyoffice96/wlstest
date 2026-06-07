@@ -8,9 +8,9 @@ import SignupCompletePage from "../pages/SignupCompletePage.tsx";
 import MyPage from "../pages/MyPage.tsx";
 import LearningPage from "../pages/LearningPage.tsx";
 import FavoritePage from "../pages/FavoritePage.tsx";
-import LecturePage from "../pages/LecturePage"
-import LectureInsertForm from "../pages/LectureInsertForm"
-import LectureUpdateForm from "../pages/LectureUpdateForm"
+import LecturePage from "../pages/LecturePage.tsx"
+import LectureInsertForm from "../pages/LectureInsertForm.tsx"
+import LectureUpdateForm from "../pages/LectureUpdateForm.tsx"
 import PublicLayout from "../components/layout/PublicLayout.tsx";
 import Introduce from "../pages/Introduce.tsx";
 import NoticeContents from "../pages/NoticeContents.tsx";
@@ -29,30 +29,31 @@ function AppRoutes({ user, handleLoginSuccess, handleLogout }: AppProps) {
         <Routes>
             {/* Header 있는 그룹 */}
             <Route element={<PublicLayout user={user} handleLogout={handleLogout} />}>
-                <Route path="/lecture/list" element={<LecturePage />} />
-                <Route path="/introduce/" element={<Introduce />} />
-                <Route path="/introduce/howtouse" element={<HowToUse />} />
-                <Route path="/lecture/insert" element={<LectureInsertForm />} />
-                <Route path="/lecture/update/:id" element={<LectureUpdateForm />} />
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<LoginPage handleLoginSuccess={handleLoginSuccess} />} />
 
-                <Route path="/signup" element={<SignupPage />} />
+                {/* members */}
+                <Route path="/api/members/mypage" element={<MyPage />} />
+                <Route path="/api/members/login" element={<LoginPage handleLoginSuccess={handleLoginSuccess} />} />
+                <Route path="/api/members/signup" element={<SignupPage />} />
+
+                {/* lecture */}
+                <Route path="/api/lecture/list" element={<LecturePage />} />
+                <Route path="/api/lecture/insert" element={<LectureInsertForm user={user} />} />
+                <Route path="/api/lecture/update/:id" element={<LectureUpdateForm user={user} />} />
+
+                {/* notices */}
+                <Route path="/api/notices" element={<NoticeContents />} />
+
+                {/* 백엔드와 소통하지 않는 페이지들 */}
+                <Route path="/" element={<Home />} />
+
+                <Route path="/memberinfo/mypage/favorite" element={<FavoritePage />} />
+                <Route path="/memberinfo/mypage/learning" element={<LearningPage />} />
 
                 <Route path="/signup/terms" element={<SignupTermsPage />} />
-
-
-
                 <Route path="/signup/complete" element={<SignupCompletePage />} />
 
-                <Route path="/memberinfo/mypage/" element={<MyPage />} />
-
-                <Route path="/memberinfo/mypage/learning/" element={<LearningPage />} />
-
-
-                <Route path="/memberinfo/mypage/favorite/" element={<FavoritePage />} />
-
-                <Route path="/notices/" element={<NoticeContents />} />
+                <Route path="/introduce/" element={<Introduce />} />
+                <Route path="/introduce/howtouse" element={<HowToUse />} />
 
             </Route>
 

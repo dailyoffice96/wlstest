@@ -1,21 +1,26 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/config";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import type { User } from "../types/User";
+import customAxios from "../api/axiosInstance";
 
-function App() {
+interface AppRoutesProps { // App.tsx에서 온 프롭스
+    user: User | null; // 로그인하면 App.tsx의 setUser로 의미있는 데이터가 되어 프롭스로 받아짐 (로그인안하면 null)
+}
+
+function App({ user }: AppRoutesProps) {
     const navigate = useNavigate();
 
-    // 아직 user를 안넣어서 주석처리 함
-    /* useEffect(() => {
+    useEffect(() => {
         // useEffect 안에서도 ?. 문법으로 깔끔하게 줄일 수 있습니다.
         if (user?.role !== 'ADMIN') {
             alert('관리자만 접근할 수 있는 페이지입니다.');
-            navigate(user ? '/' : '/member/login'); // 로그인 여부에 따라 이동지 분기
+            navigate(user ? '/' : '/api/members/login'); // 로그인 여부에 따라 이동지 분기
             return;
         }
-    }, [user, navigate]); */
+    }, [user, navigate]);
 
 
     const comment = '강의 등록'; // 제목으로도 쓰고 버튼이름으로도 쓸거같아서 변수로 만든 것
@@ -79,13 +84,12 @@ function App() {
         event.preventDefault();
 
         try {
-            const url = `${API_BASE_URL}/lecture/insert`;
+            const url = `${API_BASE_URL}/api/lecture/insert`;
             const config = {
                 headers: { 'Content-Type': 'application/json' }
             };
 
-            // 원래 customAxios(axiosInstance)를 써야하는데 아직 안넣어서 그냥 axios 사용함
-            const response = await axios.post(url, lecture, config);
+            const response = await customAxios.post(url, lecture, config);
 
             console.log('응답 데이터 : ');
             console.log(`${response.data}`);
@@ -98,7 +102,7 @@ function App() {
             setLecture(initial_value);
             setErrors(initialErrors);
 
-            navigate('/lecture/list');
+            navigate('/api/lecture/list');
 
         } catch (error: unknown) {
             console.log(error);

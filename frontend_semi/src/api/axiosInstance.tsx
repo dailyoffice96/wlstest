@@ -75,7 +75,7 @@ axiosInstance.interceptors.response.use(
             // 인증이 안된 사용자를 강제로 로그인페이지("/login")로 이동시킴
             // replace()를 사용하면 뒤로가기 기록도 삭제해서 뒤로가기 버튼을 사용하지 못함
             // (프론트 내에서의 주소(path)임 - 화면)
-            window.location.replace("/login");
+            window.location.replace("/api/members/login");
         }
 
         return Promise.reject(error);

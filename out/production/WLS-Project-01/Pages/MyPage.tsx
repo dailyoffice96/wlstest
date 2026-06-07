@@ -3,7 +3,7 @@ import type { ChangeEvent } from "react";
 import MyPageSideBar from "../components/layout/MyPageSideBar";
 import { API_BASE_URL } from "../config/config";
 import "./MyPage.css";
-import axios from "axios";
+import customAxios from "../api/axiosInstance";
 
 type MemberInfo = {
     loginId: string;
@@ -108,7 +108,7 @@ function MyPage() {
         try {
             const token = localStorage.getItem("accessToken");
 
-            const response = await axios.get(`${API_BASE_URL}/api/members/me`, {
+            const response = await customAxios.get(`${API_BASE_URL}/api/members/mypage`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -198,8 +198,8 @@ function MyPage() {
         try {
             const token = localStorage.getItem("accessToken");
 
-            await axios.patch(
-                `${API_BASE_URL}/api/members/me/password`,
+            await customAxios.patch(
+                `${API_BASE_URL}/api/members/mypage/password`,
                 {
                     currentPassword: currentPassword,
                     newPassword: memberPassword,
@@ -378,7 +378,7 @@ function MyPage() {
 
             console.log("회원정보 수정 요청 :", requestBody);
 
-            await axios.put(`${API_BASE_URL}/api/members/me`, requestBody, {
+            await customAxios.put(`${API_BASE_URL}/api/members/mypage`, requestBody, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -532,8 +532,8 @@ function MyPage() {
                                                         isPasswordConfirmTyped && isPasswordMatch
                                                             ? "member-password-guide success"
                                                             : isPasswordConfirmTyped && !isPasswordMatch
-                                                            ? "member-password-guide error"
-                                                            : "member-password-guide"
+                                                                ? "member-password-guide error"
+                                                                : "member-password-guide"
                                                     }
                                                 >
                                                     {isPasswordConfirmTyped
@@ -541,8 +541,8 @@ function MyPage() {
                                                             ? "비밀번호가 일치합니다."
                                                             : "비밀번호가 일치하지 않습니다."
                                                         : isEditMode
-                                                        ? "비밀번호 확인을 입력해 주세요."
-                                                        : ""}
+                                                            ? "비밀번호 확인을 입력해 주세요."
+                                                            : ""}
                                                 </p>
                                             )}
                                         </div>
@@ -629,7 +629,7 @@ function MyPage() {
                                                 </label>
                                             ))
                                         ) : memberInfo.memberLearningProfiles &&
-                                          memberInfo.memberLearningProfiles.length > 0 ? (
+                                            memberInfo.memberLearningProfiles.length > 0 ? (
                                             memberInfo.memberLearningProfiles.map((name) => (
                                                 <span
                                                     key={name}

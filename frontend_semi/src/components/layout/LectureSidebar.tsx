@@ -192,7 +192,7 @@ function LectureSidebar({
             <div className="sidebar-dom sidebar-dom3 border-top border-light border-opacity-25 pt-3">
                 {/* btn-outline-light : 흰색 테두리 버튼 / w-100 : 버튼 너비 사이드바 전체 */}
                 <button
-                    onClick={() => navigate("/lecture/insert")}
+                    onClick={() => navigate("/api/lecture/insert")}
                     className="btn btn-outline-light w-100 fw-bold py-2"
                 >
                     + 새 글 작성

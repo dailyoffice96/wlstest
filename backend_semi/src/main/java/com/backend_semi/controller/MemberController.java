@@ -58,7 +58,7 @@ public class MemberController {
         );
     }
 
-    @GetMapping("/me")
+    @GetMapping("/mypage")
     public ResponseEntity<MemberInfoResponseDto> getMyInfo(){
         Authentication authenticaton  = SecurityContextHolder.getContext().getAuthentication();
 
@@ -69,7 +69,7 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/me")
+    @PutMapping("/mypage")
     public ResponseEntity<Void> updateMyInfo(
             Authentication authentication,
             @RequestBody MemberUpdateRequestDto request
@@ -89,7 +89,7 @@ public class MemberController {
     }
 
     // 비밀번호를 변경하는 컨트롤러
-    @PatchMapping("/me/password")
+    @PatchMapping("/mypage/password")
     public ResponseEntity<Void> changePassword(
             Authentication authentication,
             @RequestBody MemberPasswordChangeRequestDto request
@@ -99,7 +99,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/me")
+    @PatchMapping("/mypage")
     public ResponseEntity<Void> updateMemberInfo(
             Authentication authentocatiion,
             @RequestBody MemberUpdateRequestDto request

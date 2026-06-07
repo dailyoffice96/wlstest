@@ -18,14 +18,14 @@ function Home() {
           <div className="home-hero-buttons">
             <button
               className="home-primary-button"
-              onClick={() => navigate("/lecture")}
+              onClick={() => navigate("/api/lecture/list")}
             >
               ▶ 학습 시작
             </button>
 
             <button
               className="home-outline-button"
-              onClick={() => navigate("/lecture")}
+              onClick={() => navigate("/api/lecture/list")}
             >
               📖 강의 둘러보기
             </button>
@@ -63,7 +63,7 @@ function Home() {
         <div className="home-card recommended-card">
           <div className="home-card-header">
             <h2>☆ 추천 강의</h2>
-            <button onClick={() => navigate("/lecture")}>더보기 ›</button>
+            <button onClick={() => navigate("/api/lecture/list")}>더보기 ›</button>
           </div>
 
           <div className="course-list">
@@ -117,7 +117,7 @@ function Home() {
         <div className="home-card notice-card">
           <div className="home-card-header">
             <h2>🔔 공지사항</h2>
-            <button onClick={() => navigate("/notice")}>더보기 ›</button>
+            <button onClick={() => navigate("/api/notices")}>더보기 ›</button>
           </div>
 
           <div className="notice-list">

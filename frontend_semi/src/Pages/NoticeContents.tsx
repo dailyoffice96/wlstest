@@ -3,6 +3,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../config/config";
 import NoticeSidebar from "../components/layout/NoticeSidebar";
 import "./NoticeContents.css";
+import customAxios from "../api/axiosInstance";
 
 interface Notice {
   noticeId: number;
@@ -156,7 +157,7 @@ function NoticeContents() {
 
     try {
       if (formMode === "create") {
-        await axios.post(`${API_BASE_URL}/api/notices`, requestBody, config);
+        await customAxios.post(`${API_BASE_URL}/api/notices`, requestBody, config);
         setFormMode("none");
         setEditingNotice(null);
         await fetchNotices();
@@ -164,7 +165,7 @@ function NoticeContents() {
       }
 
       if (formMode === "edit"  && editingNotice) {
-        await axios.put(
+        await customAxios.put(
           `${API_BASE_URL}/api/notices/${editingNotice.noticeId}`,
           requestBody,
           config
@@ -195,7 +196,7 @@ function NoticeContents() {
     }
 
     try {
-      await axios.delete(`${API_BASE_URL}/api/notices/${noticeId}`, {
+      await customAxios.delete(`${API_BASE_URL}/api/notices/${noticeId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
