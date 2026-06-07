@@ -27,7 +27,7 @@ public class MemberLearningProfile {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private com.backend_semi.entity.Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "learning_profile_id", nullable = false)

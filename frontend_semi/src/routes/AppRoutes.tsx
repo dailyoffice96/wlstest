@@ -17,36 +17,6 @@ import Introduce from "../pages/Introduce.tsx";
 import NoticeContents from "../pages/NoticeContents.tsx";
 
 function AppRoutes() {
-    const navigate = useNavigate(); // 내비게이트 선언해둬야 해당 기능 사용 가능.
-    const [userName, setUserName] = useState(
-        localStorage.getItem("name") || ""
-    );
-
-    const [isLogin, setIsLogin] = useState(
-        localStorage.getItem("accessToken") !== null
-    );
-
-    const handleLoginSuccess = (name: string) => {
-        setIsLogin(true);
-        setUserName(name);
-        navigate("/");
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("memberId");
-        localStorage.removeItem("name");
-        const logoutmessage = window.confirm("로그아웃 하시겠습니까?"); // 여기에 넣어야 함수가 작동할때만 메시지를 출력하게됨.
-        if (!logoutmessage) {
-            return;
-        }
-
-        alert("로그아웃 되었습니다.");
-        setIsLogin(false);
-        setUserName("");
-
-        navigate("/");
-    };
 
     return (
         <Routes>
