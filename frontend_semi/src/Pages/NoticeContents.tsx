@@ -4,6 +4,7 @@ import { API_BASE_URL } from "../config/config";
 import NoticeSidebar from "../components/layout/NoticeSidebar";
 import "./NoticeContents.css";
 import customAxios from "../api/axiosInstance";
+import type { User } from "../types/User";
 
 interface Notice {
   noticeId: number;
@@ -24,7 +25,15 @@ interface NoticeFormData {
   attachmentUrl: string;
 }
 
-function NoticeContents() {
+interface AppRoutesProps { // App.tsx에서 온 프롭스
+  user: User | null; // 로그인하면 App.tsx의 setUser로 의미있는 데이터가 되어 프롭스로 받아짐 (로그인안하면 null)
+}
+
+function NoticeContents({ user }: AppRoutesProps) {
+  // [추가] 현재 로그인한 사람이 관리자인지 여부
+  // user가 있고(?) 그 role이 'ADMIN'이면 true
+  const isAdmin = user?.role === "ADMIN";
+
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(false);
@@ -62,12 +71,12 @@ function NoticeContents() {
       setLoading(false);
     }
   };
-  
+
   // 프론트에서 가져온 공지를 정렬
   const filteredNotices =
-  selectedCategoryId === null
-    ? notices
-    : notices.filter(
+    selectedCategoryId === null
+      ? notices
+      : notices.filter(
         (notice) => notice.noticeCategoryId === selectedCategoryId
       );
 
@@ -164,7 +173,7 @@ function NoticeContents() {
         alert("공지사항이 등록되었습니다.");
       }
 
-      if (formMode === "edit"  && editingNotice) {
+      if (formMode === "edit" && editingNotice) {
         await customAxios.put(
           `${API_BASE_URL}/api/notices/${editingNotice.noticeId}`,
           requestBody,
@@ -173,7 +182,7 @@ function NoticeContents() {
         alert("공지사항이 수정되었습니다.");
         setFormMode("none");
         setEditingNotice(null);
-        await fetchNotices();  
+        await fetchNotices();
       }
     } catch (error) {
       console.error(error);
@@ -230,13 +239,16 @@ function NoticeContents() {
             <p>풀스택 강의실의 주요 안내사항을 확인하세요.</p>
           </div>
 
-          <button
-            type="button"
-            className="notice-write-button"
-            onClick={handleCreateClick}
-          >
-            공지 작성
-          </button>
+          {/* [변경] 관리자(ADMIN)일 때만 '공지 작성' 버튼 표시 */}
+          {isAdmin && (
+            <button
+              type="button"
+              className="notice-write-button"
+              onClick={handleCreateClick}
+            >
+              공지 작성
+            </button>
+          )}
         </div>
 
         <div
@@ -253,58 +265,63 @@ function NoticeContents() {
               <div className="notice-empty">등록된 공지사항이 없습니다.</div>
             ) : (
               filteredNotices.map((notice) => (
-  <article key={notice.noticeId} className="notice-list-item">
-    <div className="notice-item-top">
-      <div className="notice-item-title-box">
-        <span className="notice-item-category">
-          {notice.noticeCategoryName}
-        </span>
+                <article key={notice.noticeId} className="notice-list-item">
+                  <div className="notice-item-top">
+                    <div className="notice-item-title-box">
+                      <span className="notice-item-category">
+                        {notice.noticeCategoryName}
+                      </span>
 
-        <h3>{notice.title}</h3>
-      </div>
+                      <h3>{notice.title}</h3>
+                    </div>
 
-      <div className="notice-item-buttons">
-        <button
-          type="button"
-          className="notice-small-button edit"
-          onClick={() => handleEditClick(notice)}
-        >
-          수정
-        </button>
+                    <div className="notice-item-buttons">
+                      {/* [변경] 관리자(ADMIN)일 때만 수정/삭제 버튼 표시 */}
+                      {isAdmin && (
+                        <>
+                          <button
+                            type="button"
+                            className="notice-small-button edit"
+                            onClick={() => handleEditClick(notice)}
+                          >
+                            수정
+                          </button>
 
-        <button
-          type="button"
-          className="notice-small-button delete"
-          onClick={() => handleDeleteClick(notice.noticeId)}
-        >
-          삭제
-        </button>
-      </div>
-    </div>
+                          <button
+                            type="button"
+                            className="notice-small-button delete"
+                            onClick={() => handleDeleteClick(notice.noticeId)}
+                          >
+                            삭제
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
 
-    <div className="notice-item-meta">
-      <span>글번호 #{notice.noticeId}</span>
-      <span>{notice.createdAt?.replace("T", " ")}</span>
-      {notice.updatedAt && (
-        <span>수정됨 {notice.updatedAt.replace("T", " ")}</span>
-      )}
-    </div>
+                  <div className="notice-item-meta">
+                    <span>글번호 #{notice.noticeId}</span>
+                    <span>{notice.createdAt?.replace("T", " ")}</span>
+                    {notice.updatedAt && (
+                      <span>수정됨 {notice.updatedAt.replace("T", " ")}</span>
+                    )}
+                  </div>
 
-    <div className="notice-item-content-box">
-      {notice.contents}
-    </div>
+                  <div className="notice-item-content-box">
+                    {notice.contents}
+                  </div>
 
-    {notice.attachmentUrl && (
-      <a
-        className="notice-item-attachment"
-        href={notice.attachmentUrl}
-        target="_blank"
-        rel="noreferrer"
-      >
-        첨부파일 열기
-      </a>
-    )}
-  </article>
+                  {notice.attachmentUrl && (
+                    <a
+                      className="notice-item-attachment"
+                      href={notice.attachmentUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      첨부파일 열기
+                    </a>
+                  )}
+                </article>
               ))
             )}
           </div>

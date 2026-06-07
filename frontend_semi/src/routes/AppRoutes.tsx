@@ -41,7 +41,7 @@ function AppRoutes({ user, handleLoginSuccess, handleLogout }: AppProps) {
                 <Route path="/api/lecture/update/:id" element={<LectureUpdateForm user={user} />} />
 
                 {/* notices */}
-                <Route path="/api/notices" element={<NoticeContents />} />
+                <Route path="/api/notices" element={<NoticeContents user={user} />} />
 
                 {/* 백엔드와 소통하지 않는 페이지들 */}
                 <Route path="/" element={<Home />} />
