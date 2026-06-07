@@ -1,11 +1,10 @@
-import { API_BASE_URL } from "../config/config";
 import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
-import type { Lecture } from "../types/Lecture";
 import axios from "axios";
-import Sidebar from "../components/layout/LectureSidebar";
+import type { Lecture } from "../types/Lecture";
+import { API_BASE_URL } from "../config/config";
+import LectureSidebar from "../components/layout/LectureSidebar";
 import LectureContent from "../components/LecturePage/LectureContent";
-
+import { Button } from "react-bootstrap";
 
 function LecturePage() {
     const [lectures, setLectures] = useState<Lecture[]>([]);
@@ -109,7 +108,7 @@ function LecturePage() {
         <div className="d-flex h-100 overflow-hidden">
             {/* 2. 메인 컨텐츠 영역에 flex: 1을 적용합니다. 
                 상단바가 있다면 상단바를 제외한 '남은 공간 전체'를 알아서 채우게 됩니다. */}
-            <Sidebar
+            <LectureSidebar
                 lectures={lectures}
                 setCurrentLecture={setCurrentLecture}
                 currentLecture_id={currentLecture?.id || null}

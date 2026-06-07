@@ -1,5 +1,5 @@
 package com.backend_semi.constant;
 
 public enum Language {
-    java, typescript, sql
+    java, typescript, sql, text
 }

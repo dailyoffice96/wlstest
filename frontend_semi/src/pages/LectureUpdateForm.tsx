@@ -1,10 +1,8 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/config";
 import { useEffect, useState } from "react";
-import { Alert, Form } from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-
-import "./LectureUpdateForm.css";
 
 function App() {
     // 주소창(URL)에 파라미터 (id)이용하기
@@ -26,6 +24,7 @@ function App() {
         }
     }, [user, navigate]); */
 
+
     const comment = '강의 수정'; // 제목으로도 쓰고 버튼이름으로도 쓸거같아서 변수로 만든 것
 
     // lecture의 초기값 설
@@ -36,8 +35,7 @@ function App() {
         lecture_description: '',
         code_example: '',
         code_description: '',
-        language: '',
-        iframe_url: ''
+        language: ''
     };
 
     // 등록하고자하는 강의 정보
@@ -51,7 +49,6 @@ function App() {
         code_example: '',
         code_description: '',
         language: '',
-        iframe_url: '',
         general: ''
     };
 
@@ -80,13 +77,13 @@ function App() {
                 console.log(`강의 ${id}번 오류 발생 : ${error}`);
                 alert('해당 상품 정보를 읽어 오지 못했습니다.');
             });
-
         // 의존성 배열(dependency - props 또는 state) : 해당 변수나 객체의 값이 바뀌면 새로 렌더링함
         // id : 수정하려는 상품이 바뀌면 새로 정보를 가져와야함 (백엔드에서 get으로)
         // user : role이 ADMIN이 아닌 사용자가 사용하려고 하면 막아야함
         // navigate : 상식적으로 navigate가 바뀔 수는 없지만 기본적으로
         // useEffect() 함수 외부에서 가져온 변수나 객체들을 의존성 배열에 넣어야해서 넣음
     }, [id, navigate]); // id 값이 변경될 때 마다 화면을 re-rendering 시켜야 합니다.
+
 
     // Change 이벤트가 발생하면 동작하는 함수
     // 폼 양식에서 어떠한 컨트롤의 값이 변경되었습니다.
@@ -156,267 +153,201 @@ function App() {
     };
 
     return (
-        <div className="lecture-edit-page">
-            <section className="lecture-edit-panel">
-                <div className="lecture-edit-title-row">
-                    <div className="lecture-edit-title-icon">🛠️</div>
+        <Container style={{ marginTop: '30px' }}>
+            <h1>{comment}</h1>
 
-                    <div>
-                        <h1>{comment}</h1>
-                        <p>강의 제목, 설명, 코드 예시와 구현 URL을 수정합니다.</p>
-                    </div>
-                </div>
+            {/* 일반 오류 메시지 */}
+            {errors.general && <Alert variant="danger">{errors.general}</Alert>}
 
-                {/* 일반 오류 메시지 */}
-                {errors.general && (
-                    <Alert variant="danger" className="lecture-edit-alert">
-                        {errors.general}
-                    </Alert>
-                )}
+            {/* 특별한 말이 없으면 Form을 불러올때 bootstrap으로 하면 됨 */}
+            <Form onSubmit={SubmitAction}> {/* id는 자동 생성하게 스프링에 만들어 놓아서 입력란에 넣을 필요는 없음 */}
 
-                {/* 특별한 말이 없으면 Form을 불러올때 bootstrap으로 하면 됨 */}
-                <Form className="lecture-edit-form" onSubmit={SubmitAction}>
-                    {/* id는 자동 생성하게 스프링에 만들어 놓아서 입력란에 넣을 필요는 없음 */}
+                {/* 대주제(category) 입력창 */}
+                {/* controlId="formCategory" 이건 필수는 아님 */}
+                <Form.Group as={Row} className="mb-3" controlId="formCategory">
+                    <Form.Label column sm={2}>
+                        대주제
+                    </Form.Label>
+                    <Col sm={10}> {/* Form.Control은 HTML의 form의 input같은 것 */}
+                        <Form.Control
+                            as="textarea"
+                            rows={2}
+                            placeholder="대주제를 입력해 주세요."
 
-                    {/* 대주제(category) 입력창 */}
-                    {/* controlId="formCategory" 이건 필수는 아님 */}
-                    <Form.Group className="lecture-form-row textarea-row" controlId="formCategory">
-                        <Form.Label>
-                            대주제
-                        </Form.Label>
+                            // 정확히 말하자면 name 속성이 아니고 id속성임
+                            // 그래서 Form.Group태그의 controlId속성에 formCategory으로 설정함
+                            // name이 lecture_description면 lecture_description로 바꾸고 formlecture_description로 하면 됨
+                            name="category"
+                            value={lecture.category}
 
-                        <div className="lecture-form-control-area">
-                            {/* Form.Control은 HTML의 form의 input같은 것 */}
-                            <Form.Control
-                                as="textarea"
-                                rows={2}
-                                placeholder="대주제를 입력해 주세요."
+                            // Change 이벤트 : 값이 변하면 동작하는 이벤트
+                            onChange={ControlChange}
 
-                                // 정확히 말하자면 name 속성이 아니고 id속성임
-                                // 그래서 Form.Group태그의 controlId속성에 formCategory으로 설정함
-                                // name이 lecture_description면 lecture_description로 바꾸고 formlecture_description로 하면 됨
-                                name="category"
-                                value={lecture.category}
+                            // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
+                            isInvalid={!!errors.category}
+                        />
 
-                                // Change 이벤트 : 값이 변하면 동작하는 이벤트
-                                onChange={ControlChange}
+                        {/* 문제가 생기면 나오는 경고성 멘트 */}
+                        <Form.Control.Feedback type="invalid">
+                            {errors.category}
+                        </Form.Control.Feedback>
+                    </Col>
+                </Form.Group>
 
-                                // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
-                                isInvalid={!!errors.category}
-                            />
+                {/* 소주제(name) 입력창 */}
+                <Form.Group as={Row} className="mb-3" controlId="formName">
+                    <Form.Label column sm={2}>
+                        파일 이름
+                    </Form.Label>
+                    <Col sm={10}> {/* Form.Control은 HTML의 form의 input같은 것 */}
+                        <Form.Control
+                            type="text"
+                            placeholder="파일 이름을 입력해 주세요."
 
-                            {/* 문제가 생기면 나오는 경고성 멘트 */}
-                            <Form.Control.Feedback type="invalid">
-                                {errors.category}
-                            </Form.Control.Feedback>
-                        </div>
-                    </Form.Group>
+                            // 정확히 말하자면 name 속성이 아니고 id속성임
+                            name="name"
+                            value={lecture.name}
 
-                    {/* 소주제(name) 입력창 */}
-                    <Form.Group className="lecture-form-row" controlId="formName">
-                        <Form.Label>
-                            파일 이름
-                        </Form.Label>
+                            // Change 이벤트 : 값이 변하면 동작하는 이벤트
+                            onChange={ControlChange}
 
-                        <div className="lecture-form-control-area">
-                            {/* Form.Control은 HTML의 form의 input같은 것 */}
-                            <Form.Control
-                                type="text"
-                                placeholder="파일 이름을 입력해 주세요."
+                            // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
+                            isInvalid={!!errors.name}
+                        />
 
-                                // 정확히 말하자면 name 속성이 아니고 id속성임
-                                name="name"
-                                value={lecture.name}
+                        {/* 문제가 생기면 나오는 경고성 멘트 */}
+                        <Form.Control.Feedback type="invalid">
+                            {errors.name}
+                        </Form.Control.Feedback>
+                    </Col>
+                </Form.Group>
 
-                                // Change 이벤트 : 값이 변하면 동작하는 이벤트
-                                onChange={ControlChange}
+                {/* 강의 설명(lecture_description) 입력창 */}
+                <Form.Group as={Row} className="mb-3" controlId="formlecture_description">
+                    <Form.Label column sm={2}>
+                        강의 설명
+                    </Form.Label>
+                    <Col sm={10}> {/* Form.Control은 HTML의 form의 input같은 것 */}
+                        <Form.Control
+                            as="textarea"
+                            rows={3}
+                            placeholder="강의 설명를 입력해 주세요."
 
-                                // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
-                                isInvalid={!!errors.name}
-                            />
+                            // 정확히 말하자면 name 속성이 아니고 id속성임
+                            name="lecture_description"
+                            value={lecture.lecture_description}
 
-                            {/* 문제가 생기면 나오는 경고성 멘트 */}
-                            <Form.Control.Feedback type="invalid">
-                                {errors.name}
-                            </Form.Control.Feedback>
-                        </div>
-                    </Form.Group>
+                            // Change 이벤트 : 값이 변하면 동작하는 이벤트
+                            onChange={ControlChange}
 
-                    {/* 강의 설명(lecture_description) 입력창 */}
-                    <Form.Group className="lecture-form-row textarea-row" controlId="formlecture_description">
-                        <Form.Label>
-                            강의 설명
-                        </Form.Label>
+                            // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
+                            isInvalid={!!errors.lecture_description}
+                        />
 
-                        <div className="lecture-form-control-area">
-                            {/* Form.Control은 HTML의 form의 input같은 것 */}
-                            <Form.Control
-                                className="description-textarea"
-                                as="textarea"
-                                rows={3}
-                                placeholder="강의 설명를 입력해 주세요."
+                        {/* 문제가 생기면 나오는 경고성 멘트 */}
+                        <Form.Control.Feedback type="invalid">
+                            {errors.lecture_description}
+                        </Form.Control.Feedback>
+                    </Col>
+                </Form.Group>
 
-                                // 정확히 말하자면 name 속성이 아니고 id속성임
-                                name="lecture_description"
-                                value={lecture.lecture_description}
+                {/* 코드 예시(code_example) 입력창 */}
+                <Form.Group as={Row} className="mb-3" controlId="formCode_example">
+                    <Form.Label column sm={2}>
+                        코드 예시
+                    </Form.Label>
+                    <Col sm={10}> {/* Form.Control은 HTML의 form의 input같은 것 */}
+                        <Form.Control
+                            as="textarea"
+                            rows={8}
+                            placeholder="코드 예시를 입력해 주세요."
 
-                                // Change 이벤트 : 값이 변하면 동작하는 이벤트
-                                onChange={ControlChange}
+                            // 정확히 말하자면 name 속성이 아니고 id속성임
+                            name="code_example"
+                            value={lecture.code_example}
 
-                                // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
-                                isInvalid={!!errors.lecture_description}
-                            />
+                            // Change 이벤트 : 값이 변하면 동작하는 이벤트
+                            onChange={ControlChange}
 
-                            {/* 문제가 생기면 나오는 경고성 멘트 */}
-                            <Form.Control.Feedback type="invalid">
-                                {errors.lecture_description}
-                            </Form.Control.Feedback>
-                        </div>
-                    </Form.Group>
+                            // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
+                            isInvalid={!!errors.code_example}
+                        />
 
-                    {/* 코드 예시(code_example) 입력창 */}
-                    <Form.Group className="lecture-form-row textarea-row" controlId="formCode_example">
-                        <Form.Label>
-                            코드 예시
-                        </Form.Label>
+                        {/* 문제가 생기면 나오는 경고성 멘트 */}
+                        <Form.Control.Feedback type="invalid">
+                            {errors.code_example}
+                        </Form.Control.Feedback>
+                    </Col>
+                </Form.Group>
 
-                        <div className="lecture-form-control-area">
-                            {/* Form.Control은 HTML의 form의 input같은 것 */}
-                            <Form.Control
-                                className="code-textarea"
-                                as="textarea"
-                                rows={8}
-                                placeholder="코드 예시를 입력해 주세요."
+                {/* 코드 설명(code_description) 입력창 */}
+                <Form.Group as={Row} className="mb-3" controlId="formCode_description">
+                    <Form.Label column sm={2}>
+                        코드 설명
+                    </Form.Label>
+                    <Col sm={10}> {/* Form.Control은 HTML의 form의 input같은 것 */}
+                        <Form.Control
+                            as="textarea"
+                            rows={8}
+                            placeholder="코드 설명을 입력해 주세요."
 
-                                // 정확히 말하자면 name 속성이 아니고 id속성임
-                                name="code_example"
-                                value={lecture.code_example}
+                            // 정확히 말하자면 name 속성이 아니고 id속성임
+                            name="code_description"
+                            value={lecture.code_description}
 
-                                // Change 이벤트 : 값이 변하면 동작하는 이벤트
-                                onChange={ControlChange}
+                            // Change 이벤트 : 값이 변하면 동작하는 이벤트
+                            onChange={ControlChange}
 
-                                // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
-                                isInvalid={!!errors.code_example}
-                            />
+                            // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
+                            isInvalid={!!errors.code_description}
+                        />
 
-                            {/* 문제가 생기면 나오는 경고성 멘트 */}
-                            <Form.Control.Feedback type="invalid">
-                                {errors.code_example}
-                            </Form.Control.Feedback>
-                        </div>
-                    </Form.Group>
+                        {/* 문제가 생기면 나오는 경고성 멘트 */}
+                        <Form.Control.Feedback type="invalid">
+                            {errors.code_description}
+                        </Form.Control.Feedback>
+                    </Col>
+                </Form.Group>
 
-                    {/* 코드 설명(code_description) 입력창 */}
-                    <Form.Group className="lecture-form-row textarea-row" controlId="formCode_description">
-                        <Form.Label>
-                            코드 설명
-                        </Form.Label>
+                {/* 언어(language) 입력창 */}
+                {/* Form.Control말고 select로 콤보 박스 만들기 */}
+                {/* 스프링의 constant폴더의 Language.java인 이용해서 */}
+                {/* type, placeholder 삭제 */}
+                <Form.Group as={Row} className="mb-3" controlId="formLanguage">
+                    <Form.Label column sm={2}>
+                        언어
+                    </Form.Label>
+                    <Col sm={10}> {/* Form.Select는 HTML의 form의 select같은 것 */}
+                        <Form.Select
+                            // 정확히 말하자면 name 속성이 아니고 id속성임
+                            name="language"
+                            value={lecture.language}
 
-                        <div className="lecture-form-control-area">
-                            {/* Form.Control은 HTML의 form의 input같은 것 */}
-                            <Form.Control
-                                className="code-textarea"
-                                as="textarea"
-                                rows={8}
-                                placeholder="코드 설명을 입력해 주세요."
-
-                                // 정확히 말하자면 name 속성이 아니고 id속성임
-                                name="code_description"
-                                value={lecture.code_description}
-
-                                // Change 이벤트 : 값이 변하면 동작하는 이벤트
-                                onChange={ControlChange}
-
-                                // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
-                                isInvalid={!!errors.code_description}
-                            />
-
-                            {/* 문제가 생기면 나오는 경고성 멘트 */}
-                            <Form.Control.Feedback type="invalid">
-                                {errors.code_description}
-                            </Form.Control.Feedback>
-                        </div>
-                    </Form.Group>
-
-                    {/* 언어(language) 입력창 */}
-                    {/* Form.Control말고 select로 콤보 박스 만들기 */}
-                    {/* 스프링의 constant폴더의 Language.java인 이용해서 */}
-                    {/* type, placeholder 삭제 */}
-                    <Form.Group className="lecture-form-row" controlId="formLanguage">
-                        <Form.Label>
-                            언어
-                        </Form.Label>
-
-                        <div className="lecture-form-control-area">
-                            {/* Form.Select는 HTML의 form의 select같은 것 */}
-                            <Form.Select
-                                // 정확히 말하자면 name 속성이 아니고 id속성임
-                                name="language"
-                                value={lecture.language}
-
-                                // Change 이벤트 : 값이 변하면 동작하는 이벤트
-                                onChange={ControlChange}
-                                isInvalid={!!errors.language}
-                            >
-                                <option value="-">언어 카테고리를 선택해 주세요.</option>
-                                <option value="java">java</option>
-                                <option value="typescript">typescript</option>
-                                <option value="sql">sql</option>
-                            </Form.Select>
-
-                            {/* 문제가 생기면 나오는 경고성 멘트 */}
-                            <Form.Control.Feedback type="invalid">
-                                {errors.language}
-                            </Form.Control.Feedback>
-                        </div>
-                    </Form.Group>
-
-                    {/* 아이프레임 url(iframe_url) 입력창 */}
-                    <Form.Group className="lecture-form-row" controlId="formIframe_url">
-                        <Form.Label>
-                            아이프레임 URL
-                        </Form.Label>
-
-                        <div className="lecture-form-control-area">
-                            {/* Form.Control은 HTML의 form의 input같은 것 */}
-                            <Form.Control
-                                type="text"
-                                placeholder="아이프레임 URL을 입력해 주세요."
-
-                                // 정확히 말하자면 name 속성이 아니고 id속성임
-                                name="iframe_url"
-                                value={lecture.iframe_url}
-
-                                // Change 이벤트 : 값이 변하면 동작하는 이벤트
-                                onChange={ControlChange}
-
-                                // 값을 정확하게 boolean 타입으로 만들어서 true나 false로 만들려고 !!사용
-                                isInvalid={!!errors.iframe_url}
-                            />
-
-                            {/* 문제가 생기면 나오는 경고성 멘트 */}
-                            <Form.Control.Feedback type="invalid">
-                                {errors.iframe_url}
-                            </Form.Control.Feedback>
-                        </div>
-                    </Form.Group>
-
-                    <div className="lecture-edit-button-row">
-                        <button
-                            type="button"
-                            className="lecture-cancel-button"
-                            onClick={() => navigate('/lecture/list')}
+                            // Change 이벤트 : 값이 변하면 동작하는 이벤트
+                            onChange={ControlChange}
+                            isInvalid={!!errors.language}
                         >
-                            취소
-                        </button>
+                            <option value="-">언어 카테고리를 선택해 주세요.</option>
+                            <option value="java">java</option>
+                            <option value="typescript">typescript</option>
+                            <option value="sql">sql</option>
+                            <option value="text">text</option>
+                        </Form.Select>
 
-                        <button type="submit" className="lecture-submit-button">
-                            {comment}
-                        </button>
-                    </div>
-                </Form>
-            </section>
-        </div>
+                        {/* 문제가 생기면 나오는 경고성 멘트 */}
+                        <Form.Control.Feedback type="invalid">
+                            {errors.language}
+                        </Form.Control.Feedback>
+                    </Col>
+                </Form.Group>
+
+                <Button variant="primary" type="submit" size="lg">
+                    {comment}
+                </Button>
+
+            </Form>
+        </Container>
+
     );
 };
 

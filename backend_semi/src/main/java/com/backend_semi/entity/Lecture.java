@@ -52,11 +52,6 @@ public class Lecture {
     @NotNull(message = "사용 언어는 필수 선택 사항입니다.")
     private Language language;
 
-    // 구현화면 url
-    @Column(nullable = false)
-    @NotBlank(message = "코드 설명은 필수 입력 사항입니다.")
-    private String iframe_url;
-
     // 생성일자
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate created_at ; // 등록 일자

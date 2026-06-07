@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Lecture } from "../../types/Lecture";
 import { useNavigate } from "react-router-dom";
-import "./LectureSidebar.css";
+import "./Sidebar.css";
 
 interface LecturePageProps {
     lectures: Lecture[]; // 전체 강의 목록 배열
@@ -12,7 +12,7 @@ interface LecturePageProps {
 function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePageProps) {
     const navigate = useNavigate();
 
-    // lectures.reduce( (acc, lecture => {}, {} as Record<string, Lecture[]>) ) :
+    // lectures.reduce( (acc, lecture => {}, {} as Record<string, Lecture[]>) ) : 
     // lectures 배열을 반복문으로 돌리는데
     // acc라는 객체{}에 lectures 배열에서 꺼낸 lecture를 value로 넣을 것이다.
     // acc라는 객체의 key 타입은 string이고 value 타입은 Lecture[] 이다.
@@ -29,7 +29,7 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
         // 그렇게 모아서 만든 acc 객체를 groupedLectures 변수(객체)에 넣음
         return acc;
         // {}은 acc의 초기값 - 즉, 객체로 acc를 정의하겠다라는 뜻
-        // as Record<string, Lecture[]> :
+        // as Record<string, Lecture[]> : 
         // Record를 이용해서 타입 정의 : acc라는 객체는 key를 string으로 받고 value를 Lecture[]로 받음
     }, {} as Record<string, Lecture[]>);
 
@@ -64,10 +64,12 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
     });
 
     // 2. 카테고리 토글 상태 관리
+    // key : 카테고리 이름(string) / value : 열림(true) or 닫힘(false)
     // useState<Record<string, boolean>>({}) : key타입이 string이고 value 타입이 boolean인 것들만
     // state 변수에 넣을 것고 이 변수의 초기값은 {} - 객체이다.
     const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
 
+    // 강의 목록이 처음 로드될 때 첫 번째 카테고리를 자동으로 열어놓기
     useEffect(() => { // 카테고리 토글 열린 상태 초기 설정 (첫번째 대주제 토글이 열린 상태)
         if (lectures.length > 0) { // 백엔드가 보내온 강의 목록이 1개라도 있으면
             setOpenCategories({
@@ -95,7 +97,7 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
 
     return (
         // 사이드바 전체 영역 : Sidebar.css의 .sidebar 클래스 적용
-        <aside className="lecture-sidebar">
+        <aside className="sidebar">
 
             {/* 상단 영역 : 학습 목차 제목 + 강의 수 표시 */}
             {/* border-bottom border-light border-opacity-25 : 흰색 반투명 하단 구분선 */}
@@ -103,8 +105,8 @@ function Sidebar({ lectures, setCurrentLecture, currentLecture_id }: LecturePage
                 <h2 className="fs-4 fw-bold text-white">📚 학습 목차</h2>
 
                 {/* 전체 강의 수 표시 */}
-                <p className="lecture-sidebar-title-mini">
-                    · 총 {lectures.length}개의 강의
+                <p className="mt-2 mb-0 text-white" style={{ fontSize: "13px", opacity: 0.8 }}>
+                    총 {lectures.length}개의 강의
                 </p>
             </div>
 
