@@ -1,6 +1,5 @@
 package com.backend_semi.security;
 
-import com.backend_semi.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

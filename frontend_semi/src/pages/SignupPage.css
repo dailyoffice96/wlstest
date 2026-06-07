@@ -1,5 +1,6 @@
 .signup-page {
   min-height: calc(100vh - 90px);
+  margin-top: 90px;
   display: flex;
   background: #f4f8ff;
 }

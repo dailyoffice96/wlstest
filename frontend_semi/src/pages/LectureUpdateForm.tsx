@@ -222,7 +222,7 @@ function App({ user }: AppRoutesProps) {
     };
 
     return (
-        <Container style={{ marginTop: '30px' }}>
+        <Container style={{ marginTop: '90px' }}>
             <h1>{comment}</h1>
 
             {/* 일반 오류 메시지 */}
