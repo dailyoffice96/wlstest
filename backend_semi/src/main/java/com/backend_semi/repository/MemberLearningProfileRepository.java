@@ -1,4 +1,4 @@
-package com.backend_semi.Repository;
+package com.backend_semi.repository;
 
 import com.backend_semi.entity.Member;
 import com.backend_semi.entity.MemberLearningProfile;

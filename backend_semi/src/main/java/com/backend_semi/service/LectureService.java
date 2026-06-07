@@ -1,7 +1,7 @@
 package com.backend_semi.service;
 
 import com.backend_semi.entity.Lecture;
-import com.backend_semi.Repository.LectureRepository;
+import com.backend_semi.repository.LectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
