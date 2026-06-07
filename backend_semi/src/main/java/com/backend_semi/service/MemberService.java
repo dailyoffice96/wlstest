@@ -90,8 +90,11 @@ public class MemberService {
         return new MemberLoginResponseDto(
                 accessToken,
                 member.getMemberId(),
+                member.getRole().name(),
+                member.getLoginId(),
+                member.getEmail(),
                 member.getName(),
-                member.getRole().name()
+                member.getPhone()
         );
     }
 

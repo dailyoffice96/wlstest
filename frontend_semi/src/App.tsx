@@ -42,7 +42,9 @@ function App() {
 
   return (
     <>
-      <AppRoutes user={user} handleLoginSuccess={handleLoginSuccess} />
+      <AppRoutes user={user}
+        handleLoginSuccess={handleLoginSuccess}
+        handleLogout={handleLogout} />
     </>
   );
 }

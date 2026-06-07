@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import Home from "../pages/Home.tsx";
 import LoginPage from "../pages/LoginPage.tsx";
@@ -15,131 +14,46 @@ import LectureUpdateForm from "../pages/LectureUpdateForm"
 import PublicLayout from "../components/layout/PublicLayout.tsx";
 import Introduce from "../pages/Introduce.tsx";
 import NoticeContents from "../pages/NoticeContents.tsx";
+import type { User } from "../types/User.ts";
 
-function AppRoutes() {
+interface AppProps { // App.tsx에서 온 프롭스 - LoginPage.tsx에 전달만 함
+    user: User | null; // 로그인하면 App.tsx의 setUser로 의미있는 데이터가 되어 프롭스로 받아짐 (로그인안하면 null)
+    handleLoginSuccess: (userData: User) => void;
+    handleLogout: (event: React.MouseEvent<HTMLElement>) => void;
+}
+
+function AppRoutes({ user, handleLoginSuccess, handleLogout }: AppProps) {
 
     return (
         <Routes>
-            <Route path="/lecture/list" element={
-                <PublicLayout isLogin={isLogin}
-                              username={userName}
-                              onLogout={handleLogout}>
-                    <LecturePage/>
-                </PublicLayout>
-            }
-            />
-           <Route path="/introduce/" element={
-                <PublicLayout isLogin={isLogin}
-                              username={userName}
-                              onLogout={handleLogout}>
-                    <Introduce/>
-                </PublicLayout>
-            }
-            />
+            {/* Header 있는 그룹 */}
+            <Route element={<PublicLayout user={user} handleLogout={handleLogout} />}>
+                <Route path="/lecture/list" element={<LecturePage />} />
+                <Route path="/introduce/" element={<Introduce />} />
+                <Route path="/lecture/insert" element={<LectureInsertForm />} />
+                <Route path="/lecture/update/:id" element={<LectureUpdateForm />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<LoginPage handleLoginSuccess={handleLoginSuccess} />} />
 
-            <Route path="/lecture/insert" element={
-                    <PublicLayout isLogin={isLogin}
-                                  username={userName}
-                                  onLogout={handleLogout}>
-                                  <LectureInsertForm/>
-                    </PublicLayout>
-            }/>
-            <Route path="/lecture/update/:id"  element={
-                    <PublicLayout isLogin={isLogin}
-                                  username={userName}
-                                  onLogout={handleLogout}>
-                                  <LectureUpdateForm/>
-                    </PublicLayout>
-            }/>
-            <Route
-                path="/"
-                element={
-                    <PublicLayout isLogin={isLogin}
-                                  username={userName}
-                                  onLogout={handleLogout}>
-                        <Home/>
-                    </PublicLayout>
-                }
-            />
-            <Route
-                path="/login"
-                element={
-                    <PublicLayout isLogin={isLogin}
-                                  username={userName}
-                                  onLogout={handleLogout}>
-                        <LoginPage onLoginSuccess={handleLoginSuccess}/>
-                    </PublicLayout>
-                }
-            />
-            <Route
-                path="/signup"
-                element={
-                    <PublicLayout isLogin={isLogin}
-                                  username={userName}>
-                        <SignupPage/>
-                    </PublicLayout>
-                }
-            />
-            <Route
-                path="/signup/terms"
-                element={
-                    <PublicLayout isLogin={isLogin}
-                                  username={userName}>
-                        <SignupTermsPage/>
-                    </PublicLayout>
-                }
-            />
-            <Route
-                path="/signup/complete"
-                element={
-                    <PublicLayout
-                        isLogin={isLogin}
-                        username={userName}
-                        onLogout={handleLogout}
-                    >
-                        <SignupCompletePage/>
-                    </PublicLayout>
-                }/>
-            <Route
-                path="/memberinfo/mypage/"
-                element={
-                    <PublicLayout
-                        isLogin={isLogin}
-                        username={userName}
-                        onLogout={handleLogout}>
-                        <MyPage />
-                    </PublicLayout>
-                }/>
-            <Route
-                path="/memberinfo/mypage/learning/"
-                element={
-                    <PublicLayout
-                        isLogin={isLogin}
-                        username={userName}
-                        onLogout={handleLogout}>
-                        <LearningPage/>
-                    </PublicLayout>
-                }/>
-            <Route
-                path="/memberinfo/mypage/favorite/"
-                element={
-                    <PublicLayout
-                        isLogin={isLogin}
-                        username={userName}
-                        onLogout={handleLogout}>
-                        <FavoritePage />
-                    </PublicLayout>
-                }/>
-                <Route
-                path="/notices/"
-                element={
-                    <PublicLayout
-                        isLogin={isLogin}
-                        username={userName}
-                        onLogout={handleLogout}>
-                        <NoticeContents />
-                    </PublicLayout>
-                }/>
+                <Route path="/signup" element={<SignupPage />} />
+
+                <Route path="/signup/terms" element={<SignupTermsPage />} />
+
+
+
+                <Route path="/signup/complete" element={<SignupCompletePage />} />
+
+                <Route path="/memberinfo/mypage/" element={<MyPage />} />
+
+                <Route path="/memberinfo/mypage/learning/" element={<LearningPage />} />
+
+
+                <Route path="/memberinfo/mypage/favorite/" element={<FavoritePage />} />
+
+                <Route path="/notices/" element={<NoticeContents />} />
+
+            </Route>
+
         </Routes>
     );
 }
