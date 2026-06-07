@@ -1,7 +1,7 @@
 .mypage-page {
   width: 100%;
   height: calc(100vh - 72px);
-  padding-top: 0;
+  margin-top: 85px;
   box-sizing: border-box;
 
   background: #f4f8ff;

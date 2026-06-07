@@ -1,15 +1,26 @@
 .lecture-sidebar {
-  width: 320px;
-  min-height: calc(100vh - 90px);
-  padding: 36px 34px;
+  position: fixed;
+  left: 0;
+  top: 90px;
 
-  flex-shrink: 0;
+  width: 320px;
+  height: calc(100vh - 90px);
+
+  padding: 48px 28px 28px;
   box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
 
   color: white;
 
   background: linear-gradient(180deg, #2688ff 0%, #0056d8 100%);
+
   border-top-right-radius: 28px;
+  border-bottom-right-radius: 28px;
+
+  overflow: hidden;
+  z-index: 900;
 }
 
 .lecture-sidebar-title {

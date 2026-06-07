@@ -5,6 +5,7 @@ import { API_BASE_URL } from "../config/config";
 import LectureSidebar from "../components/layout/LectureSidebar";
 import LectureContent from "../components/LecturePage/LectureContent";
 import { Button } from "react-bootstrap";
+import "./LecturePage.css";
 
 function LecturePage() {
     const [lectures, setLectures] = useState<Lecture[]>([]);
@@ -105,7 +106,7 @@ function LecturePage() {
 
     return (
         // 1. 전체 영역을 flex로 설정하여 브라우저 높이(100vh)를 확보합니다.
-        <div className="d-flex h-100 overflow-hidden">
+        <div className="lecture-page">
             {/* 2. 메인 컨텐츠 영역에 flex: 1을 적용합니다. 
                 상단바가 있다면 상단바를 제외한 '남은 공간 전체'를 알아서 채우게 됩니다. */}
             <LectureSidebar
@@ -115,7 +116,7 @@ function LecturePage() {
             />
 
             {/* 우측 강의 상세 내용 영역 */}
-            <main className="flex-fill overflow-hidden" style={{ minHeight: 0 }}>
+            <main className="lecture-main">
                 <LectureContent currentLecture={currentLecture} makeAdminButtons={makeAdminButtons} />
             </main>
         </div>

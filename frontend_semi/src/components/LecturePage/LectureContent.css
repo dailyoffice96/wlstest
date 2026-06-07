@@ -1,10 +1,10 @@
 .lecture-content-page {
   --header-height: 90px;
-  --lecture-sidebar-width: 320px;
+  --lecture-sidebar-width: 500px;
 
   position: fixed;
   top: var(--header-height);
-  left: var(--lecture-sidebar-width);
+  margin-left: 1000px;
   right: 0;
   bottom: 0;
 

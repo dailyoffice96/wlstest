@@ -5,7 +5,7 @@
   width: 100%;
   height: calc(100vh - var(--header-height));
 
-  padding: var(--page-gap) 40px var(--page-gap);
+  padding: 120px 40px var(--page-gap);
   box-sizing: border-box;
 
   background: #f4f8ff;
