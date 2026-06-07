@@ -4,14 +4,16 @@ import type { Lecture } from "../../types/Lecture";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { ghcolors, prism, vs } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useNavigate } from "react-router-dom";
+import type { User } from "../../types/User";
 
 
 interface LecturePageProps {
   currentLecture: Lecture | null;
-  makeAdminButtons: (currentLecture: Lecture, navigate: any) => JSX.Element;
+  makeAdminButtons: (currentLecture: Lecture, navigate: any, user: User | null) => JSX.Element | null;
+  user: User | null;
 }
 
-function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) {
+function LectureContent({ currentLecture, makeAdminButtons, user }: LecturePageProps) {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<"code" | "description">("code");
@@ -70,7 +72,7 @@ function LectureContent({ currentLecture, makeAdminButtons }: LecturePageProps) 
 
         {/* 오른쪽 : LecturePage에서 props로 받은 수정/삭제 버튼 */}
         <div className="d-flex gap-2">
-          {makeAdminButtons(currentLecture, navigate)}
+          {makeAdminButtons(currentLecture, navigate, user )}
         </div>
       </nav>
 

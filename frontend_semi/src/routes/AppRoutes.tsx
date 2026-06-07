@@ -36,7 +36,7 @@ function AppRoutes({ user, handleLoginSuccess, handleLogout }: AppProps) {
                 <Route path="/api/members/signup" element={<SignupPage />} />
 
                 {/* lecture */}
-                <Route path="/api/lecture/list" element={<LecturePage />} />
+                <Route path="/api/lecture/list" element={<LecturePage user={user} />} />
                 <Route path="/api/lecture/insert" element={<LectureInsertForm user={user} />} />
                 <Route path="/api/lecture/update/:id" element={<LectureUpdateForm user={user} />} />
 

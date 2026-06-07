@@ -7,8 +7,13 @@ import LectureContent from "../components/LecturePage/LectureContent";
 import { Button } from "react-bootstrap";
 import "./LecturePage.css";
 import customAxios from "../api/axiosInstance";
+import type { User } from "../types/User";
 
-function LecturePage() {
+interface AppRoutesProps { // App.tsx에서 온 프롭스
+    user: User | null; // 로그인하면 App.tsx의 setUser로 의미있는 데이터가 되어 프롭스로 받아짐 (로그인안하면 null)
+}
+
+function LecturePage({ user }: AppRoutesProps) {
     const [lectures, setLectures] = useState<Lecture[]>([]);
     const [currentLecture, setCurrentLecture] = useState<Lecture | null>(null);
 
@@ -32,9 +37,8 @@ function LecturePage() {
     // 원래는 파라미터로 현재 보이는 강의를 표현해서 그 파라미터인 id를 이용해서
     // Update나 Delete로 수정 및 삭제를 하는데 이 웹페이지는 파라미터로 보이는 것이 아니라서
     // LecturePage에서 Props로 받은 현재 선택된 강의를 뜻하는 currentLecture를 다시 프롭스로 줘야함
-    const makeAdminButtons = (currentLecture: Lecture, navigate: any) => {
-        // 지금 user가 없어서 일단 주석처리함
-        /* if (user?.role !== 'ADMIN') return null; */
+    const makeAdminButtons = (currentLecture: Lecture, navigate: any, user: User | null) => {
+        if (user?.role !== 'ADMIN') return null;
 
         return (
             <div className="d-flex gap-2">
@@ -114,11 +118,12 @@ function LecturePage() {
                 lectures={lectures}
                 setCurrentLecture={setCurrentLecture}
                 currentLecture_id={currentLecture?.id || null}
+                user={user}
             />
 
             {/* 우측 강의 상세 내용 영역 */}
             <main className="lecture-main">
-                <LectureContent currentLecture={currentLecture} makeAdminButtons={makeAdminButtons} />
+                <LectureContent currentLecture={currentLecture} makeAdminButtons={makeAdminButtons} user={user} />
             </main>
         </div>
     );

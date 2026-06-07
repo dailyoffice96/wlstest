@@ -2,17 +2,20 @@ import { useEffect, useState } from "react";
 import type { Lecture } from "../../types/Lecture";
 import { useNavigate } from "react-router-dom";
 import "./LectureSidebar.css";
+import type { User } from "../../types/User";
 
 interface LectureSidebarProps {
     lectures: Lecture[]; // 전체 강의 목록 배열
     setCurrentLecture: (lecture: Lecture) => void; // 강의 선택 시 부모 상태를 바꿀 함수
     currentLecture_id: number | null; // 현재 선택된 강의의 ID
+    user: User | null;
 }
 
 function LectureSidebar({
     lectures,
     setCurrentLecture,
     currentLecture_id,
+    user
 }: LectureSidebarProps) {
     const navigate = useNavigate();
 
@@ -157,11 +160,10 @@ function LectureSidebar({
                                             onClick={() => setCurrentLecture(lecture)}
                                             // 선택된 강의 : 흰 배경 + 파란 글씨 + 굵게
                                             // 선택 안된 강의 : 투명 배경 + 흰 글씨
-                                            className={`p-2 mb-1 rounded ${
-                                                selected
+                                            className={`p-2 mb-1 rounded ${selected
                                                     ? "bg-white text-primary fw-bold"
                                                     : "text-white"
-                                            }`}
+                                                }`}
                                             style={{ cursor: "pointer" }}
                                         >
                                             • {lecture.name}
@@ -187,17 +189,19 @@ function LectureSidebar({
                 </div>
             </div>
 
-            {/* 하단 영역 : 새 글 작성 버튼 */}
+            {/* 하단 영역 : 새 글 작성 버튼 (ADMIN만 보임) */}
             {/* border-top : 위쪽 구분선 / pt-3 : 위 패딩 */}
-            <div className="sidebar-dom sidebar-dom3 border-top border-light border-opacity-25 pt-3">
-                {/* btn-outline-light : 흰색 테두리 버튼 / w-100 : 버튼 너비 사이드바 전체 */}
-                <button
-                    onClick={() => navigate("/api/lecture/insert")}
-                    className="btn btn-outline-light w-100 fw-bold py-2"
-                >
-                    + 새 글 작성
-                </button>
-            </div>
+            {user?.role === "ADMIN" && (
+                <div className="sidebar-dom sidebar-dom3 border-top border-light border-opacity-25 pt-3">
+                    {/* btn-outline-light : 흰색 테두리 버튼 / w-100 : 버튼 너비 사이드바 전체 */}
+                    <button
+                        onClick={() => navigate("/api/lecture/insert")}
+                        className="btn btn-outline-light w-100 fw-bold py-2"
+                    >
+                        + 새 글 작성
+                    </button>
+                </div>
+            )}
         </aside>
     );
 }
