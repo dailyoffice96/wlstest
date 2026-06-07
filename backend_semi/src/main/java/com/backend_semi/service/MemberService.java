@@ -188,10 +188,10 @@ public class MemberService {
 
         // 2. 관심 학습 분야 수정
         // 프론트에서 learningProfile 배열을 보내면 기존걸 지우고 새 배열로 교체.
-        if (request.getLearningProfileIds() != null) {
+        if (request.getLearningProfile() != null) {
             memberLearningProfileRepository.deleteByMember(member);
 
-            for (Long learningProfileId : request.getLearningProfileIds()) {
+            for (Long learningProfileId : request.getLearningProfile()) {
                 LearningProfile learningProfile = learningProfileRepository.findById(learningProfileId)
                         .orElseThrow(() -> new IllegalArgumentException("관심학습분야를 찾을 수 없습니다."));
 
