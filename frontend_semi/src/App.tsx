@@ -33,9 +33,6 @@ function App() {
     event.preventDefault();
     setUser(null);
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('memberId');
-    localStorage.removeItem('name');
-    localStorage.removeItem('role');
     localStorage.removeItem('user');
     console.log('로그 아웃 성공');
     // 로그아웃시 이동할 페이지 설정
