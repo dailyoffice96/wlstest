@@ -294,6 +294,7 @@ function App({ user }: AppRoutesProps) {
                         )}
 
 
+
                         {/* 문제가 생기면 나오는 경고성 멘트 */}
                         <Form.Control.Feedback type="invalid">
                             {errors.category}
