@@ -1,13 +1,13 @@
-package com.backend_semi.member;
+package com.backend_semi.entity;
 
 import com.backend_semi.constant.Role;
-import com.backend_semi.learningprofile.MemberLearningProfile;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -18,10 +18,11 @@ import java.util.List;
 
 @Entity @ToString @Getter @Setter
 @Table(name = "members")
+@NoArgsConstructor
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "member_id")
     private Long memberId;
 
@@ -51,7 +52,7 @@ public class Member {
 
     private LocalDate birthDate;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now().withNano(0);
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberLearningProfile> memberLearningProfiles = new ArrayList<>();
@@ -69,6 +70,19 @@ public class Member {
         this.name = name;
         this.loginId = loginId;
         this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.birthDate = birthDate;
+    }
+    public void changePassword(String encodedPassword){
+        this.password = encodedPassword;
+    }
+
+    public void updateMemberInfo(
+            String email,
+            String phone,
+            LocalDate birthDate
+    ){
         this.email = email;
         this.phone = phone;
         this.birthDate = birthDate;

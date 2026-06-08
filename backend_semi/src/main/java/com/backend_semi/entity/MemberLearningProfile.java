@@ -1,6 +1,5 @@
-package com.backend_semi.learningprofile;
+package com.backend_semi.entity;
 
-import com.backend_semi.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,7 @@ import lombok.Setter;
 public class MemberLearningProfile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_learning_profile_id")
     private Long memberLearningProfileId;
 
