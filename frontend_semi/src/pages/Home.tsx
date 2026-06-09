@@ -1,8 +1,218 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import customAxios from "../api/axiosInstance";
 import "./Home.css";
+
+type Notice = {
+  noticeId: number;
+  title: string;
+  contents: string;
+  attachmentUrl?: string | null;
+  createdAt: string;
+  updatedAt?: string | null;
+};
+
+type Lecture = {
+  id: number;
+  category: string;
+  name: string;
+  lecture_description?: string;
+  language?: string;
+  code_example?: string;
+  code_description?: string;
+  iframe_url?: string;
+};
+
+type LectureCategorySummary = {
+  category: string;
+  count: number;
+  firstLectureId: number;
+};
+
+type RecentLecture = {
+  lectureId: number;
+  category: string;
+  name: string;
+  viewCount: number;
+  lastViewedAt: string;
+};
+
+type ProgressSummary = {
+  category: string;
+  viewedCount: number;
+  totalCount: number;
+  progressRate?: number;
+};
 
 function Home() {
   const navigate = useNavigate();
+
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [noticeLoading, setNoticeLoading] = useState(true);
+
+  const [lectureCategories, setLectureCategories] = useState<LectureCategorySummary[]>([]);
+  const [lectureLoading, setLectureLoading] = useState(true);
+
+  const [recentLectures, setRecentLectures] = useState<RecentLecture[]>([]);
+  const [progressSummaries, setProgressSummaries] = useState<ProgressSummary[]>([]);
+  const [learningLoading, setLearningLoading] = useState(true);
+
+  useEffect(() => {
+    getRecentNotices();
+    getLectureCategories();
+    getLearningStatus();
+  }, []);
+
+  const getRecentNotices = async () => {
+    try {
+      const response = await customAxios.get("/api/notices");
+
+      const sortedNotices = [...response.data].sort((a: Notice, b: Notice) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+
+      setNotices(sortedNotices);
+    } catch (error) {
+      console.error("홈 공지사항 조회 실패:", error);
+    } finally {
+      setNoticeLoading(false);
+    }
+  };
+
+  const getLectureCategories = async () => {
+    try {
+      const response = await customAxios.get("/api/lecture/list");
+
+      const lectures: Lecture[] = response.data || [];
+      const categoryMap = new Map<string, LectureCategorySummary>();
+
+      lectures.forEach((lecture) => {
+        if (!lecture.category) {
+          return;
+        }
+
+        const existingCategory = categoryMap.get(lecture.category);
+
+        if (existingCategory) {
+          categoryMap.set(lecture.category, {
+            ...existingCategory,
+            count: existingCategory.count + 1,
+          });
+
+          return;
+        }
+
+        categoryMap.set(lecture.category, {
+          category: lecture.category,
+          count: 1,
+          firstLectureId: lecture.id,
+        });
+      });
+
+      setLectureCategories(Array.from(categoryMap.values()));
+    } catch (error) {
+      console.error("홈 코스 조회 실패:", error);
+    } finally {
+      setLectureLoading(false);
+    }
+  };
+
+  const getLearningStatus = async () => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      setRecentLectures([]);
+      setProgressSummaries([]);
+      setLearningLoading(false);
+      return;
+    }
+
+    try {
+      setLearningLoading(true);
+
+      const [recentResponse, summaryResponse] = await Promise.all([
+        customAxios.get("/api/lecture/list/progress/recent-list"),
+        customAxios.get("/api/lecture/list/progress/summary"),
+      ]);
+
+      setRecentLectures(recentResponse.data || []);
+      setProgressSummaries(summaryResponse.data || []);
+    } catch (error) {
+      console.error("홈 학습 현황 조회 실패:", error);
+      setRecentLectures([]);
+      setProgressSummaries([]);
+    } finally {
+      setLearningLoading(false);
+    }
+  };
+
+  const formatNoticeDate = (dateTime: string) => {
+    if (!dateTime) {
+      return "";
+    }
+
+    const dateOnly = dateTime.split("T")[0];
+    const [, month, day] = dateOnly.split("-");
+
+    return `${month}.${day}`;
+  };
+
+  const formatDateTime = (dateTime: string) => {
+    if (!dateTime) {
+      return "-";
+    }
+
+    return dateTime.replace("T", " ").split(".")[0];
+  };
+
+  const getNoticePreview = (contents: string) => {
+    if (!contents) {
+      return "내용이 없습니다.";
+    }
+
+    return contents.length > 34 ? `${contents.slice(0, 34)}...` : contents;
+  };
+
+  const getProgressRate = (viewedCount: number, totalCount: number) => {
+    if (!totalCount || totalCount <= 0) {
+      return 0;
+    }
+
+    return Math.round((viewedCount / totalCount) * 100);
+  };
+
+  const handleMoveNotice = (noticeId?: number) => {
+    if (noticeId) {
+      navigate(`/api/notices?noticeId=${noticeId}`);
+      return;
+    }
+
+    navigate("/api/notices");
+  };
+
+  const handleMoveLectureCategory = (category: LectureCategorySummary) => {
+    navigate(`/api/lecture/list?lectureId=${category.firstLectureId}`);
+  };
+
+  const handleMoveLecture = (lectureId: number) => {
+    navigate(`/api/lecture/list?lectureId=${lectureId}`);
+  };
+
+  const recentNotices = notices.slice(0, 3);
+  const visibleRecentLectures = recentLectures.slice(0, 4);
+
+  const totalViewedCount = progressSummaries.reduce(
+    (sum, item) => sum + item.viewedCount,
+    0
+  );
+
+  const totalLectureCount = progressSummaries.reduce(
+    (sum, item) => sum + item.totalCount,
+    0
+  );
+
+  const totalProgressRate = getProgressRate(totalViewedCount, totalLectureCount);
+  const latestLecture = recentLectures.length > 0 ? recentLectures[0] : null;
 
   return (
     <div className="home-page">
@@ -17,6 +227,7 @@ function Home() {
 
           <div className="home-hero-buttons">
             <button
+              type="button"
               className="home-primary-button"
               onClick={() => navigate("/api/lecture/list")}
             >
@@ -24,6 +235,7 @@ function Home() {
             </button>
 
             <button
+              type="button"
               className="home-outline-button"
               onClick={() => navigate("/api/lecture/list")}
             >
@@ -33,171 +245,267 @@ function Home() {
         </div>
 
         <div className="home-hero-visual">
-          <div className="hero-chart-card">
-            <div className="chart-circle" />
-            <div className="chart-bars">
+          <div className="hero-illustration">
+            <div className="hero-glow hero-glow-one" />
+            <div className="hero-glow hero-glow-two" />
+
+            <div className="hero-floating-badge badge-light">💡</div>
+            <div className="hero-floating-badge badge-cap">🎓</div>
+
+            <div className="hero-dashboard-card">
+              <div className="hero-pie-chart">
+                <span />
+              </div>
+
+              <div className="hero-chart-lines">
+                <span />
+                <span />
+                <span />
+              </div>
+
+              <div className="hero-card-chip">TODAY</div>
+            </div>
+
+            <div className="hero-book-stack">
+              <button type="button">HTML</button>
+              <button type="button">JavaScript</button>
+              <button type="button">Python</button>
+            </div>
+
+            <div className="hero-person">
+              <div className="hero-person-head" />
+              <div className="hero-person-neck" />
+              <div className="hero-person-body" />
+            </div>
+
+            <div className="hero-laptop">
+              <div className="hero-laptop-shine" />
+            </div>
+
+            <div className="hero-code-card">
               <span />
               <span />
               <span />
             </div>
           </div>
-
-          <div className="hero-student">
-            <div className="student-head" />
-            <div className="student-body" />
-            <div className="student-laptop" />
-          </div>
-
-          <div className="hero-book-stack">
-            <div>HTML</div>
-            <div>JavaScript</div>
-            <div>Python</div>
-          </div>
-
-          <div className="hero-bubble bubble-one">🎓</div>
-          <div className="hero-bubble bubble-two">💡</div>
         </div>
       </section>
 
       <section className="home-dashboard">
         <div className="home-card recommended-card">
           <div className="home-card-header">
-            <h2>☆ 추천 강의</h2>
-            <button onClick={() => navigate("/api/lecture/list")}>더보기 ›</button>
+            <h2>📚 코스</h2>
+
+            <button
+              type="button"
+              className="home-small-link-button"
+              onClick={() => navigate("/api/lecture/list")}
+            >
+              더보기 ›
+            </button>
           </div>
 
           <div className="course-list">
-            <div className="course-card">
-              <div className="course-image course-html">{"</>"}</div>
-              <div className="course-info">
-                <h3>HTML/CSS 기초</h3>
-                <p>웹 개발의 기초를 탄탄하게!</p>
+            {lectureLoading ? (
+              <div className="course-card">
+                <div className="course-image course-html">...</div>
 
-                <div className="course-progress-row">
-                  <div className="course-progress">
-                    <span style={{ width: "65%" }} />
-                  </div>
-                  <strong>65%</strong>
+                <div className="course-info">
+                  <h3>코스 목록을 불러오는 중입니다.</h3>
+                  <p>잠시만 기다려 주세요.</p>
                 </div>
               </div>
-            </div>
+            ) : lectureCategories.length === 0 ? (
+              <div className="course-card">
+                <div className="course-image course-html">!</div>
 
-            <div className="course-card">
-              <div className="course-image course-js">JS</div>
-              <div className="course-info">
-                <h3>JavaScript 입문</h3>
-                <p>자바스크립트 핵심 개념 이해하기</p>
-
-                <div className="course-progress-row">
-                  <div className="course-progress">
-                    <span style={{ width: "42%" }} />
-                  </div>
-                  <strong>42%</strong>
+                <div className="course-info">
+                  <h3>등록된 코스가 없습니다.</h3>
+                  <p>강의가 등록되면 이곳에 표시됩니다.</p>
                 </div>
               </div>
-            </div>
-
-            <div className="course-card">
-              <div className="course-image course-python">PY</div>
-              <div className="course-info">
-                <h3>Python 시작하기</h3>
-                <p>파이썬으로 프로그래밍 입문!</p>
-
-                <div className="course-progress-row">
-                  <div className="course-progress">
-                    <span style={{ width: "30%" }} />
+            ) : (
+              lectureCategories.map((category, index) => (
+                <div
+                  key={category.category}
+                  className="course-card"
+                  onClick={() => handleMoveLectureCategory(category)}
+                >
+                  <div
+                    className={
+                      index % 3 === 0
+                        ? "course-image course-html"
+                        : index % 3 === 1
+                          ? "course-image course-js"
+                          : "course-image course-python"
+                    }
+                  >
+                    {String(index + 1).padStart(2, "0")}
                   </div>
-                  <strong>30%</strong>
+
+                  <div className="course-info">
+                    <h3>{category.category}</h3>
+                    <p>{category.count}개의 강의가 포함된 코스입니다.</p>
+
+                    <div className="course-progress-row">
+                      <div className="course-progress">
+                        <span style={{ width: "100%" }} />
+                      </div>
+
+                      <strong>{category.count}강</strong>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              ))
+            )}
           </div>
         </div>
 
         <div className="home-card notice-card">
           <div className="home-card-header">
             <h2>🔔 공지사항</h2>
-            <button onClick={() => navigate("/api/notices")}>더보기 ›</button>
+
+            <button
+              type="button"
+              className="home-small-link-button"
+              onClick={() => navigate("/api/notices")}
+            >
+              더보기 ›
+            </button>
           </div>
 
           <div className="notice-list">
-            <div className="notice-item">
-              <div>
-                <strong>5월 강의 업데이트 안내</strong>
-                <p>신규 강의가 업데이트 되었습니다.</p>
-              </div>
-              <span>05.20</span>
-            </div>
+            {noticeLoading ? (
+              <div className="notice-item">
+                <div>
+                  <strong>공지사항을 불러오는 중입니다.</strong>
+                  <p>잠시만 기다려 주세요.</p>
+                </div>
 
-            <div className="notice-item">
-              <div>
-                <strong>서버 점검 안내</strong>
-                <p>안정적인 서비스 제공을 위한 점검입니다.</p>
+                <span>-</span>
               </div>
-              <span>05.18</span>
-            </div>
+            ) : recentNotices.length === 0 ? (
+              <div className="notice-item">
+                <div>
+                  <strong>등록된 공지사항이 없습니다.</strong>
+                  <p>새로운 공지가 등록되면 이곳에 표시됩니다.</p>
+                </div>
 
-            <div className="notice-item">
-              <div>
-                <strong>학습 챌린지 이벤트 안내</strong>
-                <p>매일 학습하고 선물을 받아가세요!</p>
+                <span>-</span>
               </div>
-              <span>05.15</span>
-            </div>
+            ) : (
+              recentNotices.map((notice) => (
+                <div
+                  key={notice.noticeId}
+                  className="notice-item"
+                  onClick={() => handleMoveNotice(notice.noticeId)}
+                >
+                  <div>
+                    <strong>{notice.title}</strong>
+                    <p>{getNoticePreview(notice.contents)}</p>
+                  </div>
+
+                  <span>{formatNoticeDate(notice.createdAt)}</span>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
         <div className="home-card status-card">
           <div className="home-card-header">
             <h2>📊 나의 학습 현황</h2>
+
+            {latestLecture ? (
+              <button
+                type="button"
+                className="home-small-link-button"
+                onClick={() => handleMoveLecture(latestLecture.lectureId)}
+              >
+                이어보기 ›
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="home-small-link-button"
+                onClick={() => navigate("/api/lecture/list")}
+              >
+                강의보기 ›
+              </button>
+            )}
           </div>
 
-          <div className="status-list">
-            <div className="status-item">
-              <div className="status-icon blue">▶</div>
-
-              <div className="status-content">
-                <p>완료한 강의</p>
-                <strong>12강 <span>/ 30강</span></strong>
-              </div>
-
-              <div className="status-progress">
-                <span style={{ width: "40%" }} />
-              </div>
-
-              <em>40%</em>
+          {learningLoading ? (
+            <div className="home-learning-empty">
+              학습 현황을 불러오는 중입니다.
             </div>
-
-            <div className="status-item">
-              <div className="status-icon green">◷</div>
-
-              <div className="status-content">
-                <p>오늘의 학습 시간</p>
-                <strong>1시간 25분</strong>
-              </div>
-
-              <div className="status-progress">
-                <span style={{ width: "70%" }} />
-              </div>
-
-              <em>목표 2시간</em>
+          ) : !localStorage.getItem("accessToken") ? (
+            <div className="home-learning-empty">
+              로그인 후 최근 학습 기록을 확인할 수 있습니다.
             </div>
-
-            <div className="status-item">
-              <div className="status-icon purple">◎</div>
-
-              <div className="status-content">
-                <p>문제풀이 정답률</p>
-                <strong>78%</strong>
-              </div>
-
-              <div className="status-progress">
-                <span style={{ width: "78%" }} />
-              </div>
-
-              <em>목표 80%</em>
+          ) : recentLectures.length === 0 ? (
+            <div className="home-learning-empty">
+              아직 학습 기록이 없습니다. 강의를 열람하면 이곳에 표시됩니다.
             </div>
-          </div>
+          ) : (
+            <>
+              <div className="home-learning-summary">
+                <div>
+                  <span>전체 진행률</span>
+                  <strong>{totalProgressRate}%</strong>
+                  <p>
+                    {totalViewedCount}강 / {totalLectureCount}강 열람
+                  </p>
+                </div>
+
+                <div>
+                  <span>최근 학습 강의</span>
+                  <strong>{latestLecture?.name}</strong>
+                  <p>{latestLecture?.category}</p>
+                </div>
+              </div>
+
+              <div className="home-learning-table">
+                <div className="home-learning-header">
+                  <span>강의명</span>
+                  <span>대주제</span>
+                  <span>횟수</span>
+                  <span>이동</span>
+                </div>
+
+                {visibleRecentLectures.map((lecture) => (
+                  <div key={lecture.lectureId} className="home-learning-row">
+                    <div className="home-learning-name">
+                      <span className="home-learning-icon">📘</span>
+
+                      <div>
+                        <strong>{lecture.name}</strong>
+                        <em>{formatDateTime(lecture.lastViewedAt)}</em>
+                      </div>
+                    </div>
+
+                    <div className="home-learning-category">
+                      {lecture.category}
+                    </div>
+
+                    <div className="home-learning-count">
+                      {lecture.viewCount}회
+                    </div>
+
+                    <div>
+                      <button
+                        type="button"
+                        className="home-learning-mini-button"
+                        onClick={() => handleMoveLecture(lecture.lectureId)}
+                      >
+                        보기
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </section>
     </div>

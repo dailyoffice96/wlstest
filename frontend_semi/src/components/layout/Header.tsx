@@ -1,6 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../icon/logo.svg";
 import type { User } from "../../types/User";
+import "./Header.css";
 
 type HeaderProps = {
   user: User | null;
@@ -9,53 +11,194 @@ type HeaderProps = {
 
 function Header({ user, handleLogout }: HeaderProps) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const decodeJwtPayload = (token: string) => {
+    try {
+      const base64Url = token.split(".")[1];
+
+      if (!base64Url) {
+        return null;
+      }
+
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((char) => {
+            return `%${("00" + char.charCodeAt(0).toString(16)).slice(-2)}`;
+          })
+          .join("")
+      );
+
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      console.error("JWT 파싱 실패:", error);
+      return null;
+    }
+  };
+
+  const clearExpiredSession = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    alert("로그인 시간이 만료되었습니다. 다시 로그인해 주세요.");
+
+    window.location.replace("/api/members/login");
+  };
+
+  const checkTokenExpired = () => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      if (user) {
+        clearExpiredSession();
+      }
+
+      return;
+    }
+
+    const payload = decodeJwtPayload(token);
+
+    if (!payload || !payload.exp) {
+      clearExpiredSession();
+      return;
+    }
+
+    const now = Math.floor(Date.now() / 1000);
+
+    if (payload.exp <= now) {
+      clearExpiredSession();
+    }
+  };
+
+  useEffect(() => {
+    checkTokenExpired();
+
+    const intervalId = window.setInterval(() => {
+      checkTokenExpired();
+    }, 30000);
+
+    const handleFocus = () => {
+      checkTokenExpired();
+    };
+
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      window.clearInterval(intervalId);
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, [user, location.pathname]);
 
   return (
     <header className="header">
-      <div className="header-logo" onClick={() => navigate("/")}>
-        <img src={logo} alt="풀스택 강의실 로고" />
-      </div>
-
-      <div className="header-left">
-        <div className="custom-dropdown">
-          <button className="header-button">소개 ▾</button>
-
-          <div className="custom-dropdown-menu">
-            <div className="custom-dropdown-item" onClick={() => navigate("/introduce")}>사이트 소개</div>
-            <div className="custom-dropdown-item" onClick={() => navigate("/introduce/howtouse")}>이용 방법</div>
-          </div>
+      <div className="header-inner">
+        <div className="header-logo" onClick={() => navigate("/")}>
+          <img src={logo} alt="풀스택 강의실 로고" />
         </div>
 
-        {user && (
-          <>
-            <button className="header-button" onClick={() => navigate("/api/lecture/list")}>▣ 강의실</button>
-            <button className="header-button" onClick={() => navigate("/api/notices")}>▤ 공지사항</button>
-          </>
-        )}
-      </div>
+        <nav className="header-left">
+          <div className="custom-dropdown">
+            <button type="button" className="header-button header-main-button">
+              <span className="header-button-icon">▾</span>
+              소개
+            </button>
 
+            <div className="custom-dropdown-menu">
+              <button
+                type="button"
+                className="custom-dropdown-item"
+                onClick={() => navigate("/introduce")}
+              >
+                <span>📘</span>
+                사이트 소개
+              </button>
 
-      <div className="header-right">
-        {user ? (
-          <><button className="header-button" onClick={() => navigate("/memberinfo/mypage/favorite")}> ★ 즐겨찾기</button>
-            <button className="header-button" onClick={() => navigate("/api/members/mypage")}>♙ {user.name}</button>
-            <button className="header-button" onClick={handleLogout}>
-              ↪로그아웃
-            </button>
-          </>
-        ) : (
-          <>
-            <button className="header-button" onClick={() => navigate("/api/members/login")}>
-              LOGIN
-            </button>
-            <button
-              className="header-button"
-              onClick={() => navigate("/signup/terms")}
-            >
-              회원가입
-            </button>
-          </>
-        )}
+              <button
+                type="button"
+                className="custom-dropdown-item"
+                onClick={() => navigate("/introduce/howtouse")}
+              >
+                <span>💡</span>
+                이용 방법
+              </button>
+            </div>
+          </div>
+
+          {user && (
+            <>
+              <button
+                type="button"
+                className="header-button"
+                onClick={() => navigate("/api/lecture/list")}
+              >
+                <span className="header-button-icon">▣</span>
+                강의실
+              </button>
+
+              <button
+                type="button"
+                className="header-button"
+                onClick={() => navigate("/api/notices")}
+              >
+                <span className="header-button-icon">▤</span>
+                공지사항
+              </button>
+            </>
+          )}
+        </nav>
+
+        <div className="header-right">
+          {user ? (
+            <>
+              <button
+                type="button"
+                className="header-button"
+                onClick={() => navigate("/members/mypage/favorite")}
+              >
+                <span className="header-button-icon">★</span>
+                즐겨찾기
+              </button>
+
+              <button
+                type="button"
+                className="header-button header-user-button"
+                onClick={() => navigate("/members/mypage/learning")}
+              >
+                <span className="header-user-avatar">♙</span>
+                {user.name}
+              </button>
+
+              <button
+                type="button"
+                className="header-button"
+                onClick={handleLogout}
+              >
+                <span className="header-button-icon">↪</span>
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="header-button"
+                onClick={() => navigate("/api/members/login")}
+              >
+                LOGIN
+              </button>
+
+              <button
+                type="button"
+                className="header-button header-signup-button"
+                onClick={() => navigate("/signup/terms")}
+              >
+                회원가입
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );

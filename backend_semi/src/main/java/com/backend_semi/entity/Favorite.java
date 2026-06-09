@@ -24,4 +24,12 @@ public class Favorite {
     @Column(name="favorite_url")
     private String favoriteUrl;
 
+    public Favorite(
+            Member member,
+            String favoriteUrl
+    ){
+        this.member = member;
+        this.favoriteUrl = favoriteUrl;
+    }
+
 }

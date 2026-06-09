@@ -1,89 +1,151 @@
-.lecture-content-page {
-  --header-height: 90px;
-  --lecture-sidebar-width: 500px;
+.lecture-content {
+  width: calc(100% - 320px);
+  height: calc(100vh - 105px);
+  margin-left: 320px;
+  margin-bottom: 15px;
 
-  position: fixed;
-  top: var(--header-height);
-  margin-left: 1000px;
-  right: 0;
-  bottom: 0;
-
-  padding: 24px;
+  padding: 28px 36px;
   box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 
   background: #f4f8ff;
   overflow: hidden;
 }
 
-.lecture-empty-box {
-  --header-height: 90px;
-  --lecture-sidebar-width: 320px;
-
-  position: fixed;
-  top: var(--header-height);
-  left: var(--lecture-sidebar-width);
-  right: 0;
-  bottom: 0;
+.lecture-content-empty {
+  height: 100%;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   color: #64748b;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
-
-  background: #f4f8ff;
-}
-
-/* 상단 경로 */
-.lecture-path-row {
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  font-size: 14px;
-}
-
-.lecture-path-text {
-  color: #64748b;
-  font-weight: 700;
-}
-
-.lecture-path-text span {
-  color: #1479e8;
-}
-
-.lecture-admin-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-/* 강의 제목 카드 */
-.lecture-title-card {
-  flex-shrink: 0;
-
-  min-height: 88px;
-  padding: 20px 24px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 
   background: white;
   border: 1px solid #d7e4f7;
-  border-radius: 18px;
-  box-shadow: 0 6px 14px rgba(0, 58, 140, 0.06);
-  box-sizing: border-box;
+  border-radius: 22px;
+  box-shadow: 0 8px 24px rgba(0, 70, 150, 0.07);
 }
 
-.lecture-title-left {
+.lecture-breadcrumb-row {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.lecture-breadcrumb {
+  min-width: 0;
+
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 800;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lecture-breadcrumb span {
+  color: #0753bf;
+  font-weight: 900;
+}
+
+.lecture-admin-area {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+/* 수정 / 삭제 버튼 */
+
+.lecture-admin-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lecture-admin-button {
+  height: 36px;
+  padding: 0 15px;
+  box-sizing: border-box;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+
+  border-radius: 10px;
+  cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.lecture-admin-button:hover {
+  transform: translateY(-1px);
+}
+
+.lecture-admin-button.edit {
+  color: #0753bf;
+  background: #f8fbff;
+  border: 1px solid #cfe0f8;
+  box-shadow: 0 5px 12px rgba(0, 80, 180, 0.07);
+}
+
+.lecture-admin-button.edit:hover {
+  background: #edf5ff;
+  border-color: #a9cdfa;
+  box-shadow: 0 8px 16px rgba(0, 80, 180, 0.11);
+}
+
+.lecture-admin-button.delete {
+  color: #dc2626;
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  box-shadow: 0 5px 12px rgba(220, 38, 38, 0.06);
+}
+
+.lecture-admin-button.delete:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  box-shadow: 0 8px 16px rgba(220, 38, 38, 0.11);
+}
+
+/* 상단 강의 소개 카드 */
+
+.lecture-hero-card {
+  flex: 0 0 auto;
+
+  padding: 22px 28px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid #d7e4f7;
+  border-radius: 22px;
+  box-shadow: 0 8px 24px rgba(0, 70, 150, 0.07);
+}
+
+.lecture-hero-left {
   min-width: 0;
 
   display: flex;
@@ -91,96 +153,123 @@
   gap: 18px;
 }
 
-.lecture-title-icon {
-  width: 50px;
-  height: 50px;
-
-  flex-shrink: 0;
+.lecture-icon-box {
+  width: 54px;
+  height: 54px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  color: #1479e8;
-  font-size: 24px;
+  color: #0753bf;
+  font-size: 21px;
   font-weight: 900;
 
-  background: rgba(20, 121, 232, 0.1);
-  border-radius: 12px;
+  background: #e8f2ff;
+  border: 1px solid #cfe0f8;
+  border-radius: 16px;
+
+  flex-shrink: 0;
 }
 
-.lecture-title-text {
+.lecture-title-box {
   min-width: 0;
 }
 
-.lecture-title-card h2 {
-  margin: 0 0 6px;
+.lecture-badge {
+  width: fit-content;
+  margin: 0 0 8px;
+  padding: 6px 12px;
 
-  color: #1f2937;
-  font-size: 26px;
+  color: #0753bf;
+  font-size: 12px;
   font-weight: 900;
 
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  background: #f8fbff;
+  border: 1px solid #cfe0f8;
+  border-radius: 999px;
 }
 
-.lecture-title-card p {
-  margin: 0;
+.lecture-title-box h1 {
+  margin: 0 0 8px;
+
+  color: #0f2d5c;
+  font-size: 29px;
+  font-weight: 900;
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+}
+
+.lecture-category-text {
+  margin: 0 0 10px;
 
   color: #64748b;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.lecture-category-text strong {
+  color: #0753bf;
+  font-weight: 900;
+}
+
+.lecture-description-text {
+  max-height: 84px;
+
+  color: #475569;
   font-size: 15px;
   font-weight: 700;
-  line-height: 1.45;
+  line-height: 1.6;
+  white-space: pre-line;
 
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-
-  overflow: hidden;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
-.lecture-title-deco {
+.lecture-description-text::-webkit-scrollbar {
+  width: 5px;
+}
+
+.lecture-description-text::-webkit-scrollbar-thumb {
+  background: #c8d8ee;
+  border-radius: 999px;
+}
+
+.lecture-hero-symbol {
+  color: #0753bf;
+  font-size: 54px;
+
+  opacity: 0.18;
   flex-shrink: 0;
-
-  margin-left: 16px;
-
-  font-size: 38px;
-  opacity: 0.25;
 }
 
-/* 하단 코드/구현 영역: 남은 화면 높이만 사용 */
-.lecture-body-area {
-  flex: 1;
+/* 코드 영역 */
+
+.lecture-workspace {
   min-height: 0;
+  flex: 1;
 
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(420px, 1fr);
-  gap: 18px;
-
+  display: flex;
   overflow: hidden;
 }
 
-/* 왼쪽 코드 패널 */
-.lecture-code-panel {
-  min-width: 0;
+.lecture-code-card {
   min-height: 0;
+  width: 100%;
 
   display: flex;
   flex-direction: column;
 
   background: white;
   border: 1px solid #d7e4f7;
-  border-radius: 18px;
-  box-shadow: 0 6px 14px rgba(0, 58, 140, 0.06);
+  border-radius: 22px;
+  box-shadow: 0 8px 24px rgba(0, 70, 150, 0.07);
 
   overflow: hidden;
 }
 
 .lecture-tab-row {
-  flex-shrink: 0;
-
-  height: 52px;
+  flex: 0 0 auto;
 
   display: flex;
   align-items: center;
@@ -190,8 +279,8 @@
 }
 
 .lecture-tab-button {
+  height: 52px;
   flex: 1;
-  height: 100%;
 
   color: #64748b;
   font-size: 15px;
@@ -202,23 +291,28 @@
   border-bottom: 3px solid transparent;
 
   cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease,
+    border-color 0.12s ease;
 }
 
 .lecture-tab-button:hover {
-  color: #1479e8;
-  background: #eef5ff;
+  background: #edf5ff;
+  color: #0753bf;
 }
 
 .lecture-tab-button.active {
-  color: #1479e8;
+  color: #0753bf;
+  background: white;
   border-bottom-color: #1479e8;
 }
 
-.lecture-tab-body {
-  flex: 1;
+.lecture-code-body {
   min-height: 0;
+  flex: 1;
 
-  padding: 16px;
+  padding: 20px;
   box-sizing: border-box;
 
   display: flex;
@@ -227,204 +321,171 @@
   overflow: hidden;
 }
 
-.lecture-code-inner {
-  flex: 1;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  overflow: hidden;
-}
-
-.lecture-code-header {
-  flex-shrink: 0;
-
-  height: 36px;
+.lecture-code-toolbar {
+  min-height: 42px;
   padding: 0 14px;
+  box-sizing: border-box;
+
+  flex: 0 0 auto;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 
   color: #64748b;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 900;
 
   background: #f8fbff;
   border: 1px solid #d7e4f7;
   border-bottom: none;
-  border-radius: 10px 10px 0 0;
-
-  box-sizing: border-box;
+  border-radius: 14px 14px 0 0;
 }
 
 .lecture-copy-button {
-  height: 26px;
+  height: 28px;
   padding: 0 10px;
 
-  color: #64748b;
+  color: #475569;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 900;
 
   background: white;
-  border: 1px solid #c9d7ee;
-  border-radius: 6px;
+  border: 1px solid #cfdbea;
+  border-radius: 8px;
 
   cursor: pointer;
 }
 
 .lecture-copy-button:hover {
-  color: #1479e8;
-  background: #eef5ff;
+  color: #0753bf;
+  background: #edf5ff;
+  border-color: #a9cdfa;
 }
 
-/* 실제 코드 스크롤 영역 */
-.lecture-code-scroll {
-  flex: 1;
+.lecture-code-viewer {
   min-height: 0;
+  flex: 1;
 
-  padding: 14px;
+  padding: 18px;
   box-sizing: border-box;
 
   background: white;
   border: 1px solid #d7e4f7;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 14px 14px;
 
   overflow: auto;
 }
 
-/* react-syntax-highlighter 내부 pre */
-.lecture-code-scroll pre {
-  margin: 0 !important;
-  min-width: max-content;
+.lecture-code-viewer pre {
+  min-height: 100%;
 }
 
-/* 코드 줄바꿈 방지 → 가로 스크롤 */
-.lecture-code-scroll code {
-  white-space: pre !important;
+.lecture-code-viewer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-/* 오른쪽 구현 화면 패널 */
-.lecture-preview-panel {
-  min-width: 0;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  background: white;
-  border: 1px solid #d7e4f7;
-  border-radius: 18px;
-  box-shadow: 0 6px 14px rgba(0, 58, 140, 0.06);
-
-  overflow: hidden;
+.lecture-code-viewer::-webkit-scrollbar-thumb {
+  background: #c8d8ee;
+  border-radius: 999px;
 }
 
-.lecture-preview-header {
-  flex-shrink: 0;
+.lecture-code-viewer::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  height: 52px;
-  padding: 0 18px;
+.lecture-code-empty {
+  height: 100%;
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 
-  background: #f8fbff;
-  border-bottom: 1px solid #d7e4f7;
-  box-sizing: border-box;
-}
-
-.lecture-preview-header span {
-  color: #1f2937;
+  color: #64748b;
   font-size: 15px;
-  font-weight: 900;
+  font-weight: 800;
 }
 
-.lecture-preview-header a {
-  color: #1479e8;
-  font-size: 13px;
-  font-weight: 900;
-  text-decoration: none;
-}
+/* 반응형 */
 
-.lecture-preview-header a:hover {
-  text-decoration: underline;
-}
-
-/* 실제 구현 화면 스크롤 영역 */
-.lecture-preview-scroll {
-  flex: 1;
-  min-height: 0;
-
-  overflow: fixed;
-  background: white;
-}
-
-.lecture-preview-scroll iframe {
-  width: 150%;
-  height: 150%;
-
-  display: block;
-
-  border: none;
-  background: white;
-
-  transform: scale(0.67);
-  transform-origin: top left;
-}
-
-/* 화면 높이가 낮을 때 상단부 압축 */
-@media (max-height: 780px) {
-  .lecture-content-page {
-    padding: 14px;
-    gap: 10px;
-  }
-
-  .lecture-title-card {
-    min-height: 72px;
-    padding: 12px 16px;
-  }
-
-  .lecture-title-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-  }
-
-  .lecture-title-card h2 {
-    font-size: 20px;
-    margin-bottom: 4px;
-  }
-
-  .lecture-title-card p {
-    font-size: 13px;
-    -webkit-line-clamp: 1;
-  }
-
-  .lecture-tab-row,
-  .lecture-preview-header {
-    height: 44px;
-  }
-
-  .lecture-code-header {
-    height: 32px;
-  }
-
-  .lecture-tab-body {
-    padding: 10px;
-  }
-}
-
-/* 화면 폭이 좁으면 구현 화면을 아래로 */
 @media (max-width: 1200px) {
-  .lecture-body-area {
-    grid-template-columns: 1fr;
+  .lecture-content {
+    padding: 24px;
   }
 
-  .lecture-preview-panel {
-    min-height: 320px;
+  .lecture-title-box h1 {
+    font-size: 27px;
+  }
+}
+
+@media (max-width: 900px) {
+  .lecture-content {
+    width: 100%;
+    height: auto;
+    min-height: calc(100vh - 90px);
+    margin-left: 0;
+    margin-bottom: 0;
+    padding: 22px 18px;
+
+    overflow: visible;
+  }
+
+  .lecture-breadcrumb-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lecture-admin-area {
+    justify-content: flex-end;
+  }
+
+  .lecture-hero-card {
+    padding: 22px;
+  }
+
+  .lecture-hero-left {
+    flex-direction: column;
+  }
+
+  .lecture-hero-symbol {
+    display: none;
+  }
+
+  .lecture-workspace {
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 600px) {
+  .lecture-content {
+    padding: 18px 14px;
+  }
+
+  .lecture-hero-card {
+    border-radius: 18px;
+  }
+
+  .lecture-title-box h1 {
+    font-size: 24px;
+  }
+
+  .lecture-tab-button {
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .lecture-code-body {
+    padding: 16px;
+  }
+
+  .lecture-admin-buttons {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .lecture-admin-button {
+    width: 100%;
   }
 }

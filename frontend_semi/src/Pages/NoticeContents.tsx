@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { API_BASE_URL } from "../config/config";
 import NoticeSidebar from "../components/layout/NoticeSidebar";
 import "./NoticeContents.css";
 import customAxios from "../api/axiosInstance";
@@ -25,23 +23,22 @@ interface NoticeFormData {
   attachmentUrl: string;
 }
 
-interface AppRoutesProps { // App.tsx에서 온 프롭스
-  user: User | null; // 로그인하면 App.tsx의 setUser로 의미있는 데이터가 되어 프롭스로 받아짐 (로그인안하면 null)
+interface AppRoutesProps {
+  user: User | null;
 }
 
 function NoticeContents({ user }: AppRoutesProps) {
-  // [추가] 현재 로그인한 사람이 관리자인지 여부
-  // user가 있고(?) 그 role이 'ADMIN'이면 true
   const isAdmin = user?.role === "ADMIN";
 
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null
+  );
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // none: 목록만 표시
-  // create: 오른쪽에 작성 폼 표시
-  // edit: 오른쪽에 수정 폼 표시
-  const [formMode, setFormMode] = useState<"none" | "create" | "edit">("none");
+  const [formMode, setFormMode] = useState<"none" | "create" | "edit">(
+    "none"
+  );
   const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
 
   const [formData, setFormData] = useState<NoticeFormData>({
@@ -51,6 +48,29 @@ function NoticeContents({ user }: AppRoutesProps) {
     attachmentUrl: "",
   });
 
+  const noticeCategoryNameMap: Record<number, string> = {
+    1: "공지",
+    2: "중요",
+    3: "업데이트",
+    4: "안내",
+  };
+
+  const getSelectedCategoryTitle = () => {
+    if (selectedCategoryId === null) {
+      return "전체공지";
+    }
+
+    return noticeCategoryNameMap[selectedCategoryId] || "공지사항";
+  };
+
+  const getSelectedCategoryDescription = () => {
+    if (selectedCategoryId === null) {
+      return "풀스택 강의실의 전체 공지사항을 확인하세요.";
+    }
+
+    return `${getSelectedCategoryTitle()} 카테고리의 공지사항을 확인하세요.`;
+  };
+
   useEffect(() => {
     fetchNotices();
   }, []);
@@ -59,11 +79,9 @@ function NoticeContents({ user }: AppRoutesProps) {
     try {
       setLoading(true);
 
-      const url = `${API_BASE_URL}/api/notices`;
-      const response = await axios.get(url);
+      const response = await customAxios.get("/api/notices");
 
       setNotices(response.data);
-
     } catch (error) {
       console.error(error);
       alert("공지사항을 불러오지 못했습니다.");
@@ -72,28 +90,25 @@ function NoticeContents({ user }: AppRoutesProps) {
     }
   };
 
-  // 프론트에서 가져온 공지를 정렬
   const filteredNotices =
     selectedCategoryId === null
       ? notices
       : notices.filter(
-        (notice) => notice.noticeCategoryId === selectedCategoryId
-      );
+          (notice) => notice.noticeCategoryId === selectedCategoryId
+        );
 
-  // CreateClick, 글 등록 버튼을 클릭할때 FormMode를 create 설정
   const handleCreateClick = () => {
     setFormMode("create");
     setEditingNotice(null);
 
     setFormData({
-      noticeCategoryId: 1,
+      noticeCategoryId: selectedCategoryId ?? 1,
       title: "",
       contents: "",
       attachmentUrl: "",
     });
   };
 
-  // 수정하기 버튼을 클릭했을때 FormMode를 Edit로 설정.
   const handleEditClick = (notice: Notice) => {
     setFormMode("edit");
     setEditingNotice(notice);
@@ -106,7 +121,6 @@ function NoticeContents({ user }: AppRoutesProps) {
     });
   };
 
-  // 취소 버튼을 클릭하였을때 Formmode를 none으로 설정
   const handleCancelForm = () => {
     setFormMode("none");
     setEditingNotice(null);
@@ -120,7 +134,9 @@ function NoticeContents({ user }: AppRoutesProps) {
   };
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = event.target;
 
@@ -143,45 +159,37 @@ function NoticeContents({ user }: AppRoutesProps) {
       return;
     }
 
-    const token = localStorage.getItem("accessToken");
-
-    if (!token) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    };
-
     const requestBody = {
       noticeCategoryId: formData.noticeCategoryId,
       title: formData.title,
       contents: formData.contents,
-      attachmentUrl: formData.attachmentUrl.trim() === "" ? null : formData.attachmentUrl,
+      attachmentUrl:
+        formData.attachmentUrl.trim() === "" ? null : formData.attachmentUrl,
     };
 
     try {
       if (formMode === "create") {
-        await customAxios.post(`${API_BASE_URL}/api/notices`, requestBody, config);
+        await customAxios.post("/api/notices", requestBody);
+
         setFormMode("none");
         setEditingNotice(null);
+
         await fetchNotices();
+
         alert("공지사항이 등록되었습니다.");
       }
 
       if (formMode === "edit" && editingNotice) {
         await customAxios.put(
-          `${API_BASE_URL}/api/notices/${editingNotice.noticeId}`,
-          requestBody,
-          config
+          `/api/notices/${editingNotice.noticeId}`,
+          requestBody
         );
+
         alert("공지사항이 수정되었습니다.");
+
         setFormMode("none");
         setEditingNotice(null);
+
         await fetchNotices();
       }
     } catch (error) {
@@ -197,19 +205,8 @@ function NoticeContents({ user }: AppRoutesProps) {
       return;
     }
 
-    const token = localStorage.getItem("accessToken");
-
-    if (!token) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
-
     try {
-      await customAxios.delete(`${API_BASE_URL}/api/notices/${noticeId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await customAxios.delete(`/api/notices/${noticeId}`);
 
       alert("공지사항이 삭제되었습니다.");
 
@@ -235,11 +232,10 @@ function NoticeContents({ user }: AppRoutesProps) {
         <div className="notice-content-header">
           <div>
             <p className="notice-content-badge">NOTICE</p>
-            <h1>공지사항</h1>
-            <p>풀스택 강의실의 주요 안내사항을 확인하세요.</p>
+            <h1>{getSelectedCategoryTitle()}</h1>
+            <p>{getSelectedCategoryDescription()}</p>
           </div>
 
-          {/* [변경] 관리자(ADMIN)일 때만 '공지 작성' 버튼 표시 */}
           {isAdmin && (
             <button
               type="button"
@@ -260,9 +256,17 @@ function NoticeContents({ user }: AppRoutesProps) {
         >
           <div className="notice-list-panel">
             {loading ? (
-              <div className="notice-empty">공지사항을 불러오는 중입니다.</div>
+              <div className="notice-empty">
+                공지사항을 불러오는 중입니다.
+              </div>
             ) : notices.length === 0 ? (
-              <div className="notice-empty">등록된 공지사항이 없습니다.</div>
+              <div className="notice-empty">
+                등록된 공지사항이 없습니다.
+              </div>
+            ) : filteredNotices.length === 0 ? (
+              <div className="notice-empty">
+                {getSelectedCategoryTitle()} 카테고리에 등록된 공지사항이 없습니다.
+              </div>
             ) : (
               filteredNotices.map((notice) => (
                 <article key={notice.noticeId} className="notice-list-item">
@@ -276,7 +280,6 @@ function NoticeContents({ user }: AppRoutesProps) {
                     </div>
 
                     <div className="notice-item-buttons">
-                      {/* [변경] 관리자(ADMIN)일 때만 수정/삭제 버튼 표시 */}
                       {isAdmin && (
                         <>
                           <button
@@ -302,6 +305,7 @@ function NoticeContents({ user }: AppRoutesProps) {
                   <div className="notice-item-meta">
                     <span>글번호 #{notice.noticeId}</span>
                     <span>{notice.createdAt?.replace("T", " ")}</span>
+
                     {notice.updatedAt && (
                       <span>수정됨 {notice.updatedAt.replace("T", " ")}</span>
                     )}

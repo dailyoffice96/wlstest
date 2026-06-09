@@ -27,14 +27,14 @@ public class FavoriteService {
         return favoriteRepository.findFavoriteByMember(member);
     }
     // 즐겨찾기 삭제
-    public boolean deleteFavorite(Long memberid){
-        Favorite favorite = favoriteRepository.findById(memberid)
+    public boolean deleteFavorite(Long favoriteId){
+        Favorite favorite = favoriteRepository.findById(favoriteId)
                                                .orElse(null);
         if(favorite == null){
             throw new IllegalArgumentException("삭제하고자 하는 즐겨찾기가 없습니다!");
         }
 
-        favoriteRepository.deleteById(memberid);
+        favoriteRepository.deleteById(favoriteId);
         return true;
     }
 }

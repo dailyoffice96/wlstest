@@ -38,10 +38,7 @@
   width: 100%;
   height: 100%;
 
-  display: grid;
-  grid-template-columns: minmax(300px, 0.8fr) minmax(620px, 1.2fr);
-  gap: 36px;
-
+  display: block;
   overflow: hidden;
 }
 
@@ -148,16 +145,13 @@
 
 /* 오른쪽 폼 영역 */
 .member-info-content {
-  min-width: 0;
+  width: 100%;
   height: 100%;
 
   padding: 10px 6px 4px;
   box-sizing: border-box;
 
-  display: flex;
-  flex-direction: column;
-
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .member-info-header {
@@ -485,9 +479,9 @@
     padding: 22px;
   }
 
-  .member-profile-visual {
-    padding: 30px 28px;
-  }
+.member-profile-visual {
+  display: none;
+}
 
   .member-profile-logo {
     width: 78px;

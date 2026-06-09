@@ -412,26 +412,6 @@ function MyPage() {
             <main className="mypage-main">
                 <section className="member-info-card">
                     <div className="member-info-layout">
-                        <aside className="member-profile-visual">
-                            <div className="member-profile-logo">
-                                <span>👤</span>
-                            </div>
-
-                            <div className="member-profile-text">
-                                <p className="member-profile-badge">MY PROFILE</p>
-                                <h2>회원정보 관리</h2>
-                                <p>
-                                    내 계정 정보와 비밀번호를 한 곳에서 확인하고
-                                    관리할 수 있습니다.
-                                </p>
-                            </div>
-
-                            <div className="member-profile-point">
-                                <span>FULLSTACK CLASSROOM</span>
-                                <strong>PROFILE</strong>
-                            </div>
-                        </aside>
-
                         <div className="member-info-content">
                             <div className="member-info-header">
                                 <p className="member-info-badge">PROFILE</p>

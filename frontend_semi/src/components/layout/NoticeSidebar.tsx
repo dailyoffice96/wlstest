@@ -23,8 +23,17 @@ function NoticeSidebar({
 
   return (
     <aside className="notice-sidebar">
-      <div className="notice-sidebar-title">
-        <h2>공지사항</h2>
+      <div className="notice-sidebar-header">
+        <div className="notice-sidebar-title-row">
+          <div className="notice-sidebar-title-icon">📢</div>
+
+          <div>
+            <h2 className="notice-sidebar-title">공지사항</h2>
+            <p className="notice-sidebar-subtitle">
+              강의실의 주요 안내를 확인하세요.
+            </p>
+          </div>
+        </div>
       </div>
 
       <nav className="notice-sidebar-menu">
@@ -38,7 +47,7 @@ function NoticeSidebar({
           onClick={() => onSelectCategory(null)}
         >
           <span className="notice-sidebar-number">00</span>
-          <span>전체공지</span>
+          <span className="notice-sidebar-button-text">전체공지</span>
         </button>
 
         {categories.map((category, index) => (
@@ -55,27 +64,33 @@ function NoticeSidebar({
             <span className="notice-sidebar-number">
               {String(index + 1).padStart(2, "0")}
             </span>
-            <span>{category.categoryName}</span>
+
+            <span className="notice-sidebar-button-text">
+              {category.categoryName}
+            </span>
           </button>
         ))}
       </nav>
 
-      <div className="notice-sidebar-divider" />
-
-      <div className="notice-sidebar-info">
-        <span className="notice-sidebar-info-icon">ⓘ</span>
-        강의실의 주요 공지와
-        <br />
-        운영 안내를 확인할 수 있습니다.
+      <div className="notice-sidebar-guide">
+        <p>
+          <span>ⓘ</span>
+          강의실의 주요 공지와
+        </p>
+        <p>운영 안내를 확인할 수 있습니다.</p>
       </div>
 
       <div className="notice-sidebar-bottom">
         <div className="notice-sidebar-illust">
-          <div className="notice-sidebar-illust-card" />
+          <div className="notice-sidebar-illust-card">
+            <span />
+            <span />
+          </div>
+
           <div className="notice-sidebar-illust-star">☆</div>
         </div>
 
-        <div className="notice-sidebar-bottom-text">NOTICE</div>
+        <strong>NOTICE</strong>
       </div>
     </aside>
   );

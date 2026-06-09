@@ -1,3 +1,18 @@
+# npm install <
+# npm install react-icons
+# npm install react-syntax-highlighter
+# 위의 3줄은 매우 핵심 중요.
+# MySQL 스키마 이름은 wls로 만들 것.
+# 관심 학습 사항은 기본적으로 DB에 삽입되지 않으므로,
+INSERT INTO learning_profiles (learning_profile_id, profile_code)
+VALUES
+    (1, 'FRONT'),
+    (2, 'BACK'),
+    (3, '웹 서비스'),
+    (4, 'UI');
+# 강의실 기본 DB는 Discord 4조)한국ICT인재개발원 2강의실 채널의 files에 있는 이현민이 올린 SQL을 한번 실행해야함.
+# use wls; 잊지 말것!
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
