@@ -17,6 +17,9 @@ import Introduce from "../pages/Introduce.tsx";
 import NoticeContents from "../pages/NoticeContents.tsx";
 import type { User } from "../types/User.ts";
 import HowToUse from "../pages/HowToUse.tsx";
+import AdminPage from "../pages/AdminPage.tsx";
+import PasswordlessSetting from "../components/passwordless/PasswordlessSetting.tsx";
+import PasswordlessAuth from "../components/passwordless/PasswordlessAuth.tsx";
 
 interface AppProps {
     user: User | null;
@@ -37,8 +40,11 @@ function AppRoutes({ user, handleLoginSuccess, handleLogout }: AppProps) {
                 {/* 로그인 / 회원가입 */}
                 <Route
                     path="/api/members/login"
-                    element={<LoginPage handleLoginSuccess={handleLoginSuccess} />}
+//                     element={<LoginPage handleLoginSuccess={handleLoginSuccess} />}
+                    element={<LoginPage />}
                 />
+                <Route path="/api/members/login/passwordlessSetting" element={<PasswordlessSetting />} />
+                <Route path="/api/members/login/passwordlessAuth" element={<PasswordlessAuth />} />
                 <Route path="/api/members/signup" element={<SignupPage />} />
                 <Route path="/signup/terms" element={<SignupTermsPage />} />
                 <Route path="/signup/complete" element={<SignupCompletePage />} />
@@ -48,6 +54,7 @@ function AppRoutes({ user, handleLoginSuccess, handleLogout }: AppProps) {
                     <Route path="/api/members/mypage" element={<MyPage />} />
                     <Route path="/members/mypage/favorite" element={<FavoritePage />}/>
                     <Route path="/members/mypage/learning" element={<LearningPage />}/>
+                    <Route path="/members/mypage/adminpage" element={<AdminPage />}/>
                     <Route path="/api/lecture/list" element={<LecturePage user={user} />}/>
                     <Route path="/api/lecture/insert" element={<LectureInsertForm user={user} />}/>
                     <Route path="/api/lecture/update/:id" element={<LectureUpdateForm user={user} />}/>
