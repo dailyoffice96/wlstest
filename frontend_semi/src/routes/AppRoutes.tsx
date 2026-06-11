@@ -21,7 +21,7 @@ import HowToUse from "../pages/HowToUse";
 interface AppProps {
     user: User | null;
     handleLoginSuccess: (userData: User) => void;
-    handleLogout: (event: React.MouseEvent<HTMLElement>) => void;
+    handleLogout: (event?: React.MouseEvent<HTMLElement>) => void;
 }
 // TEST
 
@@ -48,14 +48,14 @@ function AppRoutes({ user, handleLoginSuccess, handleLogout }: AppProps) {
                 <Route element={<ProtectedLayout user={user} />}>
                     <Route path="/api/members/mypage" element={<MyPage />} />
                     <Route path="/members/mypage" element={<Navigate to="/api/members/mypage" replace />} />
-                    <Route path="/members/mypage/favorite" element={<FavoritePage />}/>
-                    <Route path="/members/mypage/learning" element={<LearningPage />}/>
-                    <Route path="/api/lecture/list" element={<LecturePage user={user} />}/>
+                    <Route path="/members/mypage/favorite" element={<FavoritePage />} />
+                    <Route path="/members/mypage/learning" element={<LearningPage />} />
+                    <Route path="/api/lecture/list" element={<LecturePage user={user} />} />
                     <Route path="/lecture/list" element={<Navigate to="/api/lecture/list" replace />} />
-                    <Route path="/api/lecture/insert" element={<LectureInsertForm user={user} />}/>
+                    <Route path="/api/lecture/insert" element={<LectureInsertForm user={user} />} />
                     <Route path="/lecture/insert" element={<Navigate to="/api/lecture/insert" replace />} />
-                    <Route path="/api/lecture/update/:id" element={<LectureUpdateForm user={user} />}/>
-                    <Route path="/lecture/update/:id" element={<LectureUpdateForm user={user} />}/>
+                    <Route path="/api/lecture/update/:id" element={<LectureUpdateForm user={user} />} />
+                    <Route path="/lecture/update/:id" element={<LectureUpdateForm user={user} />} />
                 </Route>
 
                 {/* 정의되지 않은 주소로 접근하면 빈 화면 대신 홈으로 돌려보냅니다. */}
