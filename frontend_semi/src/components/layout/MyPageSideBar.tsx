@@ -8,6 +8,7 @@ function MyPageSideBar() {
   const isMember = location.pathname === "/api/members/mypage";
   const isLearning = location.pathname === "/members/mypage/learning";
   const isFavorite = location.pathname === "/members/mypage/favorite";
+  const isAdminPage = location.pathname === "/members/mypage/adminpage";
   //===========================================================================
   // 아래의 변수는 각 페이지의 위치일때 페이지 아이콘의 이미지를 바꾸기 위한 변수입니다. 삼항연산자를 활용하여
   // 멤버일때 이것, 학습일때 이것, 즐겨찾기일떄 이것, 식으로 작동하고 디폴트는 멤버일때입니다.
@@ -67,6 +68,15 @@ function MyPageSideBar() {
         >
           <span>03</span>
           즐겨찾기
+        </button>
+
+        <button
+          type="button"
+          className={isAdminPage ? "mypage-menu active" : "mypage-menu"}
+          onClick={() => navigate("/members/mypage/AdminPage")}
+        >
+          <span>04</span>
+          관리자
         </button>
       </div>
 

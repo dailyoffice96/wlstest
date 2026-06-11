@@ -78,6 +78,8 @@ public class Member {
         this.password = encodedPassword;
     }
 
+    public void changeRole(Role role){ this.role = role;}
+
     public void updateMemberInfo(
             String email,
             String phone,
