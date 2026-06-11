@@ -258,13 +258,13 @@ export function useMyPage() {
         email: memberUpdateForm.email,
         phone: memberUpdateForm.phone,
         birthDate: memberUpdateForm.birthDate,
-        memberLearningProfiles: memberUpdateForm.memberLearningProfiles,
+        learningProfile: memberUpdateForm.memberLearningProfiles,
         ...(hasPasswordInput()
           ? {
-              currentPassword,
-              newPassword: memberPassword,
-              newPasswordConfirm: memberPasswordConfirm,
-            }
+            currentPassword,
+            newPassword: memberPassword,
+            newPasswordConfirm: memberPasswordConfirm,
+          }
           : {}),
       };
 
