@@ -51,9 +51,8 @@ function App() {
     setUser(null);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
-    console.log('로그 아웃 성공');
     // 로그아웃시 이동할 페이지 설정
-    navigate(`/api/members/login`);
+    navigate(`/api/members/login`, { replace: true });
   };
 
 

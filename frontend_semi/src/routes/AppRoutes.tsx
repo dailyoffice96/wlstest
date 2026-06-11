@@ -46,7 +46,7 @@ function AppRoutes({ user, handleLoginSuccess, handleLogout }: AppProps) {
 
                 {/* 로그인 필요 페이지 */}
                 <Route element={<ProtectedLayout user={user} />}>
-                    <Route path="/api/members/mypage" element={<MyPage />} />
+                    <Route path="/api/members/mypage" element={<MyPage handleLogout={handleLogout} />} />
                     <Route path="/members/mypage" element={<Navigate to="/api/members/mypage" replace />} />
                     <Route path="/members/mypage/favorite" element={<FavoritePage />} />
                     <Route path="/members/mypage/learning" element={<LearningPage />} />
