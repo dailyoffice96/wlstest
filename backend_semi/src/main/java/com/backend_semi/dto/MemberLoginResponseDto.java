@@ -13,5 +13,4 @@ public class MemberLoginResponseDto {
     private String email;
     private String name;
     private String phone; // 사용자 이름을 프론트에 던져줄 용도
-
 }
