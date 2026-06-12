@@ -4,6 +4,12 @@ import customAxios from "../api/axiosInstance";
 import "./LoginPage.css";
 import type { LoginResponse, User } from "../types/User";
 import { Alert } from "react-bootstrap";
+import {
+  ShieldCheck,
+  Settings
+} from "lucide-react";
+import PasswordlessSetting from "../components/passwordless/PasswordlessSetting";
+import PasswordlessAuth from "../components/passwordless/PasswordlessRegisterAuth";
 
 interface AppRoutesProps {
     // App.tsx -> AppRoutes.tsx를 거쳐온 프롭스(정보가 들어오면 App.tsx에 데이터를 보내야함)
@@ -19,6 +25,7 @@ function LoginPage({ handleLoginSuccess }: AppRoutesProps) {
     const [errors, setErrors] = useState('');
 
     const navigate = useNavigate();
+
 
     const handleLogin = async (event?: React.SyntheticEvent) => {
         event?.preventDefault(); // 새로고침 방지
@@ -56,7 +63,8 @@ function LoginPage({ handleLoginSuccess }: AppRoutesProps) {
                 // userData는 자바스크립트 객체여서 문자열로 바꿔줘야 함
                 // JSON.stringify 함수는 JavaScript 객체를 JSON 문자열로 변환해 줍니다.
                 // App.tsx에서 로컬스토리지에 저장할 예정이라 여기서는 안해도 됨
-                localStorage.setItem("user", JSON.stringify(userData));
+                // 이제 로컬용이 아니고 배포도 해야해서 로컬스토리지에서 user 정보 보여주지 않음
+                // localStorage.setItem("user", JSON.stringify(userData));
             }
 
             // 로그인이 되면 메인 홈페이지로 이동시킴
@@ -110,6 +118,26 @@ function LoginPage({ handleLoginSuccess }: AppRoutesProps) {
                             회원가입
                         </span>
                     </p>
+
+                    <div className="login-divider">
+                      <span></span>
+                      <p>또는</p>
+                      <span></span>
+                    </div>
+
+                   <button className="passwordless-login-button"
+                   onClick={() => navigate("/api/members/login/passwordlessAuth")}>
+                     <ShieldCheck />
+                     Passwordless 로그인
+                   </button>
+
+                   <button className="passwordless-setting-button"
+                   onClick={() => navigate("/api/members/login/passwordlessSetting")}>
+                     <Settings />
+                     Passwordless 설정
+                   </button>
+
+
                 </div>
             </div>
         </div>
