@@ -32,7 +32,7 @@ function LoginPage({ handleLoginSuccess }: AppRoutesProps) {
         console.log('로그인 시도중입니다.');
 
         try {
-            const url = "/api/members/login";
+            const url = "/members/login";
             const params = { loginId, password }; // 파라미터
             const config = {
                 headers: { // 헤더에 MIME type 적어서 요청
@@ -126,13 +126,13 @@ function LoginPage({ handleLoginSuccess }: AppRoutesProps) {
                     </div>
 
                    <button className="passwordless-login-button"
-                   onClick={() => navigate("/api/members/login/passwordlessAuth")}>
+                   onClick={() => navigate("/members/login/passwordlessAuth")}>
                      <ShieldCheck />
                      Passwordless 로그인
                    </button>
 
                    <button className="passwordless-setting-button"
-                   onClick={() => navigate("/api/members/login/passwordlessSetting")}>
+                   onClick={() => navigate("/members/login/passwordlessSetting")}>
                      <Settings />
                      Passwordless 설정
                    </button>

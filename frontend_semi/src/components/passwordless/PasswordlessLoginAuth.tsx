@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../passwordless/PasswordlessAuth.css";
 
-interface PasswordlessLoginAuth {
+interface PasswordlessLoginAuthProps  {
   onBack?: () => void;
 }
 
@@ -40,7 +40,7 @@ function PasswordlessLoginAuth({ onBack }: PasswordlessLoginAuthProps) {
       return;
     }
 
-    navigate("/api/members/login");
+    navigate("/members/login");
   };
 
 

@@ -40,26 +40,26 @@ function AppRoutes({ user, handleLoginSuccess, handleLogout }: AppProps) {
 
                 {/* 로그인 / 회원가입 */}
                 <Route
-                    path="/api/members/login"
-//                     element={<LoginPage handleLoginSuccess={handleLoginSuccess} />}
-                    element={<LoginPage />}
+                    path="/members/login"
+                    element={<LoginPage handleLoginSuccess={handleLoginSuccess} />}
+//                     element={<LoginPage />}
                 />
-                <Route path="/api/members/login/passwordlessSetting" element={<PasswordlessSetting />} />
-                <Route path="/api/members/login/passwordlessRegisterAuth" element={<PasswordlessRegisterAuth />}/>
-                <Route path="/api/members/login/passwordlessAuth" element={<PasswordlessLoginAuth />}/>
-                <Route path="/api/members/signup" element={<SignupPage />} />
+                <Route path="/members/login/passwordlessSetting" element={<PasswordlessSetting />} />
+                <Route path="/members/login/passwordlessRegisterAuth" element={<PasswordlessRegisterAuth />}/>
+                <Route path="/members/login/passwordlessAuth" element={<PasswordlessLoginAuth />}/>
+                <Route path="/members/signup" element={<SignupPage />} />
                 <Route path="/signup/terms" element={<SignupTermsPage />} />
                 <Route path="/signup/complete" element={<SignupCompletePage />} />
 
                 {/* 로그인 필요 페이지 */}
                 <Route element={<ProtectedLayout user={user} />}>
-                    <Route path="/api/members/mypage" element={<MyPage />} />
+                    <Route path="/members/mypage" element={<MyPage />} />
                     <Route path="/members/mypage/favorite" element={<FavoritePage />}/>
                     <Route path="/members/mypage/learning" element={<LearningPage />}/>
                     <Route path="/members/mypage/adminpage" element={<AdminPage />}/>
-                    <Route path="/api/lecture/list" element={<LecturePage user={user} />}/>
-                    <Route path="/api/lecture/insert" element={<LectureInsertForm user={user} />}/>
-                    <Route path="/api/lecture/update/:id" element={<LectureUpdateForm user={user} />}/>
+                    <Route path="/lecture/list" element={<LecturePage user={user} />}/>
+                    <Route path="/lecture/insert" element={<LectureInsertForm user={user} />}/>
+                    <Route path="/lecture/update/:id" element={<LectureUpdateForm user={user} />}/>
                 </Route>
             </Route>
         </Routes>

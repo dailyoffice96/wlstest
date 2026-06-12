@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../passwordless/PasswordlessAuth.css";
 
-interface PasswordlessRegisterAuth {
+interface PasswordlessRegisterAuthProps  {
   onBack?: () => void;
 }
 
@@ -36,7 +36,7 @@ function PasswordlessRegisterAuth({ onBack}: PasswordlessRegisterAuthProps) {
               onBack();
               return;
             }
-            navigate("/api/members/login");
+            navigate("/members/login");
             };
 
 
@@ -69,7 +69,7 @@ function PasswordlessRegisterAuth({ onBack}: PasswordlessRegisterAuthProps) {
 //       }
 
       alert("Passwordless 등록이 완료되었습니다.");
-      navigate("/api/members/login");
+      navigate("/members/login");
   };
 
     // 1초마다 남은 시간 감소
