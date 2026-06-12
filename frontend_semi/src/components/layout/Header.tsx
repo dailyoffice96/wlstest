@@ -126,7 +126,7 @@ function Header({ user, handleLogout }: HeaderProps) {
               <button
                 type="button"
                 className="header-button"
-                onClick={() => navigate("/api/notices")}
+                onClick={() => navigate("/notices")}
               >
                 <span className="header-button-icon">▤</span>
                 공지사항

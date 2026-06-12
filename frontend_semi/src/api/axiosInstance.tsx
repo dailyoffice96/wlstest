@@ -60,7 +60,7 @@ axiosInstance.interceptors.response.use(
 
         // 현재 에러가 난 이 요청이 "혹시 로그인 하려고 시도했던 요청이었나?"를 판별하는 중
         // 로그인 시도 중 비번을 틀려서 난 401 에러와, 로그인 후 토큰이 만료되어 난 401 에러를 구분 가능
-        // url에 "/api/member/login"가 포함되어 있다면 로그인 시도중 비번 틀린 오류
+        // url에 "/api/members/login"가 포함되어 있다면 로그인 시도중 비번 틀린 오류
         // 백엔드의 경로(실제 웹페이지의 경로를 입력해야 함)
         const isLoginRequest = error.config?.url?.includes("/api/members/login");
 
